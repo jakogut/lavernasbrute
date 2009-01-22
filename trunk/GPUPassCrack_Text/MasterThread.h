@@ -27,17 +27,26 @@ public:
 	static void setSuccess(bool boolean);
 	static void printToConsole(string print);
 	static void writeIterations();
+	static int getInterval();
+	static void setInterval(int write);
+	static bool getSilent();
+	static void setSilent(bool write);
+
+	void printResult();
 
 	int id;
 	string passwd;
 	time_t startTime;
 
+	static int interval;
+	static bool silent;
+
 	//When a thread is successful, it sets this value to true, signaling to the other threads
 	//That the job is done.
 	static bool success;
 
-	static boost::recursive_mutex readSuccessMutex;
-	static boost::recursive_mutex writeSuccessMutex;
+	static boost::recursive_mutex SuccessMutex;
+	static boost::timed_mutex printMutex;
 };
 
 #endif

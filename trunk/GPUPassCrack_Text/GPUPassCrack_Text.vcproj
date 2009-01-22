@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\OSSpecific.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Threads.cpp"
 				>
 			</File>
@@ -199,6 +203,10 @@
 			>
 			<File
 				RelativePath=".\MasterThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OSSpecific.h"
 				>
 			</File>
 			<File

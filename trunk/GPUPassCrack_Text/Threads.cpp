@@ -3,7 +3,7 @@
 
 void threads::operator()()
 {
-	while (passwdNumericalString != getPasswd())
+	while (!masterThread::getSuccess())
 	{
 		generatePasswdString(getPasswd());
 
@@ -15,6 +15,14 @@ void threads::operator()()
 		else
 		{
 			incrementIterations();
+
+			if(!masterThread::getSilent())
+			{
+				if(threads::getIterations() % masterThread::getInterval() == 0)
+				{
+					masterThread::writeIterations();
+				}
+			}
 		}
 	}
 }
@@ -30,37 +38,37 @@ void threads::generatePasswdString(string passwd)
 //as a result of being locked by the incrementIterations function.
 __int64 threads::getIterations()
 {
-	//boost::recursive_mutex::scoped_lock scoped_lock(readIterationsMutex);
+	//boost::mutex::scoped_lock scoped_lock(IterationsMutex);
 	return iterations;
 }
 
 void threads::incrementIterations()
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(writeIterationsMutex);
+	//boost::mutex::scoped_lock lock(IterationsMutex);
 	iterations++;
 }
 
 string threads::getPasswdNumericalString()
 {
-	//boost::recursive_mutex::scoped_lock scoped_lock(readPasswdNumericalStringMutex);
+	//boost::recursive_mutex::scoped_lock scoped_lock(PasswdNumericalStringMutex);
 	return passwdNumericalString;
 }
 
 void threads::setPasswdNumericalString(string write)
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(readPasswdNumericalStringMutex);
+	boost::recursive_mutex::scoped_lock scoped_lock(PasswdNumericalStringMutex);
 	passwdNumericalString = write;
 }
 
 string threads::getPasswd()
 {
-	//boost::recursive_mutex::scoped_lock scoped_lock(readPasswdMutex);
+	boost::recursive_mutex::scoped_lock scoped_lock(PasswdMutex);
 	return passwd;
 }
 
 void threads::writePasswd(string write)
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(writePasswdMutex);
+	boost::recursive_mutex::scoped_lock scoped_lock(PasswdMutex);
 	passwd = write;
 }
 
@@ -84,18 +92,6 @@ int threads::roundToNearestTen(int round)
 {
 	round = (round / 10);
 	return round * 10;
-}
-
-bool threads::findCharSequence(string a, string b)
-{
-	bool result;
-
-	if (a.find(b) != string::npos)
-	{
-		result = true;
-	}
-
-	return result;		
 }
 
 string threads::parseNumericalString(string passwdNumericalString)

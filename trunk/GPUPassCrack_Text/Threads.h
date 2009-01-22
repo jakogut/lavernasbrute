@@ -52,18 +52,15 @@ public:
 	string replaceAll(string source, string a, string b);
 	string generateRandString(int length);
 
-	bool findCharSequence(string a, string b);
 	string parseNumericalString(string passwdNumericalString);
 
 	static __int64 iterations;
 	static string passwdNumericalString;
 
-	static boost::recursive_mutex readIterationsMutex;
-	static boost::recursive_mutex writeIterationsMutex;
-	static boost::recursive_mutex readPasswdMutex;
-	static boost::recursive_mutex writePasswdMutex;
-	static boost::recursive_mutex readPasswdNumericalStringMutex;
-	static boost::recursive_mutex writePasswdNumericalStringMutex;
+	static boost::mutex IterationsMutex;
+	static boost::recursive_mutex PasswdMutex;
+	static boost::recursive_mutex PasswdNumericalStringMutex;
+	static boost::recursive_mutex generatePasswdStringMutex;
 
 	static string passwd;
 };

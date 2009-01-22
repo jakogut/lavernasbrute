@@ -10,6 +10,7 @@
 
 #include "MasterThread.h"
 #include "Threads.h"
+//#include "OSSpecific.h"
 
 //Number of threads - At least two are required for proper operation.
 //One thread is a master thread which monitors the workers, all the rest are workers.
@@ -42,21 +43,22 @@ int random()
 //////////////////////////////////////////////////////////////////////////////////////////
 
 bool masterThread::success = false;
+bool masterThread::silent = false;
+int masterThread::interval;
+
 string threads::passwd = "";
 
 int threads::max = 0;
 
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
-boost::recursive_mutex threads::readIterationsMutex;
-boost::recursive_mutex threads::writeIterationsMutex;
-boost::recursive_mutex threads::readPasswdMutex;
-boost::recursive_mutex threads::writePasswdMutex;
-boost::recursive_mutex threads::readPasswdNumericalStringMutex;
-boost::recursive_mutex threads::writePasswdNumericalStringMutex;
+boost::mutex threads::IterationsMutex;
+boost::recursive_mutex threads::PasswdMutex;
+boost::recursive_mutex threads::PasswdNumericalStringMutex;
+boost::recursive_mutex threads::generatePasswdStringMutex;
 
-boost::recursive_mutex masterThread::readSuccessMutex;
-boost::recursive_mutex masterThread::writeSuccessMutex;
+boost::recursive_mutex masterThread::SuccessMutex;
+boost::timed_mutex masterThread::printMutex;
 
 //If the counter goes over the limits of a normal integer, the program crashes.
 //This really sucks when it's been running for hours. I'm using a 64-bit integer now.
@@ -66,15 +68,79 @@ string threads::passwdNumericalString = "";
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+void printHelp()
+{
+	cout << "\nLaverna's Brute."
+	"\nThis program is a brute-force password cracker."
+	"\nCOPYRIGHT 2008, this program is licensed under the GNU GPL V3 "
+	"\nSee \"http://lavernasbrute.googlecode.com\" for more details. "
+	"\n\nI am NOT responsible for loss of or damage to personal property as a result of "
+	"\nthe use of this program. Any use of this program is at your own risk."
+	"\n\n-h\t\tDisplay this help message. "
+	"\n\n-silent\t\tRun the program in silent mode. "
+	"\n\n-t STRING\tPass a text string to the brute-forcer for testing purposes."
+	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 500,000 "
+	"\n\t\tThe interval may be raised for a slight performance gain.";
+}
+
 int main(int argc, char* argv[])
 {
-	string passwdTemp = "passwd";
+	bool silent;
+	string passwdTemp = "";
+	int interval = 500000;
 
-	//cout << "Input a string to brute-force: ";
-	//cin >> passwdTemp;
+	//Parse command-line arguments
+	for(int i = 0; i < argc; i++)
+	{
+		//Set the password string to be cracked
+		if(strcmp(argv[i], "-h") == 0)
+		{
+			printHelp();
+			return 0;
+		}
 
-	cout << "Brute forcing string \"" << passwdTemp << "\"\nRunning " << NTHREADS << " (+1) cooperative threads." << endl;
-	threads::writePasswd(passwdTemp);
+		//Set silent mode
+		if(strcmp(argv[i], "-silent") == 0)
+		{
+			silent = true;
+			masterThread::setSilent(silent);
+		}
+		else 
+		{
+			silent = false;
+		}
+
+		//Set the password string to be cracked
+		if(strcmp(argv[i], "-t") == 0)
+		{
+			passwdTemp = argv[i + 1];
+		}
+
+		//Interval
+		if(strcmp(argv[i], "-i") == 0)
+		{
+			char* temp = new char[]; 
+			temp = argv[i + 1];
+
+			interval = atoi(temp);
+			masterThread::setInterval(interval);
+
+			delete[] temp;
+		}
+		else
+			masterThread::setInterval(interval);
+	}
+
+	if(passwdTemp.length() <= 0)
+	{
+		printHelp();
+		return 0;
+	}
+	else
+	{
+		cout << "\nBrute forcing string \"" << passwdTemp << "\"\nRunning " << NTHREADS << " (+1) cooperative threads." << endl;
+		threads::writePasswd(passwdTemp);
+	}
 
 	cout << "\n\n";
 
