@@ -10,11 +10,9 @@
 
 #include "MasterThread.h"
 #include "Threads.h"
-//#include "OSSpecific.h"
 
-//Number of threads - At least two are required for proper operation.
-//One thread is a master thread which monitors the workers, all the rest are workers.
-#define NTHREADS 8
+#include "Hashing.h"
+//#include "OSSpecific.h"
 
 using namespace std;
 
@@ -78,9 +76,10 @@ void printHelp()
 	"\nthe use of this program. Any use of this program is at your own risk."
 	"\n\n-h\t\tDisplay this help message. "
 	"\n\n-silent\t\tRun the program in silent mode. "
-	"\n\n-t STRING\tPass a text string to the brute-forcer for testing purposes."
+	"\n\n-s STRING\tPass a text string to the brute-forcer for testing purposes."
+	"\n\n-t INTEGER\tNumber of threads, Two are required minimum. Default: 8"
 	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 500,000 "
-	"\n\t\tThe interval may be raised for a slight performance gain.";
+	"\n\t\tThe interval may be raised for a slight performance gain.\n";
 }
 
 int main(int argc, char* argv[])
@@ -88,6 +87,10 @@ int main(int argc, char* argv[])
 	bool silent;
 	string passwdTemp = "";
 	int interval = 500000;
+
+	//Number of threads - At least two are required for proper operation.
+	//One thread is a master thread which monitors the workers, all the rest are workers.
+	int NTHREADS = 8;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; i++)
@@ -111,9 +114,27 @@ int main(int argc, char* argv[])
 		}
 
 		//Set the password string to be cracked
-		if(strcmp(argv[i], "-t") == 0)
+		if(strcmp(argv[i], "-s") == 0)
 		{
 			passwdTemp = argv[i + 1];
+		}
+
+		//Set the number of threads
+		if(strcmp(argv[i], "-t") == 0)
+		{
+			char* temp = new char[]; 
+			temp = argv[i + 1];
+
+			if(atoi(temp) >= 2)
+			{
+				NTHREADS = atoi(temp);
+			}
+			else
+			{
+				NTHREADS = 2;
+			}
+
+			delete[] temp;
 		}
 
 		//Interval
