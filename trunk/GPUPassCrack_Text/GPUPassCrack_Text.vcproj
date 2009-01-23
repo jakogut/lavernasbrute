@@ -192,7 +192,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\OSSpecific.cpp"
+				RelativePath=".\PwDump.cpp"
 				>
 			</File>
 			<File
@@ -214,7 +214,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\OSSpecific.h"
+				RelativePath=".\PwDump.h"
 				>
 			</File>
 			<File

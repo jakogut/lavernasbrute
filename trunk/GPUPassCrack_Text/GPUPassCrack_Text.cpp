@@ -12,6 +12,7 @@
 #include "Threads.h"
 
 #include "Hashing.h"
+#include "PwDump.h"
 //#include "OSSpecific.h"
 
 using namespace std;
@@ -45,8 +46,9 @@ bool masterThread::silent = false;
 int masterThread::interval;
 
 string threads::passwd = "";
-
 int threads::max = 0;
+
+string PwDump::pwDumpStore[8];
 
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
@@ -149,8 +151,13 @@ int main(int argc, char* argv[])
 			delete[] temp;
 		}
 		else
+		{
 			masterThread::setInterval(interval);
+		}
 	}
+
+	PwDump::readDump("pwdump.dmp");
+	PwDump::retrieveLMHash("student");
 
 	if(passwdTemp.length() <= 0)
 	{
