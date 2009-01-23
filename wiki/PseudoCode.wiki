@@ -1,0 +1,32 @@
+#labels Phase-Design
+#A pseudo-code summary of the application
+
+= Main.cpp =
+
+  * Declares static variables
+  * Creates and seeds a pseudo random number generator
+  * Parses command line arguments
+  * Prints information about the current run
+  * Creates a boost thread group
+  * Adds a master thread to the thread group
+  * Fills remaining positions in the group using a for loop
+
+  * The threads are run.
+
+= MasterThread.h =
+Declares all members of the masterThread class.
+
+= MasterThread.cpp =
+Defines all members of the masterThread class.
+
+The masterThread class is used to keep track of the worker threads, and the condition of success in the attack. Once one of the worker threads succeeds in cracking the password, the masterThread stops the worker threads and prints the resulting information.
+
+If the application is run without the "-silent" flag, masterThread will output the number of iterations run at a specified interval. The default interval is every 500,000 iterations.
+
+= Threads.h =
+Declares all members of the Threads class.
+
+= Threads.cpp =
+Defines all members of the masterThread class.
+
+The Threads class creates a class that is instantiated for every thread. Each thread runs in a loop, while the boolean variable "success" is false, the worker threads will generate a new randomized string, compare it to the string being cracked, and for each failed attempt, the iterations variable is incremented.
