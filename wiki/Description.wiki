@@ -23,15 +23,15 @@ The aim of this project is to provide a free (in both senses) implementation of 
 Core 2 Duo 2.00 ghz (T7300)
 
     * No hash-generation, four character string using lowercase character set only. 
-        * Estimated time: < 15 sec
-        * ~130,000 ips
+        * Estimated time: < 5 sec
+        * ~250,000 ips
 
     * No hash-generation, five character string using lowercase character set only. 
         * Estimated time: < 1 min
-        * ~115,000 ips
+        * ~210,000 ips
 
     * No hash-generation, six character string using uppercase, lowercase, numbers.
-        * Estimated time: 6 hrs - 3 days 
-        * ~80,000 ips
+        * Estimated time: unknown 
+        * unknown
 
         
