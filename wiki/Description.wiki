@@ -11,8 +11,8 @@ The aim of this project is to provide a free (in both senses) implementation of 
     *  Threading support    *Completed*
 
     *  Support for cracking of Windows passwords
-        *  Extract LM/NTLM hashes
-        *  Re-create one-way hash function
+        *  Extract LM/NTLM hashes *Completed*
+        *  Re-create one-way hash function *Partial*
         *  Pass random strings through hash function until a match is found
 
     *  GPGPU Acceleration
