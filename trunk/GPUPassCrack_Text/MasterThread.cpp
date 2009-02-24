@@ -4,7 +4,7 @@
 void masterThread::operator()()
 {
 	while (getSuccess() == false)
-	{
+	{/*
 		if(getSuccess() == false)
 		{
 		}
@@ -12,7 +12,7 @@ void masterThread::operator()()
 		{
 			break;
 		}
-	}
+	*/}
 
 	printResult();
 }

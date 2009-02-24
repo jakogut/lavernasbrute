@@ -1,21 +1,13 @@
 #ifndef THREADS_H_
 #define THREADS_H_
 
-//Absolute minimum
-#define MIN 110
-
-//Lowercase character set only
-#define MAX 389
-
-//Lowercase & uppercase character sets
-//#define MAX 679
-
-//Lowercase, uppercase, & numbers
-//#define MAX 789
+#define MIN 48		
+#define MAX 122		
 
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <sstream>
 #include <string>
 
 #include <boost/thread/thread.hpp>
@@ -31,28 +23,29 @@ class threads
 {
 public:
 
-	threads::threads(int id) : id(id){};
+	threads(int id) 
+	 : id(id)
+	{
+	}
 
 	void operator()();
 	
-	static __int64 getIterations();
-	int roundToNearestTen(int round);
 	int id;
 	static int max;
+	
+	//Our most oft called functions, we're inlining them for a small, but not negligible, speed improvement.
+	inline static void incrementIterations();
+	inline static string getPasswdNumericalString();
+	inline static void setPasswdNumericalString(string write);
 
-	static void incrementIterations();
+	static __int64 getIterations();
 	static void writePasswd(string write);
-	static void setPasswdNumericalString(string write);
-
+	
 	void generatePasswdString(string passwd);
 	
-	static string getPasswdNumericalString();
 	static string getPasswd();
 
-	string replaceAll(string source, string a, string b);
-	string generateRandString(int length);
-
-	string parseNumericalString(string passwdNumericalString);
+	inline string generateRandString(int length);
 
 	static __int64 iterations;
 	static string passwdNumericalString;

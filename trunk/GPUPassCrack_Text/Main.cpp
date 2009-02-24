@@ -11,10 +11,6 @@
 #include "MasterThread.h"
 #include "Threads.h"
 
-#include "Hashing.h"
-#include "PwDump.h"
-//#include "OSSpecific.h"
-
 using namespace std;
 
 ////////////////////////////////
@@ -48,8 +44,6 @@ int masterThread::interval;
 string threads::passwd = "";
 int threads::max = 0;
 
-string PwDump::pwDumpStore[8];
-
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
 boost::mutex threads::IterationsMutex;
@@ -77,18 +71,19 @@ void printHelp()
 	"\n\nI am NOT responsible for loss of or damage to personal property as a result of "
 	"\nthe use of this program. Any use of this program is at your own risk."
 	"\n\n-h\t\tDisplay this help message. "
-	"\n\n-silent\t\tRun the program in silent mode. "
 	"\n\n-s STRING\tPass a text string to the brute-forcer for testing purposes."
 	"\n\n-t INTEGER\tNumber of threads, Two are required minimum. Default: 8"
-	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 500,000 "
-	"\n\t\tThe interval may be raised for a slight performance gain.\n";
+	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 1,000,000"
+	"\n\t\tThe interval may be raised for a slight performance gain.\n\n"
+	"\n\n--silent\t\tRun the program in silent mode."
+	"\n\n--disable-threading\t Disables threading.\n\n";
 }
 
 int main(int argc, char* argv[])
 {
 	bool silent;
 	string passwdTemp = "";
-	int interval = 500000;
+	int interval = 1000000;
 
 	//Number of threads - At least two are required for proper operation.
 	//One thread is a master thread which monitors the workers, all the rest are workers.
@@ -105,7 +100,7 @@ int main(int argc, char* argv[])
 		}
 
 		//Set silent mode
-		if(strcmp(argv[i], "-silent") == 0)
+		if(strcmp(argv[i], "--silent") == 0)
 		{
 			silent = true;
 			masterThread::setSilent(silent);
@@ -154,10 +149,13 @@ int main(int argc, char* argv[])
 		{
 			masterThread::setInterval(interval);
 		}
-	}
 
-	PwDump::readDump("pwdump.dmp");
-	PwDump::retrieveLMHash("student");
+		//Disable threading (Use one thread)
+		if(strcmp(argv[i], "--disable-threading") == 0)
+		{
+			NTHREADS = 1;
+		}
+	}
 
 	if(passwdTemp.length() <= 0)
 	{
