@@ -1,8 +1,8 @@
 #ifndef THREADS_H_
 #define THREADS_H_
 
-#define MIN 48		
-#define MAX 122		
+#define MIN 0		
+#define MAX 100
 
 #include <iostream>
 #include <stdlib.h>

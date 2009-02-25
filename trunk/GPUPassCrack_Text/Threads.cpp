@@ -1,6 +1,8 @@
 #include "Threads.h"
 #include "MasterThread.h"
 
+const char* RAND_CHARSET = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 void threads::operator()()
 {
 	while (!masterThread::getSuccess())
@@ -72,29 +74,15 @@ void threads::writePasswd(string write)
 }
 
 //Generate random string of numbers to be converted to text
+
 string threads::generateRandString(int length)
 {
-	string passwdNumericalString = "";
+   string result = "";
 
-	char temp;
-	int randTemp;
- 
-	for(int i = 0; i < length; i++)
-	{
-		randTemp = random();
+   for(int i = 0; i < length; ++i) 
+   {
+	   result += RAND_CHARSET[random() % strlen(RAND_CHARSET)];
+   }
 
-		//Discard integer if it goes out of scope of the ASCII character set.
-		if(!(randTemp == 32 || (randTemp >= 48 && randTemp <= 57) || (randTemp >= 65 && randTemp <= 90) || (randTemp >= 97 && randTemp <= 122)))
-		{
-			i--;
-			continue;
-		}
-		else
-		{
-			temp = randTemp;
-			passwdNumericalString += temp;
-		}
-	}
-
-	return passwdNumericalString;
+   return result;
 }
