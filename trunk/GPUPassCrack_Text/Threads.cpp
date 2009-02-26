@@ -1,15 +1,18 @@
 #include "Threads.h"
 #include "MasterThread.h"
 
-const char* RAND_CHARSET = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const char* RAND_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const int CHARSET_LENGTH = strlen(RAND_CHARSET);
 
 void threads::operator()()
 {
+	string Passwd = getPasswd();
+
 	while (!masterThread::getSuccess())
 	{
-		setPasswdNumericalString(generateRandString(getPasswd().length()));
+		setPasswdNumericalString(generateRandString(Passwd.length()));
 
-		if(passwdNumericalString == getPasswd())
+		if(passwdNumericalString == Passwd)
 		{
 			masterThread::setSuccess(true);
 			break;
@@ -77,11 +80,11 @@ void threads::writePasswd(string write)
 
 string threads::generateRandString(int length)
 {
-   string result = "";
+   string result;
 
    for(int i = 0; i < length; ++i) 
    {
-	   result += RAND_CHARSET[random() % strlen(RAND_CHARSET)];
+	   result += RAND_CHARSET[rand() % CHARSET_LENGTH];
    }
 
    return result;

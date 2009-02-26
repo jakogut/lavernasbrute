@@ -46,7 +46,7 @@ public:
 	static bool success;
 
 	static boost::recursive_mutex SuccessMutex;
-	static boost::timed_mutex printMutex;
+	static boost::recursive_mutex printMutex;
 };
 
 #endif

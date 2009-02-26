@@ -17,23 +17,6 @@ using namespace std;
 // VARIABLES ///////////////////
 ////////////////////////////////
 
-boost::recursive_mutex mutex;
-
-//Setup Random(ish) Number Generator
-typedef boost::uniform_int<> UniformDist;
-UniformDist dist(MIN,MAX); 
-
-typedef boost::mt19937 BaseRNG;
-BaseRNG rng; 
-
-boost::variate_generator<BaseRNG&,UniformDist>
-getRand(rng, dist); 
-
-int random()
-{
-	return getRand();
-}
-
 //Initialize our static variables:
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,12 +30,14 @@ int threads::max = 0;
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
 boost::mutex threads::IterationsMutex;
+
+boost::recursive_mutex mutex;
 boost::recursive_mutex threads::PasswdMutex;
 boost::recursive_mutex threads::PasswdNumericalStringMutex;
 boost::recursive_mutex threads::generatePasswdStringMutex;
 
 boost::recursive_mutex masterThread::SuccessMutex;
-boost::timed_mutex masterThread::printMutex;
+boost::recursive_mutex masterThread::printMutex;
 
 //If the counter goes over the limits of a normal integer, the program crashes.
 //This really sucks when it's been running for hours. I'm using a 64-bit integer now.
@@ -171,7 +156,8 @@ int main(int argc, char* argv[])
 	cout << "\n\n";
 
 	//Seed our RNG
-	rng.seed((unsigned)time(NULL));
+	//rng.seed((unsigned)time(NULL));
+	srand((unsigned)time(NULL));
 
 	//Start the clock
 	time_t startTime = time(NULL);

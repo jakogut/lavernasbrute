@@ -4,15 +4,8 @@
 void masterThread::operator()()
 {
 	while (getSuccess() == false)
-	{/*
-		if(getSuccess() == false)
-		{
-		}
-		else
-		{
-			break;
-		}
-	*/}
+	{
+	}
 
 	printResult();
 }
@@ -31,13 +24,13 @@ void masterThread::setSuccess(bool boolean)
 
 void masterThread::writeIterations()
 {
-	boost::timed_mutex::scoped_lock scoped_timed_lock(printMutex);
+	boost::recursive_mutex::scoped_lock scoped_lock(printMutex);
 	cout << threads::getIterations() << " iterations" << endl;
 }
 
 void masterThread::printResult()
 {
-	boost::timed_mutex::scoped_lock scoped_lock(printMutex);
+	boost::recursive_mutex::scoped_lock scoped_lock(printMutex);
 	time_t endTime = ((unsigned)time(NULL));
 
 	time_t hours = ((endTime - startTime) / 3600);
