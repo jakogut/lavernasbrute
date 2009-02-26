@@ -31,7 +31,7 @@ All tests used a random string consisting of the full alphabetical character set
         * ~3 million ips
 
     * No hash-generation, five character string, 2(+1) threads. 
-        * Estimated time: < 10 min
+        * Estimated time: < 8 min
         * ~2.3 million ips
 
     * No hash-generation, six character string, 2(+1) threads.
