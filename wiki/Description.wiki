@@ -15,7 +15,7 @@ The aim of this project is to provide a free (in both senses) implementation of 
         *  Re-create one-way hash function *Partial*
         
     *  GPGPU Acceleration (ATI/Stream)
-    *  '*'NIX Support
+    *  `*`NIX Support
 
     *  GPGPU Acceleration (Nvidia/CUDA)
 
