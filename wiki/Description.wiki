@@ -26,16 +26,20 @@ Core 2 Duo 2.00 ghz (T7300)
 
 All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers.
 
-    * No hash-generation, four character string. 
-        * Estimated time: < 10 sec
-        * ~2.5 million ips
+    * No hash-generation, four character string, 2(+1) threads. 
+        * Estimated time: < 5 sec
+        * ~3 million ips
 
-    * No hash-generation, five character string. 
+    * No hash-generation, five character string, 2(+1) threads. 
         * Estimated time: < 10 min
         * ~2.3 million ips
 
-    * No hash-generation, six character string.
+    * No hash-generation, six character string, 2(+1) threads.
         * Estimated time: N/A
         * ~N/A
 
 These are informal tests. Complete accuracy is not guaranteed, but the results were estimated to the best of my ability. Results were averaged when practical, estimated time was rounded up, and iterations per second was rounded down.
+
+= Ideal Configuration =
+
+The ideal configuration to achieve the greatest speed using Laverna's Brute is to set the number of threads equal to the number of cores your processor(s) have, and run it with the "--silent" flag. The silent flag is used to prevent LB from printing the number of iterations to the console, which can significantly improve performance in the long run. If the string you're attempting to crack is above six characters, it it highly recommended that you set the silent flag, or at the very least, set the update interval (Flag "-i") to be a very high value.
