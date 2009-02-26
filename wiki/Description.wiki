@@ -13,9 +13,11 @@ The aim of this project is to provide a free (in both senses) implementation of 
     *  Support for cracking of Windows passwords
         *  Extract LM/NTLM hashes *Completed*
         *  Re-create one-way hash function *Partial*
-        *  Pass random strings through hash function until a match is found
+        
+    *  GPGPU Acceleration (ATI/Stream)
+    *  NIX Support
 
-    *  GPGPU Acceleration
+    *  GPGPU Acceleration (Nvidia/CUDA)
 
 = Current Speed: =
 (IPS == iterations per second.)
@@ -23,15 +25,17 @@ The aim of this project is to provide a free (in both senses) implementation of 
 Core 2 Duo 2.00 ghz (T7300)
 
     * No hash-generation, four character string. 
-        * Estimated time: < 30 sec
-        * ~700,000 ips
+        * Estimated time: < 6 sec
+        * ~2.5 million ips
 
+(OUTDATED RESULTS)
     * No hash-generation, five character string. 
         * Estimated time: < 10 min
         * ~600,000 ips
 
+(OUTDATED RESULTS)
     * No hash-generation, six character string.
         * Estimated time: < 4 hr
         * ~500,000 ips
 
-        
+These are informal tests. Complete accuracy is not guaranteed, but the results were estimated to the best of my ability. Results were averaged when practical, estimated time was rounded up, and iterations per second was rounded down.
