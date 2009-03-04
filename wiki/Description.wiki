@@ -13,6 +13,8 @@ The aim of this project is to provide a free (in both senses) implementation of 
     *  Support for cracking of Windows passwords
         *  Extract LM/NTLM hashes *Completed*
         *  Re-create one-way hash function *Partial*
+
+    *  Support for cracking of network authentication keys
         
     *  `*`NIX Support *Partial*
     *  GPGPU Acceleration (ATI/Stream)
