@@ -1,3 +1,0 @@
-= Known Bugs =
-
-    *  When the number of threads exceeds two, a large percentage of the randomly generated text strings used by the brute forcer are redundant between threads, dramatically increasing the amount of time required to crack a given string. A temporary workaround is to set the number of threads to two using the "-t" flag.
