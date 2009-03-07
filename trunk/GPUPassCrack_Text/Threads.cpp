@@ -7,7 +7,7 @@ const int CHARSET_LENGTH = strlen(RAND_CHARSET);
 threads::threads(int id) 
 : id(id)
 {
-	mRand = new MTRand();
+	mRand = new MTRand(id);
 }
 
 threads::~threads()
@@ -40,11 +40,6 @@ void threads::operator()()
 			}
 		}
 	}
-}
-
-void threads::generatePasswdString(string passwd)
-{
-	setPasswdNumericalString(generateRandString(passwd.length()));
 }
 
 //We're only reading the variable here, so there's no need to lock it. It's not imperative that we have
@@ -82,7 +77,7 @@ string threads::getPasswd()
 
 void threads::writePasswd(string write)
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(PasswdMutex);
+	//boost::recursive_mutex::scoped_lock scoped_lock(PasswdMutex);
 	passwd = write;
 }
 
@@ -94,7 +89,7 @@ string threads::generateRandString(int length)
 
    for(int i = 0; i < length; ++i) 
    {
-	   result += RAND_CHARSET[(int)(mRand->rand() * 100) % CHARSET_LENGTH];
+	   result += RAND_CHARSET[mRand->randInt() % CHARSET_LENGTH];
    }
 
    return result;

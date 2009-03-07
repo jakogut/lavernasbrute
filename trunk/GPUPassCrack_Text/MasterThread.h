@@ -21,6 +21,7 @@ public:
 	~masterThread();
 
 	void operator()();
+
 	static bool getSuccess();
 	static void setSuccess(bool boolean);
 	static void printToConsole(string print);

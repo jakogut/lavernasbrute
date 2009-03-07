@@ -34,15 +34,11 @@ public:
 	inline static void incrementIterations();
 	inline static string getPasswdNumericalString();
 	inline static void setPasswdNumericalString(string write);
-
-	static __int64 getIterations();
-	static void writePasswd(string write);
-	
-	void generatePasswdString(string passwd);
-	
-	static string getPasswd();
-
+	inline static __int64 getIterations();
+	inline static string getPasswd();
 	inline string generateRandString(int length);
+
+	static void writePasswd(string write);
 
 	static __int64 iterations;
 	static string passwdNumericalString;
