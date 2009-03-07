@@ -1,0 +1,10 @@
+#Dependencies
+
+= 3rd Party Libraries =
+
+Boost (http://boost.org)
+    * Thread
+    * Date_Time
+
+Crypto++ (http://www.cryptopp.com/)
+
