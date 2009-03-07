@@ -2,9 +2,13 @@
 
 = 3rd Party Libraries =
 
-Boost (http://boost.org)
+Boost
     * Thread
     * Date_Time
 
-Crypto++ (http://www.cryptopp.com/)
+(http://boost.org)
 
+
+Crypto++ 
+
+(http://www.cryptopp.com/)
