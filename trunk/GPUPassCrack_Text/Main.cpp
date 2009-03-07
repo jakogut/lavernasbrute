@@ -11,6 +11,11 @@
 #include "MasterThread.h"
 #include "Threads.h"
 
+//Make our non-standard compliant "__int64" variable standard compliant.
+#ifdef LINUX
+#define __int64		long long
+#endif
+
 using namespace std;
 
 ////////////////////////////////
@@ -52,16 +57,28 @@ void printHelp()
 	cout << "\nLaverna's Brute."
 	"\nThis program is a brute-force password cracker."
 	"\nCOPYRIGHT 2008, this program is licensed under the GNU GPL V3 "
-	"\nSee \"http://lavernasbrute.googlecode.com\" for more details. "
+	"\nSee \"http://lavernasbrute.googlecode.com/\" for more details. "
 	"\n\nI am NOT responsible for loss of or damage to personal property as a result of "
 	"\nthe use of this program. Any use of this program is at your own risk."
 	"\n\n-h\t\tDisplay this help message. "
 	"\n\n-s STRING\tPass a text string to the brute-forcer for testing purposes."
-	"\n\n-t INTEGER\tNumber of threads, Two are required minimum. Default: 8"
+	"\n\n-t INTEGER\tNumber of threads, Two are required minimum. Default: 2"
 	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 1,000,000"
 	"\n\t\tThe interval may be raised for a slight performance gain.\n\n"
 	"\n\n--silent\t\tRun the program in silent mode."
 	"\n\n--disable-threading\t Disables threading.\n\n";
+}
+
+//Character array to integer (atoi) alternative, standards compliant.
+int toInt(string input)
+{
+	stringstream ss;
+	int result;
+
+	ss << input;
+	ss >> result;
+
+	return result;
 }
 
 int main(int argc, char* argv[])
@@ -72,10 +89,10 @@ int main(int argc, char* argv[])
 
 	//Number of threads - At least two are required for proper operation.
 	//One thread is a master thread which monitors the workers, all the rest are workers.
-	int NTHREADS = 8;
+	int NTHREADS = 2;
 
 	//Parse command-line arguments
-	for(int i = 0; i < argc; i++)
+	for(int i = 0; i < argc; ++i)
 	{
 		//Set the password string to be cracked
 		if(strcmp(argv[i], "-h") == 0)
@@ -104,31 +121,27 @@ int main(int argc, char* argv[])
 		//Set the number of threads
 		if(strcmp(argv[i], "-t") == 0)
 		{
-			char* temp = new char[]; 
+			string temp;
 			temp = argv[i + 1];
 
-			if(atoi(temp) >= 2)
+			if(toInt(temp) >= 2)
 			{
-				NTHREADS = atoi(temp);
+				NTHREADS = toInt(temp);
 			}
 			else
 			{
 				NTHREADS = 2;
 			}
-
-			delete[] temp;
 		}
 
 		//Interval
 		if(strcmp(argv[i], "-i") == 0)
 		{
-			char* temp = new char[]; 
+			string temp;
 			temp = argv[i + 1];
 
-			interval = atoi(temp);
+			interval = toInt(temp);
 			masterThread::setInterval(interval);
-
-			delete[] temp;
 		}
 		else
 		{
@@ -165,7 +178,7 @@ int main(int argc, char* argv[])
 	boost::thread_group threadGroup;
 	threadGroup.create_thread(masterThread(0, startTime));
 
-	for(int i = 0; i < NTHREADS; i++)
+	for(int i = 0; i < NTHREADS; ++i)
 	{
 		threadGroup.create_thread(threads(i));
 	}

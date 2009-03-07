@@ -13,9 +13,8 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/random.hpp>
 
-extern int random();
+#include "MersenneTwister.h"
 
 using namespace std;
 
@@ -23,10 +22,8 @@ class threads
 {
 public:
 
-	threads(int id) 
-	 : id(id)
-	{
-	}
+	threads(int id);
+	~threads();
 
 	void operator()();
 	
@@ -56,6 +53,9 @@ public:
 	static boost::recursive_mutex generatePasswdStringMutex;
 
 	static string passwd;
+
+protected:
+	MTRand* mRand;
 };
 
 #endif

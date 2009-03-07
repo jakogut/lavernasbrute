@@ -4,6 +4,16 @@
 const char* RAND_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int CHARSET_LENGTH = strlen(RAND_CHARSET);
 
+threads::threads(int id) 
+: id(id)
+{
+	mRand = new MTRand();
+}
+
+threads::~threads()
+{
+}
+
 void threads::operator()()
 {
 	string Passwd = getPasswd();
@@ -49,7 +59,7 @@ __int64 threads::getIterations()
 void threads::incrementIterations()
 {
 	//boost::mutex::scoped_lock lock(IterationsMutex);
-	iterations++;
+	++iterations;
 }
 
 string threads::getPasswdNumericalString()
@@ -84,7 +94,7 @@ string threads::generateRandString(int length)
 
    for(int i = 0; i < length; ++i) 
    {
-	   result += RAND_CHARSET[rand() % CHARSET_LENGTH];
+	   result += RAND_CHARSET[(int)(mRand->rand() * 100) % CHARSET_LENGTH];
    }
 
    return result;

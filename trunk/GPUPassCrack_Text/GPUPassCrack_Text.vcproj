@@ -116,6 +116,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="C:\boost_1_38_0"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -199,6 +200,10 @@
 			>
 			<File
 				RelativePath=".\MasterThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MersenneTwister.h"
 				>
 			</File>
 			<File
