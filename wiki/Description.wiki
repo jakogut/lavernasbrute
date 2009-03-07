@@ -28,15 +28,15 @@ Core 2 Duo 2.00 ghz (T7300)
 
 All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers.
 
-    * No hash-generation, four character string, 2(+1) threads. 
-        * Estimated time: < 5 sec
-        * ~3 million ips
+    * No hash-generation, four character string, 32(+1) threads. 
+        * Estimated time: Instant
+        * ~N/A
 
-    * No hash-generation, five character string, 2(+1) threads. 
-        * Estimated time: < 8 min
+    * No hash-generation, five character string, 32(+1) threads. 
+        * Estimated time: < 3 min
         * ~2.3 million ips
 
-    * No hash-generation, six character string, 2(+1) threads.
+    * No hash-generation, six character string, 32(+1) threads.
         * Estimated time: N/A
         * ~N/A
 
