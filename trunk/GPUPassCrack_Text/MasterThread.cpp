@@ -1,6 +1,15 @@
 #include "MasterThread.h"
 #include "Threads.h"
 
+masterThread::masterThread(int id, time_t time) 
+: id(id), startTime(time)
+{
+}
+
+masterThread::~masterThread()
+{
+}
+
 void masterThread::operator()()
 {
 	while (getSuccess() == false)

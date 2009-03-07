@@ -17,10 +17,8 @@ class masterThread
 {
 public:
 
-	masterThread::masterThread(int id, time_t time) 
-	: id(id), startTime(time)
-	{
-	}
+	masterThread(int id, time_t time);
+	~masterThread();
 
 	void operator()();
 	static bool getSuccess();
