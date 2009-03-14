@@ -1,3 +1,5 @@
+//Part of Laverna's Brute
+
 #ifndef MASTERTHREAD_H_
 #define MASTERTHREAD_H_
 
@@ -5,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string>
+#include <vector>
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/recursive_mutex.hpp>
@@ -44,7 +47,7 @@ public:
 	//That the job is done.
 	static bool success;
 
-	static boost::recursive_mutex SuccessMutex;
+	static boost::mutex SuccessMutex;
 	static boost::recursive_mutex printMutex;
 };
 

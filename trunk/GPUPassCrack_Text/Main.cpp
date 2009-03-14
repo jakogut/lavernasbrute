@@ -1,3 +1,5 @@
+//Part of Laverna's Brute
+
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -12,7 +14,7 @@
 #include "Threads.h"
 
 //Make our non-standard compliant "__int64" variable standard compliant.
-#ifdef LINUX
+#ifndef WIN32
 #define __int64		long long
 #endif
 
@@ -31,6 +33,9 @@ int masterThread::interval;
 
 string threads::passwd = "";
 int threads::max = 0;
+bool threads::randFast;
+char* threads::RAND_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+int threads::CHARSET_LENGTH = strlen(RAND_CHARSET);
 
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
@@ -41,7 +46,7 @@ boost::recursive_mutex threads::PasswdMutex;
 boost::recursive_mutex threads::PasswdNumericalStringMutex;
 boost::recursive_mutex threads::generatePasswdStringMutex;
 
-boost::recursive_mutex masterThread::SuccessMutex;
+boost::mutex masterThread::SuccessMutex;
 boost::recursive_mutex masterThread::printMutex;
 
 //If the counter goes over the limits of a normal integer, the program crashes.
@@ -62,11 +67,13 @@ void printHelp()
 	"\nthe use of this program. Any use of this program is at your own risk."
 	"\n\n-h\t\tDisplay this help message. "
 	"\n\n-s STRING\tPass a text string to the brute-forcer for testing purposes."
-	"\n\n-t INTEGER\tNumber of threads, Two are required minimum. Default: 2"
-	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 1,000,000"
-	"\n\t\tThe interval may be raised for a slight performance gain.\n\n"
-	"\n\n--silent\t\tRun the program in silent mode."
-	"\n\n--disable-threading\t Disables threading.\n\n";
+	"\n\n-t INTEGER\tNumber of worker threads used in parallel calculation. Default: 32"
+	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 5,000,000"
+	"\t\tThe interval may be raised for a slight performance gain."
+	"\n\n--silent\tRun the program in silent mode."
+	"\n\n--fast\t\tRun the program using a faster, but more linear RNG."
+	"\n\t\tNOT THREAD SAFE - No more than two threads will be used."
+	"\n\n--disable-threading\tDisables threading -- not reccomended.";
 }
 
 //Character array to integer (atoi) alternative, standards compliant.
@@ -85,11 +92,10 @@ int main(int argc, char* argv[])
 {
 	bool silent;
 	string passwdTemp = "";
-	int interval = 1000000;
+	int interval = 5000000;
 
-	//Number of threads - At least two are required for proper operation.
-	//One thread is a master thread which monitors the workers, all the rest are workers.
-	int NTHREADS = 2;
+	//Number of threads - 32 seems to be optimal.
+	int NTHREADS = 32;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; ++i)
@@ -153,6 +159,24 @@ int main(int argc, char* argv[])
 		{
 			NTHREADS = 1;
 		}
+
+		if(strcmp(argv[i], "--fast") == 0)
+		{
+			threads::setRandFast(true);
+
+			//Seed our RNG
+			srand((unsigned)time(NULL));
+
+			//This method is not thread-safe, ensure that we're using two or less threads.
+			if(NTHREADS > 2)
+			{
+				NTHREADS = 2;
+			}
+		}
+		else
+		{
+			threads::setRandFast(false);
+		}
 	}
 
 	if(passwdTemp.length() <= 0)
@@ -167,10 +191,6 @@ int main(int argc, char* argv[])
 	}
 
 	cout << "\n\n";
-
-	//Seed our RNG
-	//rng.seed((unsigned)time(NULL));
-	srand((unsigned)time(NULL));
 
 	//Start the clock
 	time_t startTime = time(NULL);

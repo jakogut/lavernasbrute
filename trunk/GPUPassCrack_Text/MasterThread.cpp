@@ -1,3 +1,5 @@
+//Part of Laverna's Brute
+
 #include "MasterThread.h"
 #include "Threads.h"
 
@@ -21,13 +23,13 @@ void masterThread::operator()()
 
 bool masterThread::getSuccess()
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(SuccessMutex);
+	boost::mutex::scoped_lock scoped_lock(SuccessMutex);
 	return success;
 }
 
 void masterThread::setSuccess(bool boolean)
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(SuccessMutex);
+	boost::mutex::scoped_lock scoped_lock(SuccessMutex);
 	success = boolean;
 }
 
