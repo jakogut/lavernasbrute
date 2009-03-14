@@ -26,19 +26,19 @@ The aim of this project is to provide a free (in both senses) implementation of 
 
 Core 2 Duo 2.00 ghz (T7300)
 
-All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers.
+All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers. Laverna's brute currently supports two methods of random number generation, these tests employed the Mersenne Twister method.
 
     * No hash-generation, four character string, 32(+1) threads. 
-        * Estimated time: < 15 sec     (23 million iterations total)
-        * ~1.8 million ips
+        * Iterations per second: N/A
+        * Estimated time: Instant
 
     * No hash-generation, five character string, 32(+1) threads. 
-        * N/A
-        * ~N/A
+        * Iterations per second: 3.4 million
+        * Estimated time: < 3 min
 
     * No hash-generation, six character string, 32(+1) threads.
-        * Estimated time: < 30 hrs    (164 billion iterations total)
-        * ~1.7 million ips 
+        * Estimated time: N/A (Outdated, test needs to be re-run for accuracy)
+        * ~N/A
 
 These are informal tests. Complete accuracy is not guaranteed, but the results were estimated to the best of my ability. Results were averaged when practical, estimated time was rounded up, and iterations per second was rounded down.
 
