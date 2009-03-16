@@ -42,6 +42,4 @@ All tests used a random string consisting of the full alphabetical character set
 
 These are informal tests. Complete accuracy is not guaranteed, but the results were estimated to the best of my ability. Results were averaged when practical, estimated time was rounded up, and iterations per second was rounded down.
 
-= Ideal Configuration: =
-
-The ideal configuration to achieve the greatest speed using Laverna's Brute is to set the number of threads equal to the number of cores your processor(s) have, and run it with the "--silent" flag. The silent flag is used to prevent LB from printing the number of iterations to the console, which can significantly improve performance in the long run. If the string you're attempting to crack is above six characters, it it highly recommended that you set the silent flag, or at the very least, set the update interval (Flag "-i") to be a very high value.
+These results do not show the maximum potential speed of the program, as the test machine was often times actively in use while the tests were running in the background.
