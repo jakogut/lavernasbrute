@@ -26,7 +26,7 @@ The aim of this project is to provide a free (in both senses) implementation of 
 
 Core 2 Duo 2.00 ghz (T7300)
 
-All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers. Laverna's brute currently supports two methods of random number generation, these tests employed the Mersenne Twister method.
+All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers. Laverna's Brute currently supports two methods of random number generation, these tests employed the Mersenne Twister method.
 
     * No hash-generation, four character string, 128(+1) threads. 
         * Iterations per second: N/A
