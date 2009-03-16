@@ -39,15 +39,14 @@ int threads::CHARSET_LENGTH = strlen(RAND_CHARSET);
 
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
-boost::mutex threads::IterationsMutex;
 
-boost::recursive_mutex mutex;
+boost::mutex threads::IterationsMutex;
 boost::recursive_mutex threads::PasswdMutex;
 boost::recursive_mutex threads::PasswdNumericalStringMutex;
 boost::recursive_mutex threads::generatePasswdStringMutex;
 
 boost::mutex masterThread::SuccessMutex;
-boost::recursive_mutex masterThread::printMutex;
+boost::mutex masterThread::printMutex;
 
 //If the counter goes over the limits of a normal integer, the program crashes.
 //This really sucks when it's been running for hours. I'm using a 64-bit integer now.
@@ -67,13 +66,13 @@ void printHelp()
 	"\nthe use of this program. Any use of this program is at your own risk."
 	"\n\n-h\t\tDisplay this help message. "
 	"\n\n-s STRING\tPass a text string to the brute-forcer for testing purposes."
-	"\n\n-t INTEGER\tNumber of worker threads used in parallel calculation. Default: 32"
-	"\n\n-i INTEGER\tInterval in iterations logged to the console. Default: 5,000,000"
-	"\t\tThe interval may be raised for a slight performance gain."
+	"\n\n-t INTEGER\tNumber of worker threads used in parallel calculation."
+	"\n\n-i INTEGER\tInterval in iterations logged to the console."
+	"\n\t\tThe interval may be raised for a slight performance gain."
 	"\n\n--silent\tRun the program in silent mode."
-	"\n\n--fast\t\tRun the program using a faster, but more linear RNG."
+	"\n\n--linear\tRun the program using a faster, but more linear RNG."
 	"\n\t\tNOT THREAD SAFE - No more than two threads will be used."
-	"\n\n--disable-threading\tDisables threading -- not reccomended.";
+	"\n\n--disable-threading\n\t\tDisables threading -- This is not reccomended.";
 }
 
 //Character array to integer (atoi) alternative, standards compliant.
@@ -94,8 +93,8 @@ int main(int argc, char* argv[])
 	string passwdTemp = "";
 	int interval = 5000000;
 
-	//Number of threads - 32 seems to be optimal.
-	int NTHREADS = 32;
+	//Number of threads - 128 seems to be optimal.
+	int NTHREADS = 128;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; ++i)
@@ -160,7 +159,7 @@ int main(int argc, char* argv[])
 			NTHREADS = 1;
 		}
 
-		if(strcmp(argv[i], "--fast") == 0)
+		if(strcmp(argv[i], "--linear") == 0)
 		{
 			threads::setRandFast(true);
 

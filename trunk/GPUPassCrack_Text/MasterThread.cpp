@@ -35,13 +35,13 @@ void masterThread::setSuccess(bool boolean)
 
 void masterThread::writeIterations()
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(printMutex);
+	boost::mutex::scoped_lock scoped_lock(printMutex);
 	cout << threads::getIterations() << " iterations" << endl;
 }
 
 void masterThread::printResult()
 {
-	boost::recursive_mutex::scoped_lock scoped_lock(printMutex);
+	boost::mutex::scoped_lock scoped_lock(printMutex);
 	time_t endTime = ((unsigned)time(NULL));
 
 	time_t hours = ((endTime - startTime) / 3600);

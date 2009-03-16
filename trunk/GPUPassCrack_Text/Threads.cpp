@@ -12,7 +12,6 @@ threads::threads(int id)
 
 threads::~threads()
 {
-	delete mRand;
 }
 
 void threads::operator()()
@@ -60,13 +59,11 @@ string threads::getPasswdNumericalString()
 
 void threads::setPasswdNumericalString(string write)
 {
-	//boost::recursive_mutex::scoped_lock scoped_lock(PasswdNumericalStringMutex);
 	passwdNumericalString = write;
 }
 
 string threads::getPasswd()
 {
-	//boost::recursive_mutex::scoped_lock scoped_lock(PasswdMutex);
 	return passwd;
 }
 
