@@ -36,7 +36,7 @@ All tests used a random string consisting of the full alphabetical character set
         * Iterations per second: 3.6 million
         * Estimated time: < 20 seconds
 
-    * No hash-generation, six character string, 32(+1) threads.
+    * No hash-generation, six character string, 128(+1) threads.
         * Iterations per second: 3.3 million
         * Estimated time: < 5 hours
 
