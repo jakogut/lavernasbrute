@@ -7,8 +7,3 @@ Boost
     * Date_Time
 
 (http://boost.org)
-
-
-Crypto++ 
-
-(http://www.cryptopp.com/)
