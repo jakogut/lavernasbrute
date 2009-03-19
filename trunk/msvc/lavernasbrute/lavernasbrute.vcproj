@@ -177,15 +177,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\Main.cpp"
+				RelativePath="..\..\source\Main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\MasterThread.cpp"
+				RelativePath="..\..\source\MasterThread.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Threads.cpp"
+				RelativePath="..\..\source\Threads.cpp"
 				>
 			</File>
 		</Filter>
@@ -195,15 +195,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\src\MasterThread.h"
+				RelativePath="..\..\source\MasterThread.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RainbowTables.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Threads.h"
+				RelativePath="..\..\source\Threads.h"
 				>
 			</File>
 		</Filter>
