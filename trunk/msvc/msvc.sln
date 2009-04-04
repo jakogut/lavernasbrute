@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "lavernasbrute", "lavernasbrute\lavernasbrute.icproj", "{EEA18D28-8FE6-4E0E-8186-EA16D11FEB79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEA18D28-8FE6-4E0E-8186-EA16D11FEB79}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EEA18D28-8FE6-4E0E-8186-EA16D11FEB79}.Debug|Win32.Build.0 = Debug|Win32
+		{EEA18D28-8FE6-4E0E-8186-EA16D11FEB79}.Release|Win32.ActiveCfg = Release|Win32
+		{EEA18D28-8FE6-4E0E-8186-EA16D11FEB79}.Release|Win32.Build.0 = Release|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Release|Win32.Build.0 = Release|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Release|Win32.ActiveCfg = Release|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Debug|Win32.Build.0 = Debug|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Debug|Win32.ActiveCfg = Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

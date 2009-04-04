@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.0"
+	Name="lavernasbrute"
+	ProjectGUID="{EEA18D28-8FE6-4E0E-8186-EA16D11FEB79}"
+	VCNestedProjectGUID="{EDC98E14-8306-4685-B781-4D7B31BAFA8F}"
+	VCNestedProjectFileName="lavernasbrute.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				OptimizeForWindowsApplication="false"
+				EnableEnhancedInstructionSet="1000"
+				UseProcessorExtensions="0"
+				Parallelization="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>
