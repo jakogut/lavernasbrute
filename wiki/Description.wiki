@@ -17,9 +17,14 @@ The aim of this project is to provide a free (in both senses) implementation of 
     *  Support for cracking of network authentication keys
         
     *  `*`NIX Support *Complete*
-    *  GPGPU Acceleration (ATI/Stream) *Partial*
 
-    *  GPGPU Acceleration (Nvidia/CUDA)
+    *  ATI (Stream) processing path *Partial*
+
+    *  NVIDIA (CUDA) processing path
+
+    *  Networked processing path
+
+    *  Rainbow Tables
 
 = Current Speed: =
 *All current speed tests are out of date!*
