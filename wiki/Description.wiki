@@ -11,13 +11,13 @@ The aim of this project is to provide a free (in both senses) implementation of 
     *  Threading support    *Completed*
 
     *  Support for cracking of Windows passwords
-        *  Extract LM/NTLM hashes *Completed*
-        *  Re-create one-way hash function *Partial*
+        *  Extract LM/NTLM hashes *Complete*
+        *  Re-create one-way hash function *Complete*
 
     *  Support for cracking of network authentication keys
         
-    *  `*`NIX Support *Completed*
-    *  GPGPU Acceleration (ATI/Stream)
+    *  `*`NIX Support *Complete*
+    *  GPGPU Acceleration (ATI/Stream) *Partial*
 
     *  GPGPU Acceleration (Nvidia/CUDA)
 
@@ -25,6 +25,8 @@ The aim of this project is to provide a free (in both senses) implementation of 
 (IPS == iterations per second.)
 
 Core 2 Duo 2.00 ghz (T7300)
+
+*[All current speed tests are out of date!]*
 
 All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers. Laverna's Brute currently supports two methods of random number generation, these tests employed the Mersenne Twister method.
 
