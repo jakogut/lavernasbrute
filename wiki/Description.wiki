@@ -22,11 +22,11 @@ The aim of this project is to provide a free (in both senses) implementation of 
     *  GPGPU Acceleration (Nvidia/CUDA)
 
 = Current Speed: =
+*All current speed tests are out of date!*
+
 (IPS == iterations per second.)
 
-Core 2 Duo 2.00 ghz (T7300)
-
-*All current speed tests are out of date!*
+Tests run on a Core 2 Duo 2.00 ghz (T7300)
 
 All tests used a random string consisting of the full alphabetical character set, lower-case and upper-case, as well as numbers. Laverna's Brute currently supports two methods of random number generation, these tests employed the Mersenne Twister method.
 
