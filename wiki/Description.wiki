@@ -18,11 +18,13 @@ The aim of this project is to provide a free (in both senses) implementation of 
         
     *  `*`NIX Support *Complete*
 
-    *  Processing Paths:
+    *  Rainbow Tables
+
+    *  Alternative Processing Paths:
         *  ATI (Stream) processing path *Partial*
         *  NVIDIA (CUDA) processing path
         *  Networked processing path
-        *  Rainbow Tables
+        
 
 = Current Speed: =
 *All current speed tests are out of date!*
