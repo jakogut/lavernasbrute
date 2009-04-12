@@ -1,7 +1,9 @@
 //Part of Laverna's Brute
 
 #include "MasterThread.h"
-#include "Threads.h"
+#include "CPUPath.h"
+#include "GPUPath.h"
+
 
 masterThread::masterThread(int id, time_t time) 
 : id(id), startTime(time)
@@ -14,29 +16,62 @@ masterThread::~masterThread()
 
 void masterThread::operator()()
 {
-	while (getSuccess() == false)
+	do
 	{
-	}
+		if(!getSilent())
+		{
+			if(getIterations() % getInterval() == 0 && getIterations() != 0)
+			{
+				writeIterations();
+			}
+		}
+
+	} while(!getSuccess());
 
 	printResult();
 }
 
 bool masterThread::getSuccess()
 {
-	boost::mutex::scoped_lock scoped_lock(SuccessMutex);
+	boost::mutex::scoped_lock lock(SuccessMutex);
 	return success;
 }
 
 void masterThread::setSuccess(bool boolean)
 {
-	boost::mutex::scoped_lock scoped_lock(SuccessMutex);
+	//boost::mutex::scoped_lock scoped_lock(SuccessMutex);
 	success = boolean;
+}
+
+char* masterThread::getCharset()
+{
+	return randCharset;
+}
+
+int masterThread::getCharsetLength()
+{
+	return charsetLength;
+}
+
+void masterThread::incrementIterations()
+{
+	++iterations;
+}
+
+void masterThread::increaseIterations(int input)
+{
+	iterations += input;
+}
+
+long long masterThread::getIterations()
+{
+	return iterations;
 }
 
 void masterThread::writeIterations()
 {
-	boost::mutex::scoped_lock scoped_lock(printMutex);
-	cout << threads::getIterations() << " iterations" << endl;
+	boost::try_mutex::scoped_lock scoped_lock(printMutex);
+	cout << getIterations() << " iterations" << endl;
 }
 
 void masterThread::printResult()
@@ -53,13 +88,13 @@ void masterThread::printResult()
 	time_t seconds = (endTime - startTime) - (minutes * 60);
 
 	cout << endl << "Successful Attack! Cracked password is: " << crackedPassword << endl
-		<< "Attack duration: " << threads::getIterations() << " iterations." << endl
+		<< "Attack duration: " << getIterations() << " iterations." << endl
 		<< "Completed in: " << hours << " hours, " << minutes << " minutes, and " << seconds
 		<< " seconds. " << endl;
 			
 	if(endTime - startTime != 0)
 	{
-		cout << "Speed of this run: " << (threads::getIterations() / (endTime - startTime)) << " Iterations per second." << endl;
+		cout << "Speed of this run: " << (getIterations() / (endTime - startTime)) << " Iterations per second." << endl;
 	}
 }
 

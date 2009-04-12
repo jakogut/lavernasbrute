@@ -32,14 +32,24 @@ public:
 	static void setInterval(int write);
 	static bool getSilent();
 	static void setSilent(bool write);
+
+	static long long getIterations();
+	static void incrementIterations();
+	static void increaseIterations(int input);
+
 	static void setCrackedPassword(string write);
+
+	static char* getCharset();
+	static int getCharsetLength();
+
+	static string passwd;
 
 	void printResult();
 
 	int id;
-	string passwd;
 	time_t startTime;
 
+	static long long iterations;
 	static int interval;
 	static bool silent;
 
@@ -47,10 +57,13 @@ public:
 	//That the job is done.
 	static bool success;
 
-	static boost::mutex SuccessMutex;
+	static boost::try_mutex SuccessMutex;
 	static boost::mutex printMutex;
 
 	static string crackedPassword;
+
+	static char* randCharset;
+	static int charsetLength;
 };
 
 #endif

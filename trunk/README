@@ -1,0 +1,29 @@
+The environment is automatically set up to include the necessary headers,
+but you will need to manually extract the required libraries for your 
+compiler, which are archived in the "lib" folder. Extract the contents of
+the archive containing the pre-built libraries for your compiler/architecture
+to the /lib folder.
+
+
+
+The currently supported architectures and compilers are:
+
+[OS]	[Compiler]		[Arch]
+
+Win	Visual Studio C++ 	(x86/x64)	
+Win	Intel C++ Compiler	(x86)
+
+
+
+Pre-built libraries are available for:
+
+[OS]	[Compiler]		[Arch]		[Build Profile]		[Library Type]
+
+Win	Visual Studio C++	(x64)		Release & Debug		Static Only
+Win	Intel C++ Compiler	(x86)		Release & Debug		Static Only
+
+
+
+
+To compile the project on Windows, open the Visual Studio solution file in
+the /msvc directory and build.

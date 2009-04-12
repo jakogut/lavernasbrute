@@ -1,21 +1,25 @@
 //Part of Laverna's Brute
+//My code isn't commented all that well in some parts; my apologies. I understand all of it, and that's what matters. :)
+//I'll work on commenting it better after I've written some more code...
 
 #include <iostream>
-#include <stdlib.h>
 #include <time.h>
 #include <string>
 
+//Boost thread
 #include <boost/thread/thread.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/mutex.hpp>
 
+//Got to have a slave driver
 #include "MasterThread.h"
-#include "Threads.h"
 
-//Make our non-standard compliant "__int64" variable standard compliant.
-#ifndef WIN32
-#define __int64		long long
-#endif
+//Processing path base class
+#include "ProcessingPath.h"
+
+//Processing paths
+#include "CPUPath.h"
+#include "GPUPath.h"
 
 using namespace std;
 
@@ -30,22 +34,21 @@ bool masterThread::success = false;
 bool masterThread::silent = false;
 int masterThread::interval;
 string masterThread::crackedPassword;
+char* masterThread::randCharset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+int masterThread::charsetLength = strlen(randCharset);
 
-string threads::passwd = "";
-int threads::max = 0;
-bool threads::randFast;
-char* threads::RAND_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-int threads::CHARSET_LENGTH = strlen(RAND_CHARSET);
+string processingPath::passwd;
+int processingPath::max;
+bool processingPath::randFast;
 
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
 
-boost::mutex masterThread::SuccessMutex;
+boost::try_mutex masterThread::SuccessMutex;
 boost::mutex masterThread::printMutex;
 
-//If the counter goes over the limits of a normal integer, the program crashes.
-//This really sucks when it's been running for hours. I'm using a 64-bit integer now.
-__int64 threads::iterations = 0;
+//A counter to log the number of iterations run
+long long masterThread::iterations = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -71,7 +74,7 @@ void printHelp()
 }
 
 //Character array to integer (atoi) alternative, standards compliant.
-inline int toInt(string input)
+ int toInt(string input)
 {
 	stringstream ss;
 	int result;
@@ -88,7 +91,7 @@ int main(int argc, char* argv[])
 	string hashTemp = "";
 	int interval = 5000000;
 
-	//Number of threads - 128 seems to be optimal.
+	//Number of threads for the CPU path - 128 seems to be optimal. 
 	int NTHREADS = 128;
 
 	//Parse command-line arguments
@@ -175,7 +178,7 @@ int main(int argc, char* argv[])
 		//Use the standard library RNG
 		if(strcmp(argv[i], "--linear") == 0)
 		{
-			threads::useStandardRand(true);
+			processingPath::useStandardRand(true);
 
 			//Seed our RNG
 			srand((unsigned)time(NULL));
@@ -188,7 +191,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			threads::useStandardRand(false);
+			processingPath::useStandardRand(false);
 		}
 	}
 
@@ -202,18 +205,27 @@ int main(int argc, char* argv[])
 		cout << "\nRunning " << NTHREADS << " (+1) cooperative threads." << endl
 			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
 
-		threads::setHash(hashTemp);
+		processingPath::setHash(hashTemp);
 	}
 
 	//Start the clock
 	time_t startTime = time(NULL);
 
+	//The thread group is like a big pile of zombie slaves which rise to do your bidding with a simple "join_all()"
+	//You can add a thread--or a thousand--per processing path. The latter scenario is not suggested for paths which
+	//are threaded by nature. (GPUs, for example. Try sending a GPU instructions from multiple threads, and you'll crash the app.
 	boost::thread_group threadGroup;
+
+	//Add a master thread to the group
 	threadGroup.create_thread(masterThread(0, startTime));
 
+	//Add a thread for our Stream processing path
+	//threadGroup.create_thread(GPUPath(1));		//Currently too buggy to be of use--but you're welcome to try. Simply uncomment this line to enable the GPU path.
+
+	//Create a number of threads for the CPU path
 	for(int i = 0; i < NTHREADS; ++i)
 	{
-		threadGroup.create_thread(threads(i));
+		threadGroup.create_thread(CPUPath(i + 2));
 	}
 
 	threadGroup.join_all();

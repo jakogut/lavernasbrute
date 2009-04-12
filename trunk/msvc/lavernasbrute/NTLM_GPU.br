@@ -1,0 +1,81 @@
+kernel void gpu_ntlm_crypt(unsigned int nt_buffer_0<>, unsigned int nt_buffer_1<>, unsigned int nt_buffer_2<>, unsigned int nt_buffer_3<>, 
+						   unsigned int nt_buffer_4<>, unsigned int nt_buffer_5<>, unsigned int nt_buffer_6<>, unsigned int nt_buffer_7<>, 
+						   unsigned int nt_buffer_8<>, unsigned int nt_buffer_9<>, unsigned int nt_buffer_10<>, unsigned int nt_buffer_11<>, 
+						   unsigned int nt_buffer_12<>, unsigned int nt_buffer_13<>, unsigned int nt_buffer_14<>, unsigned int nt_buffer_15<>, 
+						   out unsigned int output_0<>, out unsigned int output_1<>, out unsigned int output_2<>, out unsigned int output_3<>)
+{	
+	unsigned int a = (uint)0x67452301;
+	unsigned int b = (uint)0xefcdab89;
+	unsigned int c = (uint)0x98badcfe;
+	unsigned int d = (uint)0x10325476;
+
+	unsigned int SQRT_2 = (uint)0x5a827999;
+	unsigned int SQRT_3 = (uint)0x6ed9eba1;
+ 
+	a += (d ^ (b & (c ^ d)))  +  nt_buffer_0  ;a = (a << 3 ) | (a >> 29);
+	d += (c ^ (a & (b ^ c)))  +  nt_buffer_1  ;d = (d << 7 ) | (d >> 25);
+	c += (b ^ (d & (a ^ b)))  +  nt_buffer_2  ;c = (c << 11) | (c >> 21);
+	b += (a ^ (c & (d ^ a)))  +  nt_buffer_3  ;b = (b << 19) | (b >> 13);
+ 
+	a += (d ^ (b & (c ^ d)))  +  nt_buffer_4  ;a = (a << 3 ) | (a >> 29);
+	d += (c ^ (a & (b ^ c)))  +  nt_buffer_5  ;d = (d << 7 ) | (d >> 25);
+	c += (b ^ (d & (a ^ b)))  +  nt_buffer_6  ;c = (c << 11) | (c >> 21);
+	b += (a ^ (c & (d ^ a)))  +  nt_buffer_7  ;b = (b << 19) | (b >> 13);
+ 
+	a += (d ^ (b & (c ^ d)))  +  nt_buffer_8  ;a = (a << 3 ) | (a >> 29);
+	d += (c ^ (a & (b ^ c)))  +  nt_buffer_9  ;d = (d << 7 ) | (d >> 25);
+	c += (b ^ (d & (a ^ b)))  +  nt_buffer_10 ;c = (c << 11) | (c >> 21);
+	b += (a ^ (c & (d ^ a)))  +  nt_buffer_11 ;b = (b << 19) | (b >> 13);
+ 
+	a += (d ^ (b & (c ^ d)))  +  nt_buffer_12 ;a = (a << 3 ) | (a >> 29);
+	d += (c ^ (a & (b ^ c)))  +  nt_buffer_13 ;d = (d << 7 ) | (d >> 25);
+	c += (b ^ (d & (a ^ b)))  +  nt_buffer_14 ;c = (c << 11) | (c >> 21);
+	b += (a ^ (c & (d ^ a)))  +  nt_buffer_15 ;b = (b << 19) | (b >> 13);
+ 
+
+	a += ((b & (c | d)) | (c & d)) + nt_buffer_0 +SQRT_2; a = (a<<3 ) | (a>>29);
+	d += ((a & (b | c)) | (b & c)) + nt_buffer_4 +SQRT_2; d = (d<<5 ) | (d>>27);
+	c += ((d & (a | b)) | (a & b)) + nt_buffer_8 +SQRT_2; c = (c<<9 ) | (c>>23);
+	b += ((c & (d | a)) | (d & a)) + nt_buffer_12+SQRT_2; b = (b<<13) | (b>>19);
+ 
+	a += ((b & (c | d)) | (c & d)) + nt_buffer_1 +SQRT_2; a = (a<<3 ) | (a>>29);
+	d += ((a & (b | c)) | (b & c)) + nt_buffer_5 +SQRT_2; d = (d<<5 ) | (d>>27);
+	c += ((d & (a | b)) | (a & b)) + nt_buffer_9 +SQRT_2; c = (c<<9 ) | (c>>23);
+	b += ((c & (d | a)) | (d & a)) + nt_buffer_13+SQRT_2; b = (b<<13) | (b>>19);
+ 
+	a += ((b & (c | d)) | (c & d)) + nt_buffer_2 +SQRT_2; a = (a<<3 ) | (a>>29);
+	d += ((a & (b | c)) | (b & c)) + nt_buffer_6 +SQRT_2; d = (d<<5 ) | (d>>27);
+	c += ((d & (a | b)) | (a & b)) + nt_buffer_10+SQRT_2; c = (c<<9 ) | (c>>23);
+	b += ((c & (d | a)) | (d & a)) + nt_buffer_14+SQRT_2; b = (b<<13) | (b>>19);
+ 
+	a += ((b & (c | d)) | (c & d)) + nt_buffer_3 +SQRT_2; a = (a<<3 ) | (a>>29);
+	d += ((a & (b | c)) | (b & c)) + nt_buffer_7 +SQRT_2; d = (d<<5 ) | (d>>27);
+	c += ((d & (a | b)) | (a & b)) + nt_buffer_11+SQRT_2; c = (c<<9 ) | (c>>23);
+	b += ((c & (d | a)) | (d & a)) + nt_buffer_15+SQRT_2; b = (b<<13) | (b>>19);
+ 
+
+	a += (d ^ c ^ b) + nt_buffer_0  +  SQRT_3; a = (a << 3 ) | (a >> 29);
+	d += (c ^ b ^ a) + nt_buffer_8  +  SQRT_3; d = (d << 9 ) | (d >> 23);
+	c += (b ^ a ^ d) + nt_buffer_4  +  SQRT_3; c = (c << 11) | (c >> 21);
+	b += (a ^ d ^ c) + nt_buffer_12 +  SQRT_3; b = (b << 15) | (b >> 17);
+ 
+	a += (d ^ c ^ b) + nt_buffer_2  +  SQRT_3; a = (a << 3 ) | (a >> 29);
+	d += (c ^ b ^ a) + nt_buffer_10 +  SQRT_3; d = (d << 9 ) | (d >> 23);
+	c += (b ^ a ^ d) + nt_buffer_6  +  SQRT_3; c = (c << 11) | (c >> 21);
+	b += (a ^ d ^ c) + nt_buffer_14 +  SQRT_3; b = (b << 15) | (b >> 17);
+ 
+	a += (d ^ c ^ b) + nt_buffer_1  +  SQRT_3; a = (a << 3 ) | (a >> 29);
+	d += (c ^ b ^ a) + nt_buffer_9  +  SQRT_3; d = (d << 9 ) | (d >> 23);
+	c += (b ^ a ^ d) + nt_buffer_5  +  SQRT_3; c = (c << 11) | (c >> 21);
+	b += (a ^ d ^ c) + nt_buffer_13 +  SQRT_3; b = (b << 15) | (b >> 17);
+ 
+	a += (d ^ c ^ b) + nt_buffer_3  +  SQRT_3; a = (a << 3 ) | (a >> 29);
+	d += (c ^ b ^ a) + nt_buffer_11 +  SQRT_3; d = (d << 9 ) | (d >> 23);
+	c += (b ^ a ^ d) + nt_buffer_7  +  SQRT_3; c = (c << 11) | (c >> 21);
+	b += (a ^ d ^ c) + nt_buffer_15 +  SQRT_3; b = (b << 15) | (b >> 17);
+ 
+	output_0 = a + (uint)0x67452301;
+	output_1 = b + (uint)0xefcdab89;
+	output_2 = c + (uint)0x98badcfe;
+	output_3 = d + (uint)0x10325476;
+}
