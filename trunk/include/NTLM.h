@@ -6,8 +6,6 @@
 #define NTLM_H_
  
 #include <string.h>
-#include <stdio.h>
-#include <sstream>
 
 #include <brook/brook.h>
 #include <brook/stream.h>
@@ -28,11 +26,10 @@ public:
 	{
 	}
 
-	inline static string getNTLMHash(string input)
+	static string getNTLMHash(string input)
 	{
 		unsigned int nt_buffer[16];
 		unsigned int crypted[4];
-		unsigned char hexOutput[33];
 
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -204,23 +201,24 @@ public:
 
 protected:
 
-	static void prepare_key(char *key, unsigned int output[])
+	static void prepare_key(char *key, unsigned int nt_buffer[])
 	{
 		int i=0;
 		int length=strlen(key);
-		memset(output,0,16*4);
+		memset(nt_buffer,0,16*4);
 		//The length of key need to be <= 27
 		for(;i<length/2;i++)	
-			output[i] = key[2*i] | (key[2*i+1]<<16);
+			nt_buffer[i] = key[2*i] | (key[2*i+1]<<16);
 	 
 		//padding
 		if(length%2==1)
-			output[i] = key[length-1] | 0x800000;
+			nt_buffer[i] = key[length-1] | 0x800000;
 		else
-			output[i]=0x80;
+			nt_buffer[i]=0x80;
 		//put the length
-		output[14] = length << 4;
+		nt_buffer[14] = length << 4;
 	}
+
 
 	static void ntlm_crypt(unsigned int nt_buffer[], unsigned int output[])
 	{
@@ -229,7 +227,8 @@ protected:
 		unsigned int c = 0x98badcfe;
 		unsigned int d = 0x10325476;
 
-		int SQRT_2(0x5a827999), SQRT_3(0x6ed9eba1);
+		unsigned int SQRT_2 = 0x5a827999;
+		unsigned int SQRT_3 = 0x6ed9eba1;
 	 
 		a += (d ^ (b & (c ^ d)))  +  nt_buffer[0]  ;a = (a << 3 ) | (a >> 29);
 		d += (c ^ (a & (b ^ c)))  +  nt_buffer[1]  ;d = (d << 7 ) | (d >> 25);
@@ -293,22 +292,23 @@ protected:
 		c += (b ^ a ^ d) + nt_buffer[7]  +  SQRT_3; c = (c << 11) | (c >> 21);
 		b += (a ^ d ^ c) + nt_buffer[15] +  SQRT_3; b = (b << 15) | (b >> 17);
 	 
-		output[0] = a + 0x67452301;
-		output[1] = b + 0xefcdab89;
-		output[2] = c + 0x98badcfe;
-		output[3] = d + 0x10325476;
+		output[0] = a + (uint)0x67452301;
+		output[1] = b + (uint)0xefcdab89;
+		output[2] = c + (uint)0x98badcfe;
+		output[3] = d + (uint)0x10325476;
 	}
 
-	static char* convert_hex(unsigned int intput[])
+	static char* convert_hex(unsigned int output[])
 	{
 		char hex_format[33];
-		char itoa16[] = "0123456789abcdef";
+		char* itoa16 = "0123456789abcdef";
+
 		int i=0;
 		//Iterate the integer
 		for(;i<4;i++)
 		{
 			int j=0;
-			unsigned int n=intput[i];
+			unsigned int n=output[i];
 			//iterate the bytes of the integer		
 			for(;j<4;j++)
 			{
@@ -320,10 +320,11 @@ protected:
 			}	
 		}
 		//null terminate the string
-		hex_format[32]=0;
+		hex_format[33]=0;
 
 		return hex_format;
 	}
+
 };
 
 #endif

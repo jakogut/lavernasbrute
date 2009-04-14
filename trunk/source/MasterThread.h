@@ -42,9 +42,11 @@ public:
 	static char* getCharset();
 	static int getCharsetLength();
 
-	static string passwd;
-
 	void printResult();
+
+protected:
+
+	static string target;
 
 	int id;
 	time_t startTime;

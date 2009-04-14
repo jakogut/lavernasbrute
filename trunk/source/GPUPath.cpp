@@ -6,11 +6,10 @@ GPUPath::GPUPath(int id)
 : id(id)
 {
 	mRand = new MTRand();
+	mNTLM = new NTLM();
 
 	//Multiplying the time by the thread id ensures that the RNG is seeded uniquely for ever thread of every processing path
 	mRand->seed((int)(time(NULL) * id));
-
-	mNTLM = new NTLM();
 
 	randCharset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
@@ -29,7 +28,7 @@ void GPUPath::operator()()
 	string* chunkStringArray = new string[chunkSize];
 	string* chunkStringHashedArray = new string[chunkSize];
 
-	string Passwd = getPasswd();
+	string Target = getTarget();
 
 	do
 	{
@@ -42,7 +41,7 @@ void GPUPath::operator()()
 
 		for(int i = 0; i < chunkSize; ++i)
 		{
-			if(chunkStringHashedArray[i] == Passwd)
+			if(chunkStringHashedArray[i] == Target)
 			{
 				masterThread::setCrackedPassword(chunkStringArray[i]);
 				masterThread::setSuccess(true);

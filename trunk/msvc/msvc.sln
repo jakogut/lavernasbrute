@@ -5,37 +5,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lavernasbrute", "lavernasbr
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		ICC-Debug|Win32 = ICC-Debug|Win32
-		ICC-Debug|x64 = ICC-Debug|x64
-		ICC-Release|Win32 = ICC-Release|Win32
-		ICC-Release|x64 = ICC-Release|x64
-		MSVC-Debug|Win32 = MSVC-Debug|Win32
-		MSVC-Debug|x64 = MSVC-Debug|x64
-		MSVC-Release|Win32 = MSVC-Release|Win32
-		MSVC-Release|x64 = MSVC-Release|x64
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Debug|Win32.ActiveCfg = ICC-Debug|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Debug|Win32.Build.0 = ICC-Debug|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Debug|x64.ActiveCfg = ICC-Debug|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Debug|x64.Build.0 = ICC-Debug|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Release|Win32.ActiveCfg = ICC-Release|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Release|Win32.Build.0 = ICC-Release|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Release|x64.ActiveCfg = MSVC-Release|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.ICC-Release|x64.Build.0 = MSVC-Release|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Debug|Win32.ActiveCfg = MSVC-Debug|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Debug|Win32.Build.0 = MSVC-Debug|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Debug|x64.ActiveCfg = MSVC-Debug|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Debug|x64.Build.0 = MSVC-Debug|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Release|Win32.ActiveCfg = MSVC-Release|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Release|Win32.Build.0 = MSVC-Release|Win32
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Release|x64.ActiveCfg = MSVC-Release|x64
-		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.MSVC-Release|x64.Build.0 = MSVC-Release|x64
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Debug|Win32.Build.0 = Debug|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Release|Win32.ActiveCfg = Release|Win32
+		{EDC98E14-8306-4685-B781-4D7B31BAFA8F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaProjectFile = C:\lavernasbrute_local\msvc\CodeAnalyst\msvc.caw
+		AMDCaProjectFile = C:\lavernasbrute\msvc\CodeAnalyst\msvc.caw
 	EndGlobalSection
 EndGlobal

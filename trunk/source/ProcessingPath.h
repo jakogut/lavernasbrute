@@ -19,25 +19,23 @@ class processingPath
 	public:
 
 	processingPath();
-	~processingPath();
+	virtual ~processingPath() = 0;
 
-	virtual void operator()();
+	virtual void operator()() = 0;
 	
-	static int max;
-	static bool randFast;
-	
-	//Our most oft called functions, we're inlining them for a small, but not negligible, speed improvement.
-	static string getPasswd();
+	static string getTarget();
 	string generateRandString(int length);
 
-	static void setHash(string write);
+	static void setTarget(string write);
 	static void useStandardRand(bool write);
-
-	static string passwd;
 
 protected:
 
 	int id;
+
+	static int max;
+	static bool randFast;
+	static string target;
 
 	MTRand* mRand;
 	NTLM* mNTLM;

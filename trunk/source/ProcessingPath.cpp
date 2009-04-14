@@ -17,13 +17,9 @@ processingPath::~processingPath()
 {
 }
 
-void processingPath::operator()()
+void processingPath::setTarget(string write)
 {
-}
-
-void processingPath::setHash(string write)
-{
-	passwd = write;
+	target = write;
 }
 
 void processingPath::useStandardRand(bool write)
@@ -31,9 +27,9 @@ void processingPath::useStandardRand(bool write)
 	randFast = write;
 }
 
-string processingPath::getPasswd()
+string processingPath::getTarget()
 {
-	return passwd;
+	return target;
 }
 
 //Generate random string of numbers to be converted to text. Who says randomness isn't useful?

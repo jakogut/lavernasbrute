@@ -37,9 +37,9 @@ string masterThread::crackedPassword;
 char* masterThread::randCharset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 int masterThread::charsetLength = strlen(randCharset);
 
-string processingPath::passwd;
-int processingPath::max;
-bool processingPath::randFast;
+string processingPath::target = "";
+int processingPath::max = 0;
+bool processingPath::randFast = false;
 
 //Create mutexes to control those nasty filthy threads trying to hog control of resources all for
 //themselves. They should be ashamed.
@@ -87,12 +87,13 @@ void printHelp()
 
 int main(int argc, char* argv[])
 {
+	/*
 	bool silent;
 	string hashTemp = "";
 	int interval = 5000000;
 
-	//Number of threads for the CPU path - 128 seems to be optimal. 
-	int NTHREADS = 128;
+	//Number of threads for the CPU path
+	const int NTHREADS = 128;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; ++i)
@@ -137,6 +138,8 @@ int main(int argc, char* argv[])
 		{
 			NTLM* mNTLM = new NTLM();
 			hashTemp = mNTLM->getNTLMHash(argv[i + 1]);
+
+			delete mNTLM;
 		}
 
 		//Set the number of threads
@@ -205,7 +208,7 @@ int main(int argc, char* argv[])
 		cout << "\nRunning " << NTHREADS << " (+1) cooperative threads." << endl
 			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
 
-		processingPath::setHash(hashTemp);
+		processingPath::setTarget(hashTemp);
 	}
 
 	//Start the clock
@@ -220,15 +223,68 @@ int main(int argc, char* argv[])
 	threadGroup.create_thread(masterThread(0, startTime));
 
 	//Add a thread for our Stream processing path
-	//threadGroup.create_thread(GPUPath(1));		//Currently too buggy to be of use--but you're welcome to try. Simply uncomment this line to enable the GPU path.
+	threadGroup.create_thread(GPUPath(1));		
 
 	//Create a number of threads for the CPU path
 	for(int i = 0; i < NTHREADS; ++i)
 	{
-		threadGroup.create_thread(CPUPath(i + 2));
+	//	threadGroup.create_thread(CPUPath(i + 2));
 	}
 
-	threadGroup.join_all();
+	threadGroup.join_all*/
+
+	srand((unsigned)time(NULL));
+	NTLM* mNTLM = new NTLM();
+
+	long long trialSize = 5000000;
+
+	string* input = new string[trialSize];
+	string* outputGPU = new string[trialSize];
+	string* outputCPU = new string[trialSize];
+
+	for(int i = 0; i < trialSize; ++i)
+	{
+		input[i] = rand();
+	}
+
+	time_t startTime = time(NULL);
+	mNTLM->getMultipleNTLMHashes(trialSize, input, outputGPU);
+	time_t endTime = time(NULL);
+
+	time_t GPU = endTime - startTime;
+
+	startTime = time(NULL);
+	for(int i = 0; i < trialSize; ++i)
+	{
+		outputCPU[i] = mNTLM->getNTLMHash(input[i]);
+	}
+	endTime = time(NULL);
+
+	time_t CPU = endTime - startTime;
+
+	cout << "\nTime taken for the GPU is: " << GPU << endl
+		<< "Time taken for the CPU is: " << CPU << endl << endl;
+
+	bool equal;
+
+	for(int i = 0; i < trialSize; ++i)
+	{
+		if(outputGPU[i] != outputCPU[i])
+		{
+			cout << "Arrays are not equal." << endl;
+			equal = false;
+			break;
+		}
+		else
+		{
+			equal = true;
+		}
+	}
+
+	if(equal == true)
+	{
+		cout << "Arrays are equal." << endl;
+	}
 
 	return 0;
 }

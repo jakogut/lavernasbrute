@@ -20,7 +20,7 @@ void masterThread::operator()()
 	{
 		if(!getSilent())
 		{
-			if(getIterations() % getInterval() == 0 && getIterations() != 0)
+			if(getIterations() % getInterval() == 0)
 			{
 				writeIterations();
 			}
