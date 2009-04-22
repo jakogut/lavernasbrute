@@ -65,7 +65,7 @@ void printHelp()
 	"\n\n-b HASH\t\tTake an NTLM hash and brute force it."
 	"\n\n-s STRING\tGenerate an NTLM hash from a text string and brute force it."
 	"\n\n-t INTEGER\tNumber of worker threads used in parallel calculation."
-	"\n\n-i INTEGER\tInterval in iterations logged to the console."
+	"\n\n-i INTEGER\tInterval for iterations logged to the console; measured in seconds."
 	"\n\t\tThe interval may be raised for a slight performance gain."
 	"\n\n--silent\tRun the program in silent mode."
 	"\n\n--linear\tRun the program using a faster, but more linear RNG."
@@ -87,13 +87,12 @@ void printHelp()
 
 int main(int argc, char* argv[])
 {
-	/*
 	bool silent;
 	string hashTemp = "";
-	int interval = 5000000;
+	int interval = 5;
 
 	//Number of threads for the CPU path
-	const int NTHREADS = 128;
+	int NTHREADS = 128;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; ++i)
@@ -206,7 +205,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		cout << "\nRunning " << NTHREADS << " (+1) cooperative threads." << endl
-			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
+			<< "Cracking NTLM hash " << hashTemp << ".\n\n";
 
 		processingPath::setTarget(hashTemp);
 	}
@@ -223,68 +222,15 @@ int main(int argc, char* argv[])
 	threadGroup.create_thread(masterThread(0, startTime));
 
 	//Add a thread for our Stream processing path
-	threadGroup.create_thread(GPUPath(1));		
+	//threadGroup.create_thread(GPUPath(1));		
 
 	//Create a number of threads for the CPU path
 	for(int i = 0; i < NTHREADS; ++i)
 	{
-	//	threadGroup.create_thread(CPUPath(i + 2));
+		threadGroup.create_thread(CPUPath(i + 2));
 	}
 
-	threadGroup.join_all*/
-
-	srand((unsigned)time(NULL));
-	NTLM* mNTLM = new NTLM();
-
-	long long trialSize = 5000000;
-
-	string* input = new string[trialSize];
-	string* outputGPU = new string[trialSize];
-	string* outputCPU = new string[trialSize];
-
-	for(int i = 0; i < trialSize; ++i)
-	{
-		input[i] = rand();
-	}
-
-	time_t startTime = time(NULL);
-	mNTLM->getMultipleNTLMHashes(trialSize, input, outputGPU);
-	time_t endTime = time(NULL);
-
-	time_t GPU = endTime - startTime;
-
-	startTime = time(NULL);
-	for(int i = 0; i < trialSize; ++i)
-	{
-		outputCPU[i] = mNTLM->getNTLMHash(input[i]);
-	}
-	endTime = time(NULL);
-
-	time_t CPU = endTime - startTime;
-
-	cout << "\nTime taken for the GPU is: " << GPU << endl
-		<< "Time taken for the CPU is: " << CPU << endl << endl;
-
-	bool equal;
-
-	for(int i = 0; i < trialSize; ++i)
-	{
-		if(outputGPU[i] != outputCPU[i])
-		{
-			cout << "Arrays are not equal." << endl;
-			equal = false;
-			break;
-		}
-		else
-		{
-			equal = true;
-		}
-	}
-
-	if(equal == true)
-	{
-		cout << "Arrays are equal." << endl;
-	}
+	threadGroup.join_all();
 
 	return 0;
 }

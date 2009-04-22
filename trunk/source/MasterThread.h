@@ -43,6 +43,7 @@ public:
 	static int getCharsetLength();
 
 	void printResult();
+	void delay(time_t seconds);
 
 protected:
 

@@ -20,10 +20,8 @@ void masterThread::operator()()
 	{
 		if(!getSilent())
 		{
-			if(getIterations() % getInterval() == 0)
-			{
-				writeIterations();
-			}
+			delay(interval);
+			writeIterations();
 		}
 
 	} while(!getSuccess());
@@ -70,8 +68,14 @@ long long masterThread::getIterations()
 
 void masterThread::writeIterations()
 {
+	stringstream ss;
+	string output;
+
+	ss << getIterations();
+	ss >> output;
+
 	boost::try_mutex::scoped_lock scoped_lock(printMutex);
-	cout << getIterations() << " iterations" << endl;
+	cout << output << " iterations" << endl;
 }
 
 void masterThread::printResult()
@@ -96,6 +100,16 @@ void masterThread::printResult()
 	{
 		cout << "Speed of this run: " << (getIterations() / (endTime - startTime)) << " Iterations per second." << endl;
 	}
+}
+
+//Great reliable function for delaying something; resolution is in seconds
+void masterThread::delay(time_t seconds)
+{
+	time_t startTime = time(NULL);
+
+	do
+	{
+	} while(time(NULL) < startTime + seconds);
 }
 
 //No mutexes needed, these are accessed infrequently.
