@@ -29,12 +29,28 @@ Correct:
 a += b * (c - d);
 }}}
 
+= Object Naming =
+
+Variable names aren't that complicated. Name variables in a way that explicitly and concisely reveals their purpose. Any single-part variable is all lowercase. Any variable consisting of more than one part starts with a lowercase character, and subsequent parts start with an uppercase letter.
+
+For example, these are all proper variable declarations:
+
+{{{
+//Group variable declarations of the same type with a similar purpose on the same line
+int hello, helloWorld;
+
+bool isThisTrue;
+string namingConventions;
+}}}
+
+Header/source files are named in the same way as variables, but they always start with a capital letter. Class/struct definitions are named in the same way as variables, and should have the same or similar name as the header containing them.
+
 = Header Files =
 
 == Include Guards ==
 My standard for writing include guards is the name of the header file in all capital letters, followed by an underscore, the letter 'H', and another underscore.
 
-For example, the header "MyHeader*.h" would have guards like so:
+For example, the header "MyHeader.h" would have guards like so:
 
 {{{
 #ifndef MYHEADER_H_
@@ -51,7 +67,9 @@ It is preferred that blocks of code with similar functionality be put into their
 
 Here is an example:
 
-MyClass*.h
+{{{
+MyClass.h
+}}}
 {{{
 #ifndef MYCLASS_H_
 #define MYCLASS_H_
@@ -83,7 +101,9 @@ protected:
 #endif
 }}}
 
-MyClass*.cpp
+{{{
+MyClass.cpp
+}}}
 {{{
 #include MyClass.h
 
