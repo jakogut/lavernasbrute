@@ -1,5 +1,5 @@
+#summary General guidelines for code formatting (Developers and Contributors)
 #labels Phase-Implementation,Phase-Requirements,Phase-Design
-#If you're contributing to Laverna's Brute, I ask that you follow these formatting guidelines:
 
 = Indentation & Whitespace =
 
