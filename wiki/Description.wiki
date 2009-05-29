@@ -36,16 +36,16 @@ Tests run on a Core 2 Duo 2.00 ghz (T7300)
 All tests used a random string consisting of a full 62-byte character set.
 
     * No hash-generation, four character string, 128(+1) threads. 
-        *~~ Iterations per second: N/A ~~
-        *~~ Estimated time: Instant ~~
+        * ~~Iterations per second: N/A~~
+        * ~~Estimated time: Instant~~
 
     * No hash-generation, five character string, 128(+1) threads. 
-        *~~ Iterations per second: 3.6 million ~~
-        *~~ Estimated time: < 20 seconds ~~
+        * ~~Iterations per second: 3.6 million~~
+        * ~~Estimated time: < 20 seconds~~
 
     * No hash-generation, six character string, 128(+1) threads.
-        *~~ Iterations per second: 3.3 million ~~
-        *~~ Estimated time: < 5 hours ~~
+        * ~~Iterations per second: 3.3 million~~
+        * ~~Estimated time: < 5 hours~~
 
 These are informal tests. Complete accuracy is not guaranteed, but the results were estimated to the best of my ability. Results were averaged when practical, estimated time was rounded up, and iterations per second was rounded down.
 
