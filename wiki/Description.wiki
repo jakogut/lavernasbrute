@@ -3,28 +3,59 @@
 
 = Introduction =
 
-The aim of this project is to provide a free (in both senses) implementation of a brute-force password cracker. The first goal is to successfully crack a windows password of any length. After this has been completed, I can add support for GPGPU acceleration, and after that's completed, I can add support for the cracking of other passwords, such as WEP/WPA keys.
+The aim of this project is to provide a free (in both senses) implementation of a brute-force password cracker with support for a variety of distributed and parallel computing platforms, including GPGPU and networked load distribution.
 
 = Milestones: =
 
-    *  Random generation of strings for use in a brute forcer    *Complete*
-    *  Threading support    *Complete*
+    * Threading support *Complete*
 
-    *  Support for cracking of Windows passwords
-        *  Extract LM/NTLM hashes *Complete*
-        *  Re-create one-way hash function *Complete*
+    * Support for cracking of Windows passwords *Complete*
 
-    *  Support for cracking of network authentication keys
+    * Support for cracking of network authentication keys
         
-    *  `*`NIX Support *Complete*
+    * `*`NIX Support *Partial*
 
-    *  Rainbow Tables
+    * Rainbow Tables
 
-    *  Alternative Processing Paths:
+    * Alternative Processing Paths:
         *  ATI (Stream) processing path *Partial*
         *  NVIDIA (CUDA) processing path
-        *  Networked load distribution/coordination (Project Vesta)
-        
+        *  Networked load distribution/coordination
+
+    * Persistent runs (Saving/loading of progress in a run)
+
+= Release Labels: =
+
+== Development Releases: ==
+=== Alpha ===  
+
+* Most unstable form of development release
+
+* Feature list is not frozen, and new bugs/regressions may be introduced at any time
+
+* Intended feature list is not complete
+
+=== Beta ===
+
+* A step up in stability from Alpha
+
+* Feature list for a given release is, for the most part, completed
+
+* Code changes are primarily bug fixes
+
+=== Release Candidate ===
+
+* RC builds have potential to be release builds, but are still potentially unstable
+
+* Feature list is frozen, no new features may be introduced in this stage
+
+* Bug fixes only
+
+== Release Builds: ==
+
+Once a certain release has passed the RC stage, and has been deemed stable, it will be compiled and binaries for a number of platforms will be hosted here.
+
+There are no current release builds for Laverna's Brute.
 
 = Speed Tests: =
 
