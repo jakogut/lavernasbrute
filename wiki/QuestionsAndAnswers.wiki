@@ -1,0 +1,18 @@
+#summary Questions and answers regarding Laverna's Brute
+#labels Featured
+
+= Questions and Answers =
+
+=== Where can I get the latest version of Laverna's Brute? ===
+
+There are no stable releases yet. For Alpha (the current release status) checkout the code from the [http://code.google.com/p/lavernasbrute/source/checkout Source Checkout] page or check the [http://code.google.com/p/lavernasbrute/downloads/list Downloads] page to see if there are builds for your OS/Arch.
+
+=== I found a bug. Where can I report it? ===
+
+See the [http://code.google.com/p/lavernasbrute/issues/list Issues] page to send a bug report. Please remember to search the issues first to see if there is an existing report.
+
+=== How can I follow the development status of Laverna's Brute? ===
+
+  * Read the [http://lavernasbrute.blogspot.com/ Laverna's Brute Blog] to keep up with detailed information on Laverna's Brute code updates and check-ins, new features, bugs, Google Code page updates, plans, etc. maintained by the project owner.
+  * Keep track of changes to the SVN repository by reading updates on the [http://code.google.com/p/lavernasbrute/source/list Source Changes] page.
+  * Subscribe to one or more of the [http://code.google.com/p/lavernasbrute/feeds Project Feeds] for updates concerning project information, downloads, wiki, issue updates, and source changes using your favorite feed reader.
