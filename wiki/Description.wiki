@@ -27,29 +27,29 @@ The aim of this project is to provide a free (in both senses) implementation of 
 = Release Labels: =
 
 == Development Releases: ==
-=== Alpha ===  
+    === Alpha ===  
 
-* Most unstable form of development release
+        * Most unstable form of development release
 
-* Feature list is not frozen, and new bugs/regressions may be introduced at any time
+        * Feature list is not frozen, and new bugs/regressions may be introduced at any time
 
-* Intended feature list is not complete
+        * Intended feature list is not complete
 
-=== Beta ===
+    === Beta ===
 
-* A step up in stability from Alpha
+        * A step up in stability from Alpha
 
-* Feature list for a given release is, for the most part, completed
+        * Feature list for a given release is, for the most part, completed
 
-* Code changes are primarily bug fixes
+        * Code changes are primarily bug fixes
 
-=== Release Candidate ===
+    === Release Candidate ===
 
-* RC builds have potential to be release builds, but are still potentially unstable
+    * RC builds have potential to be release builds, but are still potentially unstable
 
-* Feature list is frozen, no new features may be introduced in this stage
+    * Feature list is frozen, no new features may be introduced in this stage
 
-* Bug fixes only
+    * Bug fixes only
 
 == Release Builds: ==
 
