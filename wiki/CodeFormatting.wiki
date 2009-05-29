@@ -1,0 +1,122 @@
+#labels Phase-Implementation,Phase-Requirements,Phase-Design
+#If you're contributing to Laverna's Brute, I ask that you follow these formatting guidelines:
+
+= Indentation & Whitespace =
+
+The ANSI indent style is used in Laverna's Brute. Each brace, regardless of whether it is a starting or closing brace, is put on it's own line, and the braces for every single block of code are aligned for clarity.
+
+Here is an example:
+
+{{{
+if(foo)
+{
+    do
+    {
+        bar();
+    } while(baz)
+}
+}}}
+
+Use spaces in between operators and operands to maintain clarity.
+
+Incorrect:
+{{{
+a+=b*(c-d);
+}}}
+
+Correct:
+{{{
+a += b * (c - d);
+}}}
+
+= Header Files =
+
+== Include Guards ==
+My standard for writing include guards is the name of the header file in all capital letters, followed by an underscore, the letter 'H', and another underscore.
+
+For example, the header "MyHeader.h" would have guards like so:
+
+{{{
+#ifndef MYHEADER_H_
+#define MYHEADER_H_
+
+//Header code here
+
+#endif
+}}}
+
+= Class Creation =
+
+It is preferred that blocks of code with similar functionality be put into their own class or classes, and that each class be declared in a header, and defined in a separate source file. (Though this is not required. A single class may be declared and defined in a single header, if necessary.)
+
+Here is an example:
+
+MyClass.h
+{{{
+#ifndef MYCLASS_H_
+#define MYCLASS_H_
+
+class myClass
+{
+    myClass();
+    ~myClass();
+
+public:
+
+    //Public method
+    void foo();
+
+    //Public accessor methods
+    int getFoobar();
+    void setFoobar(int write);
+
+//Use the protected keyword unless private is absolutely necessary
+protected:
+
+    //Protected function
+    bar();
+
+    //Protected variables
+    int foobar;
+};
+
+#endif
+}}}
+
+MyClass.cpp
+{{{
+#include MyClass.h
+
+myClass::myClass()
+{
+    foobar = 0;
+}
+
+myClass::~myClass()
+{
+}
+
+void myClass::foo()
+{
+    bar();
+}
+
+void myClass::bar()
+{
+    //Do something
+}
+
+void myClass::setFoobar(int write)
+{
+    foobar = write;
+}
+
+int myClass::getFoobar()
+{
+    return foobar;
+}
+}}}
+
+= Optimization  =
+
+Speed is critical in Laverna's brute, therefore, optimization is a necessary evil. Optimize your code, but make sure it does what is needed, and works without flaw before doing so. Premature optimization will cause you endless grief if your code is not ready for it. Make sure your optimizations don't compromise the stability of the application, or the clarity of your code. Only inline functions which are fewer than five lines in length.   
