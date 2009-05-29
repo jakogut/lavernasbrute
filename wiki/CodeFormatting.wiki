@@ -127,9 +127,7 @@ protected:
 #endif
 }}}
 
-{{{
 MyClass.cpp
-}}}
 {{{
 #include MyClass.h
 
