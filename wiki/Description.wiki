@@ -1,5 +1,5 @@
+#summary Project Description and Goals
 #labels Phase-Design,Featured
-#Project Description and Goals
 
 = Introduction =
 
