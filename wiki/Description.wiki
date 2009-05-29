@@ -26,27 +26,6 @@ The aim of this project is to provide a free (in both senses) implementation of 
         *  Networked load distribution/coordination (Project Vesta)
         
 
-= Current Speed: =
-*All current speed tests are out of date!*
+= Speed Tests: =
 
-(IPS == iterations per second.)
-
-Tests run on a Core 2 Duo 2.00 ghz (T7300)
-
-All tests used a random string consisting of a full 62-byte character set.
-
-    * No hash-generation, four character string, 128(+1) threads. 
-        * ~~Iterations per second: N/A~~
-        * ~~Estimated time: Instant~~
-
-    * No hash-generation, five character string, 128(+1) threads. 
-        * ~~Iterations per second: 3.6 million~~
-        * ~~Estimated time: < 20 seconds~~
-
-    * No hash-generation, six character string, 128(+1) threads.
-        * ~~Iterations per second: 3.3 million~~
-        * ~~Estimated time: < 5 hours~~
-
-These are informal tests. Complete accuracy is not guaranteed, but the results were estimated to the best of my ability. Results were averaged when practical, estimated time was rounded up, and iterations per second was rounded down.
-
-These results do not show the maximum potential speed of the program, as the test machine was often times actively in use while the tests were running in the background.
+_Due to the constantly changing nature of the performance of Laverna's Brute, speed testing has been reserved for milestone builds only, and out-of-date speed tests have been deleted._
