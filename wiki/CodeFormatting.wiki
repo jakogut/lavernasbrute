@@ -30,7 +30,7 @@ a += b * (c - d);
 }}}
 
 = Comments =
-Comment your code well, but don't overdue it. Make your comments legible and use proper grammar to the best of your ability. "Silly" comments and easter eggs are welcome, but don't overdue it, don't use them where they are completely irrelevant to the code, and don't use bad spelling and grammar.
+Comment your code well, but don't overdue it. (Please don't use comments on parts of your code where the functionality is blatantly obvious, it's patronizing, and makes me want to eat you.) Make your comments legible and use proper grammar to the best of your ability. "Silly" comments and easter eggs are welcome, but don't overdue it, don't use them where they are completely irrelevant to the code, and don't use bad spelling and grammar.
 
 Comments belonging on a single line should use the double slash, '//', with no space in between the comment declaration and the comment text.
 
@@ -39,7 +39,7 @@ If the comment is long enough to wrap around to another line, use the comment bl
 {{{
 //This is a short comment.
 
-/* This is a very long comment. It wraps around the text editor, which means it should be declared as a block, rather than a single line. */
+/* This is a very long comment. It wraps around the text editor, which means it should be declared as a block, rather than a single line. You just lost the game.*/
 }}}
 
 = Object Naming =
