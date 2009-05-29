@@ -39,7 +39,7 @@ If the comment is long enough to wrap around to another line, use the comment bl
 {{{
 //This is a short comment.
 
-/* This is a very long comment. It wraps around the text editor, which means it should be declared as a block, rather than a single line. You just lost the game.*/
+/* This is a very long comment. It will wrap around most test editors, which means it should be declared as a block, rather than a single line. You just lost the game.*/
 }}}
 
 = Object Naming =
