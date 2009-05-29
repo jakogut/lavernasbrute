@@ -3,6 +3,8 @@
 
 = Indentation & Whitespace =
 
+Each tab is the same length as four spaces.
+
 The ANSI indent style is used in Laverna's Brute. Each brace, regardless of whether it is a starting or closing brace, is put on it's own line, and the braces for every single block of code are aligned for clarity.
 
 Here is an example:
@@ -28,6 +30,15 @@ Correct:
 {{{
 a += b * (c - d);
 }}}
+
+If you have an especially long function header or flow control condition, wrap it around to the next line.
+
+{{{
+kernel void someFunction(int data1, bool isTrue, string inputText, 
+    unsigned long long iterations)
+{
+    //Do something
+}
 
 = Comments =
 Comment your code well, but don't overdue it. (Please don't use comments on parts of your code where the functionality is blatantly obvious, it's patronizing, and makes me want to eat you.) Make your comments legible and use proper grammar to the best of your ability. "Silly" comments and easter eggs are welcome, but don't overdue it, don't use them where they are completely irrelevant to the code, and don't use bad spelling and grammar.
