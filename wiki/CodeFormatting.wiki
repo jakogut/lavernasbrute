@@ -50,7 +50,7 @@ Header/source files are named in the same way as variables, but they always star
 == Include Guards ==
 My standard for writing include guards is the name of the header file in all capital letters, followed by an underscore, the letter 'H', and another underscore.
 
-For example, the header "MyHeader.h" would have guards like so:
+For example, the header "*MyHeader.h" would have guards like so:
 
 {{{
 #ifndef MYHEADER_H_
