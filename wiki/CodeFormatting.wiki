@@ -34,7 +34,7 @@ a += b * (c - d);
 == Include Guards ==
 My standard for writing include guards is the name of the header file in all capital letters, followed by an underscore, the letter 'H', and another underscore.
 
-For example, the header "MyHeader.h" would have guards like so:
+For example, the header "MyHeader*.h" would have guards like so:
 
 {{{
 #ifndef MYHEADER_H_
@@ -51,7 +51,7 @@ It is preferred that blocks of code with similar functionality be put into their
 
 Here is an example:
 
-MyClass.h
+MyClass*.h
 {{{
 #ifndef MYCLASS_H_
 #define MYCLASS_H_
@@ -83,7 +83,7 @@ protected:
 #endif
 }}}
 
-MyClass.cpp
+MyClass*.cpp
 {{{
 #include MyClass.h
 
