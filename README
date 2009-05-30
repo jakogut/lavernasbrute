@@ -3,6 +3,7 @@ DIRECTORIES OVERVIEW
 /MSVC9          Visual Studio project files
 /include        Include directory for library headers
 /source         Source code for building Laverna's Brute
+/tools          Useful tools meant to assist developers
 
 BUILDING
 
