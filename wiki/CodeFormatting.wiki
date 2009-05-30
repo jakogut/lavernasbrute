@@ -42,6 +42,8 @@ kernel void someFunction(int data1, bool isTrue, string inputText,
 }
 }}}
 
+If you use `vim` for editing files you may find [http://code.google.com/p/lavernasbrute/source/browse/trunk/tools/scripts/lavernasbrute.vim this script] useful.
+
 = Comments =
 Comment your code well, but don't overdue it. (Please don't use comments on parts of your code where the functionality is blatantly obvious, it's patronizing, and makes me want to eat you.) Make your comments legible and use proper grammar to the best of your ability. "Silly" comments and easter eggs are welcome, but don't overdue it, don't use them where they are completely irrelevant to the code, and don't use bad spelling and grammar.
 
