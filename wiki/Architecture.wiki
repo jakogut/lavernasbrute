@@ -1,4 +1,5 @@
 #summary A general synopsis of the architecture and inner workings of Laverna's Brute.
+#labels Phase-Design
 
 = Introduction =
 
@@ -9,6 +10,11 @@ Laverna's Brute is an advanced hash-cracking application built on top of a massi
 == Laverna's Brute ==
 
 The code specific to Laverna's Brute is specialized in hash-cracking. The real power of the cracker lies in the processing engine powering it.
+
+<wiki:comment>
+TODO: Explain in more detail what code belongs to which project, and more explicitly define the difference between the two projects. 
+</wiki:comment>
+
 
 == Processing Engine ==
 
