@@ -18,4 +18,4 @@ TODO: Explain in more detail what code belongs to which project, and more explic
 
 == Processing Engine ==
 
-The Laverna's Brute processing engine utilizes a number of methods for parallel computation on a single machine, such as threading and vector operations, which are meant to use as much power available, as efficiently as possible. The engine is planned to be extended with support for distributed computing over a network.
+The Laverna's Brute processing engine utilizes a number of methods for parallel computation on a single machine, such as threading and SIMD operations, which are meant to use as much power available, as efficiently as possible. The engine is planned to be extended with support for organized distributed computing over a network.
