@@ -2,9 +2,14 @@
 
 = Introduction =
 
-Laverna's Brute is an advanced hash-cracking application built on top of a massively parallel computational engine. The engine provides easy access to a number of processing paths, and structures it in a way that is easy to understand and extend. As of now, the engine supports threading, and an early implementation of GPGPU. It can, and will be extended with full support for GPGPU paths, and distributed computing over a variety of platforms and architectures.
-
+Laverna's Brute is an advanced hash-cracking application built on top of a massively parallel computational engine. The engine provides easy access to a number of processing paths, and structures it in a way that is easy to understand and extend.
 
 = Details =
 
-TODO: Explain the computing engine in more detail, and provide information as to the differences between Laverna's Brute, and the engine.
+== Laverna's Brute ==
+
+The code specific to Laverna's Brute is specialized in hash-cracking. The real power of the cracker lies in the processing engine powering it.
+
+== Processing Engine ==
+
+The Laverna's Brute processing engine utilizes a number of methods for parallel computation on a single machine, such as threading and vector operations, which are meant to use as much power available, as efficiently as possible. The engine is planned to be extended with support for distributed computing over a network.
