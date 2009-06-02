@@ -7,10 +7,7 @@
  
 #include <string.h>
 
-#include <brook/brook.h>
-#include <brook/stream.h>
-
-#include "LB_GPU.h"
+#include "StreamOperations.h"
  
 using namespace std;
 
@@ -40,7 +37,7 @@ protected:
 	static void prepare_key(char *key, unsigned int nt_buffer[])
 	{
 		int i=0;
-		int length=strlen(key);
+		int length=(int)(strlen(key));
 		memset(nt_buffer,0,16*4);
 		//The length of key need to be <= 27
 		for(;i<length/2;i++)	
@@ -127,16 +124,14 @@ protected:
 		c += (b ^ a ^ d) + nt_buffer[7]  +  SQRT_3; c = (c << 11) | (c >> 21);
 		b += (a ^ d ^ c) + nt_buffer[15] +  SQRT_3; b = (b << 15) | (b >> 17);
 	 
-		output[0] = a + (uint)0x67452301;
-		output[1] = b + (uint)0xefcdab89;
-		output[2] = c + (uint)0x98badcfe;
-		output[3] = d + (uint)0x10325476;
+		output[0] = a + (unsigned int)0x67452301;
+		output[1] = b + (unsigned int)0xefcdab89;
+		output[2] = c + (unsigned int)0x98badcfe;
+		output[3] = d + (unsigned int)0x10325476;
 	}
 
 	static char* convert_hex(unsigned int output[])
 	{
-		
-
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
 		{

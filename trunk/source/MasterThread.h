@@ -26,15 +26,15 @@ public:
 	static void printToConsole(string print);
 	static void writeIterations();
 	static int getInterval();
-	static void setInterval(int write);
+	static void setInterval(int input);
 	static bool getSilent();
-	static void setSilent(bool write);
+	static void setSilent(bool input);
 
 	static long long getIterations();
 	static void incrementIterations();
 	static void increaseIterations(int input);
 
-	static void setCrackedPassword(string write);
+	static void setCrackedPassword(string input);
 
 	static char* getCharset();
 	static int getCharsetLength();

@@ -22,9 +22,6 @@ protected:
 	int id;
 	int chunkSize;
 
-	string* chunkStringArray;
-	string* chunkStringHashedArray;
-
 	char* charset;
 	int charsetLength;
 };

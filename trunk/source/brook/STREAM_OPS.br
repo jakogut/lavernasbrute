@@ -1,0 +1,52 @@
+//Common operators
+kernel void gpu_ADD(float input0<>, float input1<>, out float output<>)
+{
+	output = input0 + input1;
+}
+
+kernel void gpu_SUB(float input0<>, float input1<>, out float output<>)
+{
+	output = input0 - input1;
+}
+
+kernel void gpu_DIV(float input0<>, float input1<>, out float output<>)
+{
+	output = input0 / input1;
+}
+
+kernel void gpu_MUL(float input0<>, float input1<>, out float output<>)
+{
+	output = input0 * input1;
+}
+
+//Bitwise operators
+kernel void gpu_NOT(int input<>, out int output<>)
+{
+	output = ~input;
+}
+
+kernel void gpu_OR(int input0<>, int input1<>, out int output<>)
+{
+	output = input0 | input1;
+}
+
+kernel void gpu_XOR(int input0<>, int input1<>, out int output<>)
+{
+	output = input0 ^ input1;
+}
+
+kernel void gpu_AND(int input0<>, int input1<>, out int output<>)
+{
+	output = input0 & input1;
+}
+
+//Bit shifts
+kernel void gpu_LSHIFT(int input<>, int shift, out int output<>)
+{
+	output = input << shift;
+}
+
+kernel void gpu_RSHIFT(int input<>, int shift, out int output<>)
+{
+	output = input >> shift;
+}

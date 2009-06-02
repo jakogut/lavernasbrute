@@ -34,3 +34,5 @@ Lin	GCC			(x86)		Release			Static Only	(Unsupported)
 
 To compile the project on Windows, open the Visual Studio solution file in
 the /MSVC9 directory and build. 
+
+TODO: Linux make file & instructions

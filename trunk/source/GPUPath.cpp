@@ -15,7 +15,7 @@ GPUPath::GPUPath(int id)
 	charsetLength = masterThread::getCharsetLength();
 
 	//Size of data chunks to be processed by the GPU
-	chunkSize = 10;
+	chunkSize = 8092;
 }
 
 GPUPath::~GPUPath()
@@ -24,13 +24,9 @@ GPUPath::~GPUPath()
 
 void GPUPath::operator()()
 {
-/*	//Arrays to move data chunks
-	string* chunkStringArray = new string[chunkSize];
-	string* chunkStringHashedArray = new string[chunkSize];
-
 	string Target = getTarget();
 
-	do
+/*	do
 	{
 		for(int i = 0; i < chunkSize; ++i)
 		{
@@ -53,8 +49,5 @@ void GPUPath::operator()()
 			}
 		}
 
-	} while(!masterThread::getSuccess());
-
-	delete [] chunkStringArray;
-	delete [] chunkStringHashedArray;*/
+	} while(!masterThread::getSuccess());*/
 }
