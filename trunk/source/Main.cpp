@@ -89,7 +89,7 @@ void printHelp()
 	return result;
 }
 
-/*int main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	bool silent;
 	string hashTemp = "";
@@ -245,32 +245,6 @@ void printHelp()
 	}
 
 	threadGroup.join_all();
-
-	return 0;
-}*/
-
-int main()
-{
-	int chunkSize = 8092;
-
-	streamOperations* streamops = new streamOperations(chunkSize);
-
-	streamops->setChunkSize(chunkSize);
-
-	float* inputArray = new float[chunkSize];
-	float* outputArray = new float[chunkSize];
-
-	for(int i = 0; i < chunkSize; i++)
-	{
-		inputArray[i] = i;
-	}
-
-	streamops->ADD(inputArray, inputArray, outputArray);
-
-	for(int i = 0; i < chunkSize; i++)
-	{
-		cout << outputArray[i] << endl;
-	}
 
 	return 0;
 }
