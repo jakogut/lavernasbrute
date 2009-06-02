@@ -9,6 +9,7 @@ streamOperations::~streamOperations()
 {
 }
 
+//TODO: This crap needs to be cleaned up
 void streamOperations::ADD(float input0[], float input1[], float output[])
 {
 	unsigned int streamSize[] = {chunkSize};
@@ -73,6 +74,7 @@ void streamOperations::MUL(float input0[], float input1[], float output[])
 	streamWrite(outputStream, output);
 }
 
+//TODO: Finish these operators
 void streamOperations::NOT(float input[], float output)
 {
 }
