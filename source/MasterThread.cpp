@@ -8,7 +8,7 @@ masterThread::masterThread(int id)
 	//Start the clock
 	startTime = time(NULL);
 
-	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	charset = (char *)"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	charsetLength = strlen(charset);
 }
 
