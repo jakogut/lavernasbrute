@@ -17,7 +17,7 @@ public:
 
 	NTLM()
 	{
-		itoa16 = "0123456789abcdef";
+		itoa16 = (char *)"0123456789abcdef";
 	}
 
 	~NTLM()
