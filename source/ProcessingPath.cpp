@@ -27,29 +27,29 @@ processingPath::~processingPath()
 {
 }
 
-void processingPath::setTarget(string write)
+void processingPath::setTarget(string input)
 {
-	target = write;
+	target = input;
 }
 
-void processingPath::setMaxChars(int write)
+void processingPath::setMaxChars(int input)
 {
-	maxChars = write;
+	maxChars = input;
 }
 
-void processingPath::setTotalThreads(int write)
+void processingPath::setTotalThreads(int input)
 {
-	totalThreads = write;
+	totalThreads = input;
 }
 
-void processingPath::useStandardRand(bool write)
+void processingPath::useStandardRand(bool input)
 {
-	randFast = write;
+	randFast = input;
 }
 
-void processingPath::useLinearSearch(bool write)
+void processingPath::useLinearSearch(bool input)
 {
-	linearSearch = write;
+	linearSearch = input;
 }
 
 string processingPath::getTarget()
@@ -82,7 +82,7 @@ string processingPath::generateRandString(int length)
 
 string processingPath::integerToKey(long long location)
 {
-	int num = location;
+	long long num = location;
 	string result;
 
 	while(num > 0)

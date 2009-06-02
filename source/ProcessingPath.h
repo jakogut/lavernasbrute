@@ -21,7 +21,7 @@ class processingPath
 	public:
 
 	processingPath();
-	virtual ~processingPath() = 0;
+	~processingPath();
 
 	virtual void operator()() = 0;
 	

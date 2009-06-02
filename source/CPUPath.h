@@ -24,7 +24,7 @@ protected:
 	char* charset;
 	int charsetLength;
 
-	long long keyLocation;
+	unsigned long long keyLocation;
 };
 
 #endif

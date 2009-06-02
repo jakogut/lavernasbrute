@@ -353,6 +353,10 @@
 				RelativePath="..\..\source\ProcessingPath.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\source\StreamOperations.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -379,12 +383,16 @@
 				RelativePath="..\..\source\ProcessingPath.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\source\StreamOperations.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Brook Files"
 			>
 			<File
-				RelativePath="..\..\source\brook\LB_GPU.br"
+				RelativePath="..\..\source\brook\STREAM_OPS.br"
 				>
 				<FileConfiguration
 					Name="Debug|x64"
@@ -406,15 +414,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\source\brook\LB_GPU.cpp"
+				RelativePath="..\..\source\brook\STREAM_OPS.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\brook\LB_GPU.h"
+				RelativePath="..\..\source\brook\STREAM_OPS.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\brook\LB_GPU_gpu.h"
+				RelativePath="..\..\source\brook\STREAM_OPS_gpu.h"
 				>
 			</File>
 		</Filter>
