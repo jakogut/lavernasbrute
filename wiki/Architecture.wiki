@@ -11,11 +11,25 @@ Laverna's Brute is an advanced hash-cracking application built on top of a massi
 
 The code specific to Laverna's Brute is specialized in hash-cracking. The real power of the cracker lies in the processing engine powering it.
 
-<wiki:comment>
-TODO: Explain in more detail what code belongs to which project, and more explicitly define the difference between the two projects. 
-</wiki:comment>
+=== Master Thread ===
+Master thread is a class used to create a single thread which monitors the operation of worker threads, and performs tasks for the whole of the program, such as writing information to the console, tracking the progress and success of a run, and file I/O. This structure eliminates the need for the usage of semaphores.
+
+=== CPU Path ===
+The CPU path is a class derived from the processing path class. It is used to create worker threads which depend on the power of the CPU for operation. This path is thread-safe.
+
+=== GPU Path ===
+The GPU path is a class derived from the processing path class. It is used to create worker threads which depend on the power of the GPU for operation. This path is *not* thread-safe. (This path is incomplete.)
+
+=== NTLM ===
+The NTLM class is used to provide NTLM hashing of text strings.
 
 
 == Processing Engine ==
 
 The Laverna's Brute processing engine utilizes a number of methods for parallel computation on a single machine, such as threading and SIMD operations, which are meant to use as much power available, as efficiently as possible. The engine is planned to be extended with support for organized distributed computing over a network.
+
+=== Processing Path ===
+The processing path class is a base class containing objects common to all paths, which implementations can derive from.
+
+=== Stream Operations ===
+The stream operations class is an object which wraps a number of stream accelerated mathematical operations, taking arrays as input and output, and applying the necessary conversions before sending the data off to the GPU. This eliminates the need for the programmer to know any GPU specific code when writing operations targeted for the GPU.
