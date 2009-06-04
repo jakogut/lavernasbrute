@@ -16,3 +16,13 @@ See the [http://code.google.com/p/lavernasbrute/issues/list Issues] page to send
   * Read the [http://lavernasbrute.blogspot.com/ Laverna's Brute Blog] to keep up with detailed information on Laverna's Brute code updates and check-ins, new features, bugs, Google Code page updates, plans, etc. maintained by the project owner.
   * Keep track of changes to the SVN repository by reading updates on the [http://code.google.com/p/lavernasbrute/source/list Source Changes] page.
   * Subscribe to one or more of the [http://code.google.com/p/lavernasbrute/feeds Project Feeds] for updates concerning project information, downloads, wiki, issue updates, and source changes using your favorite feed reader.
+
+=== Where can I contact the Laverna's Brute development team? ===
+Joseph.Kogut[REMOVE_THIS_TAG]@gmail.com
+
+<wiki:comment>
+Justin: Wasn't sure if you wanted your address here or not. Feel free to put it down if you want to be contacted about LB.
+</wiki:comment>
+
+=== How can I request a feature? ===
+Contact one of the developers at the address specified. Any feature requests are welcome, and will be considered carefully. If the request is reasonable, it will likely be included in a future release.
