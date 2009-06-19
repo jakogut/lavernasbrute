@@ -13,7 +13,6 @@
 #include <string>
 
 #include "MasterThread.h"
-#include "MersenneTwister.h"
 #include "NTLM.h"
 
 class processingPath
@@ -36,7 +35,6 @@ class processingPath
 
 protected:
 
-	MTRand* mRand;
 	NTLM* mNTLM;
 
 	int id;

@@ -4,11 +4,6 @@
 
 processingPath::processingPath() 
 {
-	mRand = new MTRand();
-
-	//Multiplying the time by the thread id ensures that the RNG is seeded uniquely for ever thread of every processing path
-	mRand->seed((int)(time(NULL) * id));
-
 	mNTLM = new NTLM();
 
 	charset = masterThread::getCharset();
