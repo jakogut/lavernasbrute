@@ -4,6 +4,7 @@
 #define CPUPATH_H_
 
 #include "ProcessingPath.h"
+#include "Math.h"
 
 class CPUPath : public processingPath
 {
