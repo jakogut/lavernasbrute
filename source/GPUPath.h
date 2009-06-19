@@ -6,8 +6,6 @@
 #include "ProcessingPath.h"
 #include "MasterThread.h"
 
-using namespace std;
-
 class GPUPath : public processingPath
 {
 public:

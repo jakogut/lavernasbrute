@@ -15,7 +15,7 @@ processingPath::processingPath()
 	charsetLength = masterThread::getCharsetLength();
 
 	randFast = false;
-	linearSearch = false;
+	linearSearch = true;
 
 	if(maxChars <= 0)
 	{
@@ -27,9 +27,29 @@ processingPath::~processingPath()
 {
 }
 
-void processingPath::setTarget(string input)
+//Convert an integer to a base 62 key
+std::string processingPath::integerToKey(unsigned long long* location)
+{
+	unsigned long long num = *location;
+	std::string result;
+
+	while(num > 0)
+	{
+		result += charset[num % 62];
+		num /= 62;
+	}
+
+	return result;
+}
+
+void processingPath::setTarget(std::string input)
 {
 	target = input;
+}
+
+std::string processingPath::getTarget()
+{
+	return target;
 }
 
 void processingPath::setMaxChars(int input)
@@ -42,54 +62,7 @@ void processingPath::setTotalThreads(int input)
 	totalThreads = input;
 }
 
-void processingPath::useStandardRand(bool input)
-{
-	randFast = input;
-}
-
 void processingPath::useLinearSearch(bool input)
 {
 	linearSearch = input;
-}
-
-string processingPath::getTarget()
-{
-	return target;
-}
-
-//Generate random string of numbers to be converted to text. Who says randomness isn't useful?
-string processingPath::generateRandString(int length)
-{
-   string result = "";
-
-	if(randFast)
-	{
-		for(int i = 0; i < length; ++i) 
-		{
-			result += charset[rand() % charsetLength - 1];
-		}
-	}
-	else
-	{
-		for(int i = 0; i < length; ++i) 
-		{
-			result += charset[mRand->randInt(charsetLength - 1)];
-		}
-   }
-
-   return result;
-}
-
-string processingPath::integerToKey(long long location)
-{
-	long long num = location;
-	string result;
-
-	while(num > 0)
-	{
-		result += charset[num % 62];
-		num /= 62;
-	}
-
-	return result;
 }

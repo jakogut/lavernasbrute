@@ -1,20 +1,25 @@
 //Common operators
-kernel void gpu_ADD(float input0<>, float input1<>, out float output<>)
+kernel void gpu_ADD(int input0<>, int input1<>, out int output<>)
 {
 	output = input0 + input1;
 }
 
-kernel void gpu_SUB(float input0<>, float input1<>, out float output<>)
+kernel void gpu_ADD_CONST(int input0<>, int input1, out int output<>)
+{
+	output = input0 + input1;
+}
+
+kernel void gpu_SUB(int input0<>, int input1<>, out int output<>)
 {
 	output = input0 - input1;
 }
 
-kernel void gpu_DIV(float input0<>, float input1<>, out float output<>)
+kernel void gpu_DIV(int input0<>, int input1<>, out int output<>)
 {
 	output = input0 / input1;
 }
 
-kernel void gpu_MUL(float input0<>, float input1<>, out float output<>)
+kernel void gpu_MUL(int input0<>, int input1<>, out int output<>)
 {
 	output = input0 * input1;
 }
@@ -30,9 +35,14 @@ kernel void gpu_OR(int input0<>, int input1<>, out int output<>)
 	output = input0 | input1;
 }
 
-kernel void gpu_XOR(int input0<>, int input1<>, out int output<>)
+kernel void gpu_XOR_BIOP(int input0<>, int input1<>, out int output<>)
 {
 	output = input0 ^ input1;
+}
+
+kernel void gpu_XOR_TRIOP(int input0<>, int input1<>, int input2<>, out int output<>)
+{
+	output = input0 ^ input1 ^ input2;
 }
 
 kernel void gpu_AND(int input0<>, int input1<>, out int output<>)

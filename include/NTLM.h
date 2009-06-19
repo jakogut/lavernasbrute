@@ -7,10 +7,6 @@
  
 #include <string.h>
 
-#include "StreamOperations.h"
- 
-using namespace std;
-
 class NTLM
 {
 public:
@@ -18,13 +14,25 @@ public:
 	NTLM()
 	{
 		itoa16 = (char *)"0123456789abcdef";
+
+		nt_buffer = new unsigned int[16];
+		crypted = new unsigned int[4];
+		hex_format = new char[32];
 	}
 
 	~NTLM()
 	{
+		if(nt_buffer)
+			delete [] nt_buffer;
+
+		if(crypted)
+			delete [] crypted;
+
+		if(hex_format)
+			delete [] hex_format;
 	}
 
-	inline static string getNTLMHash(string input)
+	inline static std::string getNTLMHash(std::string input)
 	{
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -34,7 +42,7 @@ public:
 
 protected:
 
-	static void prepare_key(char *key, unsigned int nt_buffer[])
+	static void prepare_key(char *key, unsigned int* nt_buffer)
 	{
 		int i=0;
 		int length=(int)(strlen(key));
@@ -52,7 +60,7 @@ protected:
 		nt_buffer[14] = length << 4;
 	}
 
-	static void ntlm_crypt(unsigned int nt_buffer[], unsigned int output[])
+	static void ntlm_crypt(unsigned int* nt_buffer, unsigned int* output)
 	{
 		unsigned int a = 0x67452301;
 		unsigned int b = 0xefcdab89;
@@ -130,7 +138,7 @@ protected:
 		output[3] = d + (unsigned int)0x10325476;
 	}
 
-	static char* convert_hex(unsigned int output[])
+	static char* convert_hex(unsigned int* output)
 	{
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
@@ -147,17 +155,16 @@ protected:
 			}	
 		}
 		//null terminate the string
-		hex_format[33]=0;
+		hex_format[32]=0;
 
 		return hex_format;
 	}
 
-protected:
+	static unsigned int* nt_buffer;
+	static unsigned int* crypted;
+	static char* hex_format;
 
-	static unsigned int nt_buffer[16];
-	static unsigned int crypted[4];
 	static char* itoa16;
-	static char hex_format[33];
 };
 
 #endif

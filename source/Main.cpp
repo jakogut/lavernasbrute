@@ -6,8 +6,6 @@
 
 //Boost thread
 #include <boost/thread/thread.hpp>
-#include <boost/thread/recursive_mutex.hpp>
-#include <boost/thread/mutex.hpp>
 
 //Base class for processing paths
 #include "ProcessingPath.h"
@@ -18,8 +16,6 @@
 //Processing paths (Slaves)
 #include "CPUPath.h"
 #include "GPUPath.h"
-
-#include "StreamOperations.h"
 
 using namespace std;
 
@@ -43,9 +39,9 @@ int processingPath::totalThreads;
 bool processingPath::randFast;
 bool processingPath::linearSearch;
 
-unsigned int NTLM::nt_buffer[16];
-unsigned int NTLM::crypted[4];
-char NTLM::hex_format[33];
+unsigned int* NTLM::nt_buffer;
+unsigned int* NTLM::crypted;
+char* NTLM::hex_format;
 char* NTLM::itoa16;
 
 //A counter to log the number of iterations run
@@ -66,14 +62,11 @@ void printHelp()
 	"\n\n-b HASH\t\tTake an NTLM hash and brute force it."
 	"\n\n-s STRING\tGenerate an NTLM hash from a text string and brute force it."
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
+	"\n\t\tThis should match the core count of your CPU."
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
 	"\n\n-i INTEGER\tInterval in seconds for iterations logged to the console."
 	"\n\t\tThe interval may be raised for a slight performance gain."
 	"\n\n--silent\tRun the program in silent mode."
-	"\n\n--standard-rand\tRun the program using a faster, but more linear RNG."
-	"\n\t\tNOT THREAD SAFE - No more than two threads will be used."
-	"\n\n--linear\tRun the brute-forcer using a linear method which eliminates"
-	"\n\t\tredundant key generation."
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
 
@@ -96,7 +89,7 @@ int main(int argc, char* argv[])
 	int interval = 5;
 
 	//Number of threads for the CPU path
-	int NTHREADS = 128;
+	int totalThreads = 2;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; ++i)
@@ -128,10 +121,8 @@ int main(int argc, char* argv[])
 		//Take a plain text string, generate an NTLM hash of it, and crack it
 		if(strcmp(argv[i], "-s") == 0)
 		{
-			NTLM* mNTLM = new NTLM();
-			hashTemp = mNTLM->getNTLMHash(argv[i + 1]);
-
-			delete mNTLM;
+			NTLM ntlm;
+			hashTemp = ntlm.getNTLMHash(argv[i + 1]);
 		}
 
 		//Set the number of threads
@@ -142,11 +133,11 @@ int main(int argc, char* argv[])
 
 			if(toInt(temp) >= 2)
 			{
-				NTHREADS = toInt(temp);
+				totalThreads = toInt(temp);
 			}
 			else
 			{
-				NTHREADS = 2;
+				totalThreads = 2;
 			}
 		}
 
@@ -172,7 +163,7 @@ int main(int argc, char* argv[])
 		//Disable threading
 		if(strcmp(argv[i], "--disable-threading") == 0)
 		{
-			NTHREADS = 1;
+			totalThreads = 1;
 		}
 
 		//Disable iteration logging
@@ -185,30 +176,6 @@ int main(int argc, char* argv[])
 		{
 			silent = false;
 		}
-
-		//Use the standard library RNG
-		if(strcmp(argv[i], "--standard-rand") == 0)
-		{
-			processingPath::useStandardRand(true);
-
-			//Seed our RNG
-			srand((unsigned)time(NULL));
-
-			//This RNG is not thread-safe, ensure that we're using two or less threads.
-			if(NTHREADS > 2)
-			{
-				NTHREADS = 2;
-			}
-		}
-		else
-		{
-			processingPath::useStandardRand(false);
-		}
-
-		if(strcmp(argv[i], "--linear") == 0)
-		{
-			processingPath::useLinearSearch(true);
-		}
 	}
 
 	if(hashTemp.length() <= 0)
@@ -218,7 +185,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		cout << "\nRunning " << NTHREADS << " (+1) cooperative threads," << endl
+		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
 			<< "Cracking NTLM hash " << hashTemp << ".\n\n";
 
 		processingPath::setTarget(hashTemp);
@@ -230,7 +197,7 @@ int main(int argc, char* argv[])
 	boost::thread_group threadGroup;
 
 	//Set the total number of worker threads in use for this run
-	processingPath::setTotalThreads(NTHREADS);
+	processingPath::setTotalThreads(totalThreads);
 
 	//Add a thread for our Stream processing path
 	//threadGroup.create_thread(GPUPath(1));
@@ -239,7 +206,7 @@ int main(int argc, char* argv[])
 	threadGroup.create_thread(masterThread(0));
 
 	//Create a number of threads for the CPU path
-	for(int i = 0; i < NTHREADS; ++i)
+	for(int i = 0; i < totalThreads; ++i)
 	{
 		threadGroup.create_thread(CPUPath(i));
 	}

@@ -25,15 +25,23 @@ contents of this directory.
 class __gpu_ADD
 {
     public:
-        void operator()(const ::brook::Stream< float >& input0, const ::brook::Stream< float >& input1, const ::brook::Stream<  float >& output);
+        void operator()(const ::brook::Stream< int >& input0, const ::brook::Stream< int >& input1, const ::brook::Stream<  int >& output);
         EXTENDCLASS();
 };
 extern __THREAD__ __gpu_ADD gpu_ADD;
 
+class __gpu_ADD_CONST
+{
+    public:
+        void operator()(const ::brook::Stream< int >& input0, const int  input1, const ::brook::Stream<  int >& output);
+        EXTENDCLASS();
+};
+extern __THREAD__ __gpu_ADD_CONST gpu_ADD_CONST;
+
 class __gpu_SUB
 {
     public:
-        void operator()(const ::brook::Stream< float >& input0, const ::brook::Stream< float >& input1, const ::brook::Stream<  float >& output);
+        void operator()(const ::brook::Stream< int >& input0, const ::brook::Stream< int >& input1, const ::brook::Stream<  int >& output);
         EXTENDCLASS();
 };
 extern __THREAD__ __gpu_SUB gpu_SUB;
@@ -41,7 +49,7 @@ extern __THREAD__ __gpu_SUB gpu_SUB;
 class __gpu_DIV
 {
     public:
-        void operator()(const ::brook::Stream< float >& input0, const ::brook::Stream< float >& input1, const ::brook::Stream<  float >& output);
+        void operator()(const ::brook::Stream< int >& input0, const ::brook::Stream< int >& input1, const ::brook::Stream<  int >& output);
         EXTENDCLASS();
 };
 extern __THREAD__ __gpu_DIV gpu_DIV;
@@ -49,7 +57,7 @@ extern __THREAD__ __gpu_DIV gpu_DIV;
 class __gpu_MUL
 {
     public:
-        void operator()(const ::brook::Stream< float >& input0, const ::brook::Stream< float >& input1, const ::brook::Stream<  float >& output);
+        void operator()(const ::brook::Stream< int >& input0, const ::brook::Stream< int >& input1, const ::brook::Stream<  int >& output);
         EXTENDCLASS();
 };
 extern __THREAD__ __gpu_MUL gpu_MUL;
@@ -70,13 +78,21 @@ class __gpu_OR
 };
 extern __THREAD__ __gpu_OR gpu_OR;
 
-class __gpu_XOR
+class __gpu_XOR_BIOP
 {
     public:
         void operator()(const ::brook::Stream< int >& input0, const ::brook::Stream< int >& input1, const ::brook::Stream<  int >& output);
         EXTENDCLASS();
 };
-extern __THREAD__ __gpu_XOR gpu_XOR;
+extern __THREAD__ __gpu_XOR_BIOP gpu_XOR_BIOP;
+
+class __gpu_XOR_TRIOP
+{
+    public:
+        void operator()(const ::brook::Stream< int >& input0, const ::brook::Stream< int >& input1, const ::brook::Stream< int >& input2, const ::brook::Stream<  int >& output);
+        EXTENDCLASS();
+};
+extern __THREAD__ __gpu_XOR_TRIOP gpu_XOR_TRIOP;
 
 class __gpu_AND
 {

@@ -25,15 +25,13 @@ class processingPath
 
 	virtual void operator()() = 0;
 	
-	static string getTarget();
+	static std::string getTarget();
 
-	string generateRandString(int length);
-	string integerToKey(long long location);
+	std::string integerToKey(unsigned long long* location);
 
-	static void setTarget(string write);
+	static void setTarget(std::string write);
 	static void setMaxChars(int write);
 	static void setTotalThreads(int write);
-	static void useStandardRand(bool write);
 	static void useLinearSearch(bool write);
 
 protected:
@@ -43,15 +41,16 @@ protected:
 
 	int id;
 
+	int getID();
+
 	unsigned long long startKeyspace, endKeyspace;
 	unsigned long long keyspaceOffset;
 
-	
 	static int maxChars;
 	static int totalThreads;
 	static bool randFast;
 	static bool linearSearch;
-	static string target;
+	static std::string target;
 
 	char* charset;
 	int charsetLength;
