@@ -304,7 +304,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="brook.lib tinyxml_lib.lib"
+				AdditionalDependencies="brook.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
 				GenerateDebugInformation="true"
