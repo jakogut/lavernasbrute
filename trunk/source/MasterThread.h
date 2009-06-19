@@ -6,12 +6,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
-#include <string>
 #include <string.h>
 #include <sstream>
 #include <vector>
-
-using namespace std;
 
 class masterThread
 {
@@ -24,9 +21,8 @@ public:
 
 	static bool getSuccess();
 	static void setSuccess(bool boolean);
-	static void printToConsole(string print);
+	static void printToConsole(std::string print);
 	static void writeIterations();
-	static int getInterval();
 	static void setInterval(int input);
 	static bool getSilent();
 	static void setSilent(bool input);
@@ -35,17 +31,17 @@ public:
 	static void incrementIterations();
 	static void increaseIterations(int input);
 
-	static void setCrackedPassword(string input);
+	static void setCrackedPassword(std::string input);
 
 	static char* getCharset();
 	static int getCharsetLength();
 
+	static void delay(time_t seconds);
 	void printResult();
-	void delay(time_t seconds);
 
 protected:
 
-	static string target;
+	static std::string target;
 
 	int id;
 	time_t startTime;
@@ -54,14 +50,11 @@ protected:
 	static int interval;
 	static bool silent;
 
-	//When a thread is successful, it sets this value to true, signaling to the other threads
+	//When a thread is successful, it sets this value to true, signaling the other threads
 	//That the job is done.
 	static bool success;
 
-	//static boost::try_mutex SuccessMutex;
-	//static boost::mutex printMutex;
-
-	static string crackedPassword;
+	static std::string crackedPassword;
 
 	static char* charset;
 	static int charsetLength;

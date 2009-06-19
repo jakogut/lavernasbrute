@@ -24,6 +24,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaProjectFile = C:\lavernasbrute_local\MSVC9\CodeAnalyst\lavernasbrute.caw
+		AMDCaProjectFile = C:\lavernasbrute\MSVC9\CodeAnalyst\lavernasbrute.caw
 	EndGlobalSection
 EndGlobal

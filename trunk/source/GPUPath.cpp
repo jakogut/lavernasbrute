@@ -24,7 +24,7 @@ GPUPath::~GPUPath()
 
 void GPUPath::operator()()
 {
-	string Target = getTarget();
+	std::string Target = getTarget();
 
 /*	do
 	{

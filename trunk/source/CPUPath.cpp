@@ -14,8 +14,8 @@ CPUPath::CPUPath(int id)
 	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
 
-	startKeyspace = (long long)((pow((double)62, maxChars) / totalThreads) * id);
-	endKeyspace = startKeyspace + (long long)(pow((double)62, maxChars) / totalThreads);
+	startKeyspace = ((pow((unsigned long double)charsetLength, maxChars) / totalThreads) * id);
+	endKeyspace = startKeyspace + (pow((unsigned long double)charsetLength, maxChars) / totalThreads);
 
 	//Assign a unique portion of the keyspace to the thread
 	keyLocation = startKeyspace;
@@ -27,47 +27,23 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
-	string Target = getTarget();
+	std::string tempString;
 
-	if(linearSearch)
+	do
 	{
-		do
+		tempString = integerToKey(&keyLocation);
+		keyLocation++;
+
+		if(mNTLM->getNTLMHash(tempString) == target)
 		{
-			string tempString = "";
-			tempString = integerToKey(keyLocation);
-			keyLocation++;
-
-			if(mNTLM->getNTLMHash(tempString) == Target)
-			{
-				masterThread::setCrackedPassword(tempString);
-				masterThread::setSuccess(true);
-				break;
-			}
-			else
-			{
-				masterThread::incrementIterations();
-			}
-
-		} while(!masterThread::getSuccess() && keyLocation < endKeyspace);
-	}
-	else
-	{
-		do
+			masterThread::setCrackedPassword(tempString);
+			masterThread::setSuccess(true);
+			break;
+		}
+		else
 		{
-			string tempString = "";
-			tempString = generateRandString(4);
+			masterThread::incrementIterations();
+		}
 
-			if(mNTLM->getNTLMHash(tempString) == Target)
-			{
-				masterThread::setCrackedPassword(tempString);
-				masterThread::setSuccess(true);
-				break;
-			}
-			else
-			{
-				masterThread::incrementIterations();
-			}
-
-		} while(!masterThread::getSuccess());
-	}
+	} while(!masterThread::getSuccess() && keyLocation < endKeyspace);
 }

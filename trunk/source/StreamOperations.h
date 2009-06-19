@@ -17,24 +17,36 @@ public:
 	streamOperations(int chunkSize);
 	~streamOperations();
 
-	void ADD(float input0[], float input1[], float output[]);
-	void SUB(float input0[], float input1[], float output[]);
-	void DIV(float input0[], float input1[], float output[]);
-	void MUL(float input0[], float input1[], float output[]);
+	void writeStream(int stream, int input[]);
+	int* readResult();
 
-	void NOT(float input[], float output);
-	void OR(float input0[], float input1[], float output[]);
-	void XOR(float input0[], float input1[], float output[]);
-	void AND(float input0[], float input1[], float output[]);
+	void ADD(int input1);
+	inline void ADD();
+	inline void SUB();
+	inline void DIV();
+	inline void MUL();
 
-	void LSHIFT(float input[], int shift, float output[]);
-	void RSHIFT(float input[], int shift, float output[]);
+	inline void NOT();
+	inline void OR();
+	inline void XOR_BI();
+	inline void XOR_TRI();
+	inline void AND();
+
+	inline void LSHIFT(int shift);
+	inline void RSHIFT(int shift);
 
 	void setChunkSize(int input);
 
 protected:
 
 	int chunkSize;
+
+	Stream<int>* inputStream0;
+	Stream<int>* inputStream1;
+	Stream<int>* inputStream2;
+
+	Stream<int>* outputStream;
+	int* output;
 };
 
 #endif

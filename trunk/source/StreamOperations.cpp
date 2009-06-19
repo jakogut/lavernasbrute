@@ -3,103 +3,105 @@
 streamOperations::streamOperations(int chunkSize)
 : chunkSize(chunkSize)
 {
+	int streamSize[] = {chunkSize};
+
+	inputStream0 = new Stream<int>(1, (unsigned int*)streamSize);
+	inputStream1 = new Stream<int>(1, (unsigned int*)streamSize);
+	inputStream2 = new Stream<int>(1, (unsigned int*)streamSize);
+
+	outputStream = new Stream<int>(1, (unsigned int*)streamSize);
+
+	output = new int[chunkSize];
 }
 
 streamOperations::~streamOperations()
 {
+	delete inputStream0;
+	delete inputStream1;
+	delete inputStream2;
+	delete outputStream;
+	delete output;
 }
 
-//TODO: This crap needs to be cleaned up
-void streamOperations::ADD(float input0[], float input1[], float output[])
+void streamOperations::writeStream(int stream, int input[])
 {
-	unsigned int streamSize[] = {chunkSize};
+	switch(stream)
+	{
+	case 0:
+		streamRead(*inputStream0, input);
+		break;
 
-	Stream<float> inputStream0(1, streamSize);
-	Stream<float> inputStream1(1, streamSize);
-	Stream<float> outputStream(1, streamSize);
+	case 1:
+		streamRead(*inputStream1, input);
+		break;
 
-	streamRead(inputStream0, input0);
-	streamRead(inputStream1, input1);
-
-	gpu_ADD(inputStream0, inputStream1, outputStream);
-
-	streamWrite(outputStream, output);
+	case 2:
+		streamRead(*inputStream2, input);
+		break;
+	}
 }
 
-void streamOperations::SUB(float input0[], float input1[], float output[])
+int* streamOperations::readResult()
 {
-	int streamSize[] = {chunkSize};
-
-	Stream<float> inputStream0(1, (unsigned int*)streamSize);
-	Stream<float> inputStream1(1, (unsigned int*)streamSize);
-	Stream<float> outputStream(1, (unsigned int*)streamSize);
-
-	streamRead(inputStream0, input0);
-	streamRead(inputStream1, input1);
-
-	gpu_SUB(inputStream0, inputStream1, outputStream);
-
-	streamWrite(outputStream, output);
+	return output;
 }
 
-void streamOperations::DIV(float input0[], float input1[], float output[])
+void streamOperations::ADD(int input1)
 {
-	int streamSize[] = {chunkSize};
-
-	Stream<float> inputStream0(1, (unsigned int*)streamSize);
-	Stream<float> inputStream1(1, (unsigned int*)streamSize);
-	Stream<float> outputStream(1, (unsigned int*)streamSize);
-
-	streamRead(inputStream0, input0);
-	streamRead(inputStream1, input1);
-
-	gpu_DIV(inputStream0, inputStream1, outputStream);
-
-	streamWrite(outputStream, output);
+	gpu_ADD_CONST(*inputStream0, input1, *outputStream);
 }
 
-void streamOperations::MUL(float input0[], float input1[], float output[])
+void streamOperations::ADD()
 {
-	int streamSize[] = {chunkSize};
-
-	Stream<float> inputStream0(1, (unsigned int*)streamSize);
-	Stream<float> inputStream1(1, (unsigned int*)streamSize);
-	Stream<float> outputStream(1, (unsigned int*)streamSize);
-
-	streamRead(inputStream0, input0);
-	streamRead(inputStream1, input1);
-
-	gpu_MUL(inputStream0, inputStream1, outputStream);
-
-	streamWrite(outputStream, output);
+	gpu_ADD(*inputStream0, *inputStream1, *outputStream);
 }
 
-//TODO: Finish these operators
-void streamOperations::NOT(float input[], float output)
+void streamOperations::SUB()
 {
+	gpu_SUB(*inputStream0, *inputStream1, *outputStream);
 }
 
-void streamOperations::OR(float input0[], float input1[], float output[])
+void streamOperations::DIV()
 {
+	gpu_DIV(*inputStream0, *inputStream1, *outputStream);
 }
 
-void streamOperations::XOR(float input0[], float input1[], float output[])
+void streamOperations::MUL()
 {
+	gpu_MUL(*inputStream0, *inputStream1, *outputStream);
 }
 
-void streamOperations::AND(float input0[], float input1[], float output[])
+void streamOperations::NOT()
 {
+	gpu_NOT(*inputStream0, *outputStream);
 }
 
-void streamOperations::LSHIFT(float input[], int shift, float output[])
+void streamOperations::OR()
 {
+	gpu_OR(*inputStream0, *inputStream1, *outputStream);
 }
 
-void streamOperations::RSHIFT(float input[], int shift, float output[])
+void streamOperations::XOR_BI()
 {
+	gpu_XOR_BIOP(*inputStream0, *inputStream1, *outputStream);
 }
 
-void streamOperations::setChunkSize(int input)
+void streamOperations::XOR_TRI()
 {
-	chunkSize = input;
+	gpu_XOR_TRIOP(*inputStream0, *inputStream1, *inputStream2, *outputStream);
+}
+
+void streamOperations::AND()
+{
+	gpu_AND(*inputStream0, *inputStream1, *outputStream);
+}
+
+void streamOperations::LSHIFT(int shift)
+{
+	gpu_LSHIFT(*inputStream0, shift, *outputStream);
+}
+
+void streamOperations::RSHIFT(int shift)
+{
+	gpu_RSHIFT(*inputStream0, shift, *outputStream);
 }
