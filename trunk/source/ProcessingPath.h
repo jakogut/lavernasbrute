@@ -39,8 +39,6 @@ protected:
 
 	int id;
 
-	int getID();
-
 	unsigned long long startKeyspace, endKeyspace;
 	unsigned long long keyspaceOffset;
 

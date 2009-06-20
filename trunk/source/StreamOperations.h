@@ -14,38 +14,36 @@ class streamOperations
 {
 public:
 
-	streamOperations(int chunkSize);
+	streamOperations(long long chunkSize, int numStreams);
 	~streamOperations();
-
-	void writeStream(int stream, int input[]);
-	int* readResult();
-
-	void ADD(int input1);
-	inline void ADD();
-	inline void SUB();
-	inline void DIV();
-	inline void MUL();
-
-	inline void NOT();
-	inline void OR();
-	inline void XOR_BI();
-	inline void XOR_TRI();
-	inline void AND();
-
-	inline void LSHIFT(int shift);
-	inline void RSHIFT(int shift);
 
 	void setChunkSize(int input);
 
+	void writeStream(int streamIndex, int input[]);
+	int* readStream(int streamIndex);
+
+	void ADD_CONST(int streamIndex, int input1, int outputStream);
+	void ADD(int streamIndex0, int streamIndex1, int outputStream);
+	void SUB(int streamIndex0, int streamIndex1, int outputStream);
+	void DIV(int streamIndex0, int streamIndex1, int outputStream);
+	void MUL(int streamIndex0, int streamIndex1, int outputStream);
+
+	void NOT(int streamIndex, int outputStream);
+	void OR(int streamIndex0, int streamIndex1, int outputStream);
+	void XOR(int streamIndex0, int streamIndex1, int outputStream);
+	void XOR(int streamIndex0, int streamIndex1, int streamIndex2, int outputStream);
+	void AND(int streamIndex0, int streamIndex1, int outputStream);
+
+	void LSHIFT(int streamIndex, int shift, int outputStream);
+	void RSHIFT(int streamIndex, int shift, int outputStream);
+
 protected:
 
-	int chunkSize;
+	long long chunkSize;
+	int numStreams;
 
-	Stream<int>* inputStream0;
-	Stream<int>* inputStream1;
-	Stream<int>* inputStream2;
+	Stream<int>** stream;
 
-	Stream<int>* outputStream;
 	int* output;
 };
 

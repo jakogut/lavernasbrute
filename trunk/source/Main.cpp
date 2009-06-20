@@ -17,6 +17,8 @@
 #include "CPUPath.h"
 #include "GPUPath.h"
 
+#include "StreamOperations.h"
+
 using namespace std;
 
 ////////////////////////////////
