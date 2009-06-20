@@ -10,8 +10,8 @@ CPUPath::CPUPath(int id)
 	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
 
-	startKeyspace = ((pow((unsigned long double)charsetLength, maxChars) / totalThreads) * id);
-	endKeyspace = startKeyspace + (pow((unsigned long double)charsetLength, maxChars) / totalThreads);
+	startKeyspace = (long long)((pow((double)charsetLength, maxChars) / totalThreads) * id);
+	endKeyspace = startKeyspace + (long long)(pow((double)charsetLength, maxChars) / totalThreads);
 
 	//Assign a unique portion of the keyspace to the thread
 	keyLocation = startKeyspace;

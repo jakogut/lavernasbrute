@@ -143,15 +143,15 @@ protected:
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
 		{
-			unsigned int n=output[i];
+			unsigned int n = output[i];
 			//iterate the bytes of the integer		
 			for(int j = 0; j < 4; j++)
 			{
-				unsigned int convert=n%256;
+				unsigned int convert = n % 256;
 				hex_format[i*8+j*2+1]=itoa16[convert%16];
-				convert/=16;
+				convert /= 16;
 				hex_format[i*8+j*2+0]=itoa16[convert%16];
-				n/=256;
+				n /= 256;
 			}	
 		}
 		//null terminate the string
@@ -163,7 +163,6 @@ protected:
 	static unsigned int* nt_buffer;
 	static unsigned int* crypted;
 	static char* hex_format;
-
 	static char* itoa16;
 };
 
