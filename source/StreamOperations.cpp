@@ -5,6 +5,8 @@ streamOperations::streamOperations(long long chunkSize, int numStreams)
 {
 	int streamSize[] = {chunkSize};
 
+	output = new int[chunkSize];
+
 	stream = new Stream<int>*[numStreams];
 
 	for(int i = 0; i < numStreams; i++)
@@ -30,11 +32,7 @@ void streamOperations::writeStream(int streamIndex, int* input)
 
 int* streamOperations::readStream(int streamIndex)
 {
-	output = new int[chunkSize];
-
 	streamWrite(*stream[streamIndex], output);
-
-	delete output;
 
 	return output;
 }
