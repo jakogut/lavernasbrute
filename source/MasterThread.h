@@ -10,11 +10,14 @@
 #include <sstream>
 #include <vector>
 
+#include <boost/thread/thread.hpp>
+#include <boost/date_time.hpp>
+
 class masterThread
 {
 public:
 
-	masterThread(int id);
+	masterThread();
 	~masterThread();
 
 	void operator()();
@@ -36,7 +39,6 @@ public:
 	static char* getCharset();
 	static int getCharsetLength();
 
-	static void delay(time_t seconds);
 	void printResult();
 
 protected:
@@ -45,6 +47,8 @@ protected:
 
 	int id;
 	time_t startTime;
+
+	bool iterationsWrittenFlag;
 
 	static long long iterations;
 	static int interval;

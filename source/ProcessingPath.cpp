@@ -4,13 +4,8 @@
 
 processingPath::processingPath() 
 {
-	mNTLM = new NTLM();
-
 	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
-
-	randFast = false;
-	linearSearch = true;
 
 	if(maxChars <= 0)
 	{
@@ -22,7 +17,7 @@ processingPath::~processingPath()
 {
 }
 
-//Convert an integer to a base 62 key
+//Convert the integer key location to a text string
 std::string processingPath::integerToKey(unsigned long long* location)
 {
 	unsigned long long num = *location;
@@ -30,8 +25,8 @@ std::string processingPath::integerToKey(unsigned long long* location)
 
 	while(num > 0)
 	{
-		result += charset[num % 62];
-		num /= 62;
+		result += charset[num % (charsetLength + 1)];
+		num /= (charsetLength + 1);
 	}
 
 	return result;
@@ -55,9 +50,4 @@ void processingPath::setMaxChars(int input)
 void processingPath::setTotalThreads(int input)
 {
 	totalThreads = input;
-}
-
-void processingPath::useLinearSearch(bool input)
-{
-	linearSearch = input;
 }

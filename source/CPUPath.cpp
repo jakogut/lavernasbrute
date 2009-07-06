@@ -5,11 +5,6 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	mNTLM = new NTLM();
-
-	charset = masterThread::getCharset();
-	charsetLength = masterThread::getCharsetLength();
-
 	startKeyspace = (long long)((pow((double)charsetLength, maxChars) / totalThreads) * id);
 	endKeyspace = startKeyspace + (long long)(pow((double)charsetLength, maxChars) / totalThreads);
 
@@ -23,18 +18,15 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
-	std::string tempString;
-
 	do
 	{
-		tempString = integerToKey(&keyLocation);
+		currentKey = integerToKey(&keyLocation);
 		keyLocation++;
 
-		if(mNTLM->getNTLMHash(tempString) == target)
+		if(ntlm.getNTLMHash(currentKey) == target)
 		{
-			masterThread::setCrackedPassword(tempString);
+			masterThread::setCrackedPassword(currentKey);
 			masterThread::setSuccess(true);
-			break;
 		}
 		else
 		{

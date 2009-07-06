@@ -24,14 +24,14 @@ void GPUPath::operator()()
 
 /*	do
 	{
-		for(int i = 0; i < chunkSize; ++i)
+		for(int i = 0; i < chunkSize; i++)
 		{
 			chunkStringArray[i] = generateRandString(4);
 		}
 
 		mNTLM->getMultipleNTLMHashes(chunkSize, chunkStringArray, chunkStringHashedArray);
 
-		for(int i = 0; i < chunkSize; ++i)
+		for(int i = 0; i < chunkSize; i++)
 		{
 			if(chunkStringHashedArray[i] == Target)
 			{

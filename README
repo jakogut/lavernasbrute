@@ -1,11 +1,11 @@
 DIRECTORIES OVERVIEW
 
-/bin			Location for completed builds
-/lib			Directory to search for library dependencies
-/MSVC9          Visual Studio project files
-/include        Include directory for library headers
-/source         Source code for building Laverna's Brute
-/tools          Useful tools meant to assist developers
+/bin		Location for completed builds
+/lib		Directory to search for library dependencies
+/MSVC9          	Visual Studio project files
+/include       	Include directory for library headers
+/source      	Source code for building Laverna's Brute
+/tools          	Useful tools meant to assist developers
 
 BUILDING
 
@@ -20,17 +20,17 @@ You will need to install the ATI Stream SDK for your platform, which is availabl
 
 The currently supported architectures and compilers are:
 
-[OS]	[Compiler]		[Arch]
+[OS]	[Compiler]			[Arch]
 
 Win	Visual Studio C++ 9.0	(x86/x64)
 
 
 Pre-built libraries are available for:
 
-[OS]	[Compiler]		[Arch]		[Build Profile]		[Library Type]
+[OS]	[Compiler]			[Arch]		[Build Profile]		[Library Type]
 
-Win	Visual Studio C++ 9.0	(x86/x64)	Release & Debug		Static Only
-Win	Intel C++ Compiler	(x86)		Release	& Debug		Static Only	(Unsupported)
+Win	Visual Studio C++ 9.0	(x86/x64)		Release & Debug		Static Only
+Win	Intel C++ Compiler		(x86)		Release	& Debug		Static Only	(Unsupported)
 Lin	GCC			(x86)		Release			Static Only	(Unsupported)
 
 

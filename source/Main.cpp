@@ -28,22 +28,20 @@ using namespace std;
 //Initialize our static variables:
 //////////////////////////////////////////////////////////////////////////////////////////
 
-bool masterThread::success;
-bool masterThread::silent;
-int masterThread::interval;
-string masterThread::crackedPassword;
-char* masterThread::charset;
-int masterThread::charsetLength;
+bool masterThread::success = 0;
+bool masterThread::silent = 0;
+int masterThread::interval = 0;
+string masterThread::crackedPassword = "";
+char* masterThread::charset = 0;
+int masterThread::charsetLength = 0;
 
-string processingPath::target;
-int processingPath::maxChars;
-int processingPath::totalThreads;
-bool processingPath::randFast;
-bool processingPath::linearSearch;
+string processingPath::target = "";
+int processingPath::maxChars = 0;
+int processingPath::totalThreads = 0;
 
-unsigned int* NTLM::nt_buffer;
-unsigned int* NTLM::crypted;
-char* NTLM::hex_format;
+unsigned int NTLM::nt_buffer[16];
+unsigned int NTLM::crypted[4];
+char NTLM::hex_format[33];
 char* NTLM::itoa16;
 
 //A counter to log the number of iterations run
@@ -84,17 +82,17 @@ void printHelp()
 	return result;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
 	bool silent;
-	string hashTemp = "";
+	string hashTemp;
 	int interval = 5;
 
 	//Number of threads for the CPU path
-	int totalThreads = 2;
+	int totalThreads = 4;
 
 	//Parse command-line arguments
-	for(int i = 0; i < argc; ++i)
+	for(int i = 0; i < argc; i++)
 	{
 		//Set the password string to be cracked
 		if(strcmp(argv[i], "-h") == 0)
@@ -112,7 +110,7 @@ int main(int argc, char* argv[])
 			//The length of a proper NTLM hash is always 32 characters
 			if(newHash.length() == 32)
 			{
-				hashTemp = argv[i + 1];
+				hashTemp = newHash;
 			}
 			else
 			{
@@ -151,10 +149,7 @@ int main(int argc, char* argv[])
 		//Interval for iteration logging
 		if(strcmp(argv[i], "-i") == 0)
 		{
-			string temp;
-			temp = argv[i + 1];
-
-			interval = toInt(temp);
+			interval = toInt(argv[i + 1]);
 			masterThread::setInterval(interval);
 		}
 		else
@@ -171,8 +166,7 @@ int main(int argc, char* argv[])
 		//Disable iteration logging
 		if(strcmp(argv[i], "--silent") == 0)
 		{
-			silent = true;
-			masterThread::setSilent(silent);
+			masterThread::setSilent(true);
 		}
 		else 
 		{
@@ -180,17 +174,19 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if(hashTemp.length() <= 0)
+	if(hashTemp.length() > 0)
 	{
-		printHelp();
-		return 0;
+		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
+			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
+
+		processingPath::setTarget(hashTemp);
 	}
 	else
 	{
-		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
-			<< "Cracking NTLM hash " << hashTemp << ".\n\n";
+		cerr << "\nERROR: Invalid input. Please choose a valid action." << endl;
 
-		processingPath::setTarget(hashTemp);
+		printHelp();
+		return 1;
 	}
 
 	//The thread group is like a big pile of zombie slaves which rise to do your bidding with a simple "join_all()"
@@ -205,10 +201,10 @@ int main(int argc, char* argv[])
 	//threadGroup.create_thread(GPUPath(1));
 
 	//Add a master thread to the group
-	threadGroup.create_thread(masterThread(0));
+	threadGroup.create_thread(masterThread());
 
 	//Create a number of threads for the CPU path
-	for(int i = 0; i < totalThreads; ++i)
+	for(int i = 0; i < totalThreads; i++)
 	{
 		threadGroup.create_thread(CPUPath(i));
 	}
