@@ -3,9 +3,9 @@
 streamOperations::streamOperations(long long chunkSize, int numStreams)
 : chunkSize(chunkSize), numStreams(numStreams)
 {
-	int streamSize[] = {chunkSize};
+	int streamSize[] = {(unsigned int)chunkSize};
 
-	output = new int[chunkSize];
+	output = new int[(unsigned int)chunkSize];
 
 	stream = new Stream<int>*[numStreams];
 
@@ -19,7 +19,7 @@ streamOperations::~streamOperations()
 {
 	for(int i = 0; i < numStreams; i++)
 	{
-		delete [] stream[i];
+		delete stream[i];
 	}
 
 	delete [] stream;

@@ -23,19 +23,17 @@ class processingPath
 	~processingPath();
 
 	virtual void operator()() = 0;
-	
-	static std::string getTarget();
 
 	std::string integerToKey(unsigned long long* location);
 
+	static std::string getTarget();
 	static void setTarget(std::string write);
 	static void setMaxChars(int write);
 	static void setTotalThreads(int write);
-	static void useLinearSearch(bool write);
 
 protected:
 
-	NTLM* mNTLM;
+	NTLM ntlm;
 
 	int id;
 
@@ -44,8 +42,6 @@ protected:
 
 	static int maxChars;
 	static int totalThreads;
-	static bool randFast;
-	static bool linearSearch;
 	static std::string target;
 
 	char* charset;

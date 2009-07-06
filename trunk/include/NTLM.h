@@ -13,26 +13,14 @@ public:
 
 	NTLM()
 	{
-		itoa16 = (char *)"0123456789abcdef";
-
-		nt_buffer = new unsigned int[16];
-		crypted = new unsigned int[4];
-		hex_format = new char[32];
+		itoa16 = "0123456789abcdef";
 	}
 
 	~NTLM()
 	{
-		if(nt_buffer)
-			delete [] nt_buffer;
-
-		if(crypted)
-			delete [] crypted;
-
-		if(hex_format)
-			delete [] hex_format;
 	}
 
-	inline static std::string getNTLMHash(std::string input)
+	static std::string getNTLMHash(std::string input)
 	{
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -160,9 +148,9 @@ protected:
 		return hex_format;
 	}
 
-	static unsigned int* nt_buffer;
-	static unsigned int* crypted;
-	static char* hex_format;
+	static unsigned int nt_buffer[16];
+	static unsigned int crypted[4];
+	static char hex_format[33];
 	static char* itoa16;
 };
 

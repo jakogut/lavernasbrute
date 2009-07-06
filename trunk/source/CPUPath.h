@@ -22,6 +22,8 @@ protected:
 	char* charset;
 	int charsetLength;
 
+	std::string currentKey;
+
 	unsigned long long keyLocation;
 };
 
