@@ -24,7 +24,7 @@ class processingPath
 
 	virtual void operator()() = 0;
 
-	std::string integerToKey(unsigned long long* location);
+	void integerToKey(unsigned long long* location, std::string* output);
 
 	static std::string getTarget();
 	static void setTarget(std::string write);
@@ -36,9 +36,6 @@ protected:
 	NTLM ntlm;
 
 	int id;
-
-	unsigned long long startKeyspace, endKeyspace;
-	unsigned long long keyspaceOffset;
 
 	static int maxChars;
 	static int totalThreads;

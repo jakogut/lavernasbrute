@@ -9,7 +9,7 @@ masterThread::masterThread()
 	startTime = time(NULL);
 
 	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	charsetLength = strlen(charset);
+	charsetLength = (int)(strlen(charset));
 }
 
 masterThread::~masterThread()
@@ -20,16 +20,13 @@ void masterThread::operator()()
 {
 	boost::posix_time::seconds updateInterval(interval);
 
-	do
+	while(!success)
 	{
 		if(!silent)
-		{
 			writeIterations();
-		}
 
 		boost::this_thread::sleep(updateInterval);
-
-	} while(!success);
+	}
 
 	printResult();
 }
