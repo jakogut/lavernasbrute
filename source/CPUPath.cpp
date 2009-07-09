@@ -5,11 +5,13 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	startKeyspace = (long long)((pow((double)charsetLength, maxChars) / totalThreads) * id);
-	endKeyspace = startKeyspace + (long long)(pow((double)charsetLength, maxChars) / totalThreads);
+	startKeyspace = ((pow((double)charsetLength, maxChars) / totalThreads) * id);
+	endKeyspace = startKeyspace + (pow((double)charsetLength, maxChars) / totalThreads);
 
 	//Assign a unique portion of the keyspace to the thread
 	keyLocation = startKeyspace;
+
+	std::cout << id << "\t" << startKeyspace << " - " << endKeyspace << std::endl;
 }
 
 CPUPath::~CPUPath()
@@ -20,7 +22,7 @@ void CPUPath::operator()()
 {
 	do
 	{
-		currentKey = integerToKey(&keyLocation);
+		integerToKey(&keyLocation, &currentKey);
 		keyLocation++;
 
 		if(ntlm.getNTLMHash(currentKey) == target)

@@ -19,12 +19,9 @@ protected:
 
 	int id;
 
-	char* charset;
-	int charsetLength;
-
 	std::string currentKey;
 
-	unsigned long long keyLocation;
+	unsigned long long startKeyspace, endKeyspace, keyLocation;
 };
 
 #endif

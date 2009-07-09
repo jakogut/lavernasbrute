@@ -18,18 +18,16 @@ processingPath::~processingPath()
 }
 
 //Convert the integer key location to a text string
-std::string processingPath::integerToKey(unsigned long long* location)
+void processingPath::integerToKey(unsigned long long* location, std::string* output)
 {
 	unsigned long long num = *location;
-	std::string result;
+	*output = "";
 
 	while(num > 0)
 	{
-		result += charset[num % (charsetLength + 1)];
-		num /= (charsetLength + 1);
+		*output += charset[num % (charsetLength + 1)];
+		num /= charsetLength + 1;
 	}
-
-	return result;
 }
 
 void processingPath::setTarget(std::string input)
