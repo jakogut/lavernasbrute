@@ -31,7 +31,7 @@ string masterThread::crackedPassword = "";
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 
-string processingPath::target = "";
+char* processingPath::target = "";
 int processingPath::maxChars = 0;
 int processingPath::totalThreads = 0;
 
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
 		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
 			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
 
-		processingPath::setTarget(hashTemp);
+		processingPath::setTarget((char*)hashTemp.c_str());
 	}
 	else
 	{

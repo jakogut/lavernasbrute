@@ -22,6 +22,7 @@ protected:
 	std::string currentKey;
 
 	unsigned long long startKeyspace, endKeyspace, keyLocation;
+	unsigned long long localProgress;
 };
 
 #endif

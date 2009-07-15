@@ -20,8 +20,6 @@ GPUPath::~GPUPath()
 
 void GPUPath::operator()()
 {
-	std::string Target = getTarget();
-
 /*	do
 	{
 		for(int i = 0; i < chunkSize; i++)
