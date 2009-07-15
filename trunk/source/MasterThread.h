@@ -43,7 +43,7 @@ public:
 
 protected:
 
-	static std::string target;
+	static char* target;
 
 	int id;
 	time_t startTime;

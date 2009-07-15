@@ -24,10 +24,10 @@ class processingPath
 
 	virtual void operator()() = 0;
 
-	void integerToKey(unsigned long long* location, std::string* output);
+	void integerToKey(unsigned long long location, std::string* output);
 
-	static std::string getTarget();
-	static void setTarget(std::string write);
+	static char* getTarget();
+	static void setTarget(char* write);
 	static void setMaxChars(int write);
 	static void setTotalThreads(int write);
 
@@ -39,7 +39,7 @@ protected:
 
 	static int maxChars;
 	static int totalThreads;
-	static std::string target;
+	static char* target;
 
 	char* charset;
 	int charsetLength;
