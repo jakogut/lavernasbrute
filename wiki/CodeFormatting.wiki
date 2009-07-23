@@ -60,7 +60,7 @@ should be declared as a block, rather than a single line. You just lost the game
 
 = Object Naming =
 
-Variable names aren't that complicated. Name variables in a way that explicitly and concisely reveals their purpose. Any single-part variable is all lowercase. Any variable consisting of more than one part starts with a lowercase character, and subsequent parts start with an uppercase letter.
+Variable names aren't that complicated. Name variables in a way that explicitly and concisely reveals their purpose. Any single-part variable is all lowercase. Any variable consisting of more than one part starts with a lowercase character, and subsequent parts start with an uppercase letter. (Camel-case)
 
 For example, these are all proper variable declarations:
 
