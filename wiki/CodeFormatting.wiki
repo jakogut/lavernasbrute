@@ -16,7 +16,7 @@ if(foo)
     {
         bar();
 
-    } while(baz)
+    } while(baz);
 }
 }}}
 
