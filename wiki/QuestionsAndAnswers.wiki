@@ -7,6 +7,10 @@
 
 There are no stable releases yet. For Alpha (the current release status) checkout the code from the [http://code.google.com/p/lavernasbrute/source/checkout Source Checkout] page or check the [http://code.google.com/p/lavernasbrute/downloads/list Downloads] page to see if there are builds for your OS/Arch.
 
+=== How does the versioning system of Laverna's Brute work? ===
+
+Version numbers are given based on when the material was created. Version numbering is in the format YY.MM.DD, with no leading zeroes. (A binary built on the 3rd of January, 2010 would be version 10.1.3.) This makes it easy to distinguish which builds are newer than others, while making versioning a more automatic process for us, as builds don't have to meet certain criteria to be versioned, they simply _are._
+
 === I found a bug. Where can I report it? ===
 
 See the [http://code.google.com/p/lavernasbrute/issues/list Issues] page to send a bug report. Please remember to search the issues first to see if there is an existing report.
