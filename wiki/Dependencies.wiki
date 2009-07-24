@@ -11,6 +11,8 @@ This page is provided to show what dependencies are required to build Laverna's 
     _Boost is generally only available as a source package, and will require you to build   
     the libraries yourself if they are not available pre-built for your compiler._
 
+    (Pre-built archives of Boost are now available [http://dottru.net/~joseph/BoostLibs here].)
+
   * ATI Stream SDK 1.4+ [http://developer.amd.com/gpu/ATIStreamSDK/]
 
     _The Stream SDK is available with pre-built libraries for a variety of compilers and 
