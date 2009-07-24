@@ -18,3 +18,13 @@ This page is provided to show what dependencies are required to build Laverna's 
     _The Stream SDK is available with pre-built libraries for a variety of compilers and 
     platforms. Some components of the SDK can be built from source for your specific 
     platform._
+
+<wiki:comment>
+
+Possible future dependencies:
+
+    * C++ Sockets [http://www.alhem.net/Sockets/download.html]
+
+    _The C++ Sockets dependency is available in source form only._
+
+</wiki:comment>
