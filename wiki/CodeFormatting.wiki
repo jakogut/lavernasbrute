@@ -35,7 +35,7 @@ a += b * (c - d);
 If you have an especially long function header or flow control condition, wrap it around to the next line.
 
 {{{
-kernel void someFunction(int data1, bool isTrue, string inputText, 
+void someFunction(int data1, bool isTrue, string inputText, 
     unsigned long long iterations)
 {
     //Do something
