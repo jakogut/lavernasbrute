@@ -5,8 +5,6 @@
 GPUPath::GPUPath(int id)
 : id(id)
 {
-	mNTLM = new NTLM();
-
 	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
 

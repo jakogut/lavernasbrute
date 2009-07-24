@@ -20,12 +20,18 @@ void masterThread::operator()()
 {
 	boost::posix_time::seconds updateInterval(interval);
 
-	while(!success)
+	if(!silent)
 	{
-		if(!silent)
+		while(!success)
+		{
 			writeIterations();
-
-		boost::this_thread::sleep(updateInterval);
+			boost::this_thread::sleep(updateInterval);
+		}
+	}
+	else
+	{
+		while(!success);
+			boost::this_thread::sleep(updateInterval);
 	}
 
 	printResult();
@@ -33,24 +39,19 @@ void masterThread::operator()()
 
 void masterThread::writeIterations()
 {
-	std::stringstream ss;
-	std::string output;
-
-	ss << getIterations();
-	ss >> output;
-
-	std::cout << output << " iterations" << std::endl;
+	std::cout << getIterations() << " iterations" << std::endl;
 }
 
 void masterThread::printResult()
 {
-	time_t endTime = ((unsigned)time(NULL));
+	time_t endTime = time(NULL);
 
-	//This needs to be reworked
-	time_t hours = (endTime - startTime) / 3600;
-	time_t minutes = (endTime - startTime) / 60;
 	time_t seconds = (endTime - startTime);
+	time_t minutes = seconds / 60;
+	time_t hours = minutes / 60;
+	time_t days = hours / 24;
 
+	hours -= days * 24;
 	minutes -= hours * 60;
 	seconds -= minutes * 60;
 
@@ -72,7 +73,12 @@ bool masterThread::getSuccess()
 
 void masterThread::incrementIterations()
 {
-	++iterations;
+	iterations++;
+}
+
+void masterThread::increaseIterations(unsigned long long input)
+{
+	iterations += input;
 }
 
 void masterThread::setSuccess(bool boolean)
@@ -93,11 +99,6 @@ int masterThread::getCharsetLength()
 long long masterThread::getIterations()
 {
 	return iterations;
-}
-
-void masterThread::increaseIterations(int input)
-{
-	iterations += input;
 }
 
 bool masterThread::getSilent()

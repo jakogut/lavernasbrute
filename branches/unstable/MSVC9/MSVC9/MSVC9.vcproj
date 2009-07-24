@@ -285,15 +285,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				InlineFunctionExpansion="0"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="&quot;$(BROOKROOT)\sdk\include&quot;;..\..\include;..\..\source\brook"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				MinimalRebuild="true"
-				RuntimeLibrary="2"
-				StructMemberAlignment="5"
+				RuntimeLibrary="0"
+				StructMemberAlignment="0"
 				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="false"
 				EnableEnhancedInstructionSet="0"
@@ -316,7 +316,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="brook.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
+				AdditionalLibraryDirectories="&quot;D:\BoostLibs\1_38_0\MSVC-64&quot;;&quot;C:\boost_1_38_0\stage\ICC-64&quot;;&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -357,6 +357,10 @@
 			>
 			<File
 				RelativePath="..\..\source\CPUPath.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\Director.cpp"
 				>
 			</File>
 			<File
@@ -419,6 +423,10 @@
 			>
 			<File
 				RelativePath="..\..\source\CPUPath.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\Director.h"
 				>
 			</File>
 			<File
@@ -517,7 +525,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="mkdir brookgenfiles | &quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot; -o &quot;../../source/brook/$(InputName)&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot; -o &quot;../../source/brook/$(InputName)&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="..\..\source\brook\$(InputName).cpp"
 					/>
 				</FileConfiguration>

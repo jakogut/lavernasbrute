@@ -32,7 +32,7 @@ public:
 
 	static long long getIterations();
 	static void incrementIterations();
-	static void increaseIterations(int input);
+	static void increaseIterations(unsigned long long input);
 
 	static void setCrackedPassword(std::string input);
 
@@ -47,8 +47,6 @@ protected:
 
 	int id;
 	time_t startTime;
-
-	bool iterationsWrittenFlag;
 
 	static long long iterations;
 	static int interval;

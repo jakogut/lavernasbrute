@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 	int interval = 5;
 
 	//Number of threads for the CPU path
-	int totalThreads = 4;
+	int totalThreads = 2;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; i++)
@@ -111,6 +111,8 @@ int main(int argc, char** argv)
 			else
 			{
 				cerr << "\nERROR: Invalid hash! String must be 32 characters in length." << endl;
+
+				return 1;
 			}
 		}
 
@@ -133,6 +135,8 @@ int main(int argc, char** argv)
 			}
 			else
 			{
+				cout << "\nERROR: To run fewer than two threads, you must use the --disable-threading flag.";
+
 				totalThreads = 2;
 			}
 		}
@@ -181,7 +185,8 @@ int main(int argc, char** argv)
 	{
 		cerr << "\nERROR: Invalid input. Please choose a valid action." << endl;
 
-		printHelp();
+		cout << "\nUse flag '-h' to view the available options." << endl;
+
 		return 1;
 	}
 

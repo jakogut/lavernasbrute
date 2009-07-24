@@ -17,21 +17,6 @@ processingPath::~processingPath()
 {
 }
 
-//Convert the integer key location to a text string
-void processingPath::integerToKey(unsigned long long location, std::string* output)
-{
-	unsigned long long num = location;
-
-	output->clear();
-	output->reserve(sizeof(char) * maxChars);
-
-	while(num > 0)
-	{
-		*output += charset[num % (charsetLength + 1)];
-		num /= charsetLength + 1;
-	}
-}
-
 void processingPath::setTarget(char* input)
 {
 	target = input;
@@ -45,6 +30,11 @@ char* processingPath::getTarget()
 void processingPath::setMaxChars(int input)
 {
 	maxChars = input;
+}
+
+int processingPath::getMaxChars()
+{
+	return maxChars;
 }
 
 void processingPath::setTotalThreads(int input)

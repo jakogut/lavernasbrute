@@ -19,7 +19,7 @@ protected:
 
 	int id;
 
-	std::string currentKey;
+	void integerToKey(unsigned long long location, char* output);
 
 	unsigned long long startKeyspace, endKeyspace, keyLocation;
 	unsigned long long localProgress;
