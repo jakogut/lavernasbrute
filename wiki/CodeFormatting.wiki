@@ -74,6 +74,12 @@ string namingConventions;
 
 Header/source files are named in the same way as variables, but they always start with a capital letter. Class/struct definitions are named similar to variables, with the sole exception that single-part class/struct names should begin with a capital. Class/struct names should have the same or similar name as the header containing them.
 
+{{{
+struct someData; //...
+
+class Networking; //...
+}}}
+
 = Header Files =
 
 == Include Guards ==
