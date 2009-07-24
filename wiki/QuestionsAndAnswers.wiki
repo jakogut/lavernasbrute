@@ -22,7 +22,7 @@ See the [http://code.google.com/p/lavernasbrute/issues/list Issues] page to send
   * Subscribe to one or more of the [http://code.google.com/p/lavernasbrute/feeds Project Feeds] for updates concerning project information, downloads, wiki, issue updates, and source changes using your favorite feed reader.
 
 === Where can I contact the Laverna's Brute development team? ===
-Joseph.Kogut`[REMOVE_THIS_TAG`]@gmail.com
+Joseph.Kogut+lavernasbrute@gmail.com
 
 <wiki:comment>
 Justin: Wasn't sure if you wanted your address here or not. Feel free to put it down if you want to be contacted about LB.
