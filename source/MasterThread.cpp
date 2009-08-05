@@ -3,7 +3,6 @@
 #include "MasterThread.h"
 
 masterThread::masterThread() 
-: id(id)
 {
 	//Start the clock
 	startTime = time(NULL);
@@ -23,23 +22,12 @@ void masterThread::operator()()
 	while(!success)
 	{
 		if(!silent)
-			writeIterations();
+			std::cout << getIterations() << " iterations" << std::endl;
 
 		boost::this_thread::sleep(updateInterval);
 	}
 
 	printResult();
-}
-
-void masterThread::writeIterations()
-{
-	std::stringstream ss;
-	std::string output;
-
-	ss << getIterations();
-	ss >> output;
-
-	std::cout << output << " iterations" << std::endl;
 }
 
 void masterThread::printResult()
@@ -105,17 +93,17 @@ bool masterThread::getSilent()
 	return silent;
 }
 
-void masterThread::setSilent(bool write)
+void masterThread::setSilent(bool input)
 {
-	silent = write;
+	silent = input;
 }
 
-void masterThread::setInterval(int write)
+void masterThread::setInterval(int input)
 {
-	interval = write;
+	interval = input;
 }
 
-void masterThread::setCrackedPassword(std::string write)
+void masterThread::setCrackedPassword(std::string input)
 {
-	crackedPassword = write;
+	crackedPassword = input;
 }

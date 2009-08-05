@@ -11,30 +11,25 @@ processingPath::processingPath()
 	{
 		maxChars = 8;
 	}
+	else if (maxChars > 10)
+	{
+		maxChars = 10;
+	}
 }
 
 processingPath::~processingPath()
 {
 }
 
-//Convert the integer key location to a text string
-void processingPath::integerToKey(unsigned long long location, std::string* output)
+void processingPath::setTarget(std::string input)
 {
-	unsigned long long num = location;
-
-	output->clear();
-	output->reserve(sizeof(char) * maxChars);
-
-	while(num > 0)
-	{
-		*output += charset[num % (charsetLength + 1)];
-		num /= charsetLength + 1;
-	}
+	strcpy(target, (char*)input.c_str());
 }
 
 void processingPath::setTarget(char* input)
 {
-	target = input;
+	strcpy(target, input);
+	target[32] = 0;
 }
 
 char* processingPath::getTarget()

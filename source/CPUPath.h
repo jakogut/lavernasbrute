@@ -19,10 +19,14 @@ protected:
 
 	int id;
 
-	std::string currentKey;
+	NTLM ntlm;
 
-	unsigned long long startKeyspace, endKeyspace, keyLocation;
-	unsigned long long localProgress;
+	//Function for converting an integer to a text string (key)
+	void integerToKey(unsigned long long location);
+	char* currentKey;
+
+	unsigned long long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
+	int localProgress;
 };
 
 #endif

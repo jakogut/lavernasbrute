@@ -13,14 +13,13 @@ public:
 
 	NTLM()
 	{
-		itoa16 = "0123456789abcdef";
 	}
 
 	~NTLM()
 	{
 	}
 
-	inline static char* getNTLMHash(std::string* input)
+	static char* getNTLMHash(std::string* input)
 	{
 		prepare_key((char*)input->c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -28,7 +27,7 @@ public:
 		return convert_hex(crypted);
 	}
 
-	inline static char* getNTLMHash(std::string input)
+	static char* getNTLMHash(std::string input)
 	{
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -36,7 +35,7 @@ public:
 		return convert_hex(crypted);
 	}
 
-	inline static char* getNTLMHash(char* input)
+	static char* getNTLMHash(char* input)
 	{
 		prepare_key(input, nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
