@@ -316,7 +316,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="brook.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
+				AdditionalLibraryDirectories="&quot;D:\BoostLibs\1_38_0\MSVC-64&quot;;&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -399,18 +399,6 @@
 				RelativePath="..\..\source\ProcessingPath.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\source\StreamOperations.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -460,117 +448,6 @@
 			<File
 				RelativePath="..\..\source\ProcessingPath.h"
 				>
-			</File>
-			<File
-				RelativePath="..\..\source\StreamOperations.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
-			Name="Brook Files"
-			>
-			<File
-				RelativePath="..\..\source\brook\STREAM_OPS.br"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="&quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot; -o &quot;..\..\source\brook\$(InputName)&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						Outputs="..\..\brook\$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="&quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot;  ..\..\source\brook\STREAM_OPS.br&#x0D;&#x0A;"
-						Outputs="..\..\source\brook\$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="mkdir brookgenfiles | &quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot; -o &quot;../../source/brook/$(InputName)&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						Outputs="..\..\source\brook\$(InputName).cpp"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\source\brook\STREAM_OPS.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\source\brook\STREAM_OPS.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\source\brook\STREAM_OPS_gpu.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

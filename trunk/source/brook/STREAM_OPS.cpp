@@ -8,98 +8,98 @@
 #include "STREAM_OPS_gpu.h"
 #include "STREAM_OPS.h"
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_ADD_cpu_inner(const __BrtInt1  &input0,
                          const __BrtInt1  &input1,
                          __BrtInt1  &output)
 
-#line 3 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 3 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 4 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 4 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 + input1;
 }
 void  __gpu_ADD_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_ADD_cpu_inner (
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          __out_arg_output);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_ADD::operator()(const ::brook::Stream< int >& input0,
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_ADD_fp[] = {
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_ADD_cal,
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_ADD_cpu,
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_ADD_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 1 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 1 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -113,99 +113,99 @@ __THREAD__ __gpu_ADD gpu_ADD;
 
 
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_ADD_CONST_cpu_inner(const __BrtInt1  &input0,
                                const __BrtInt1  &input1,
                                __BrtInt1  &output)
 
-#line 8 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 8 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 9 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 9 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 + input1;
 }
 void  __gpu_ADD_CONST_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __BrtInt1 *arg_input1 = (__BrtInt1 *) __k->getVectorElement(1);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_ADD_CONST_cpu_inner (
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                *arg_input1,
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                __out_arg_output);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_ADD_CONST::operator()(const ::brook::Stream< int >& input0,
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const int  input1,
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_ADD_CONST_fp[] = {
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_ADD_CONST_cal,
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_ADD_CONST_cpu,
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_ADD_CONST_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   brook::Constant<int > constant_1(input1);
   __k.PushConstant(constant_1);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 6 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 6 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -219,98 +219,98 @@ __THREAD__ __gpu_ADD_CONST gpu_ADD_CONST;
 
 
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_SUB_cpu_inner(const __BrtInt1  &input0,
                          const __BrtInt1  &input1,
                          __BrtInt1  &output)
 
-#line 13 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 13 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 14 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 14 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 - input1;
 }
 void  __gpu_SUB_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_SUB_cpu_inner (
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          __out_arg_output);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_SUB::operator()(const ::brook::Stream< int >& input0,
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_SUB_fp[] = {
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_SUB_cal,
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_SUB_cpu,
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_SUB_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 11 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 11 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -324,98 +324,98 @@ __THREAD__ __gpu_SUB gpu_SUB;
 
 
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_DIV_cpu_inner(const __BrtInt1  &input0,
                          const __BrtInt1  &input1,
                          __BrtInt1  &output)
 
-#line 18 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 18 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 19 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 19 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 / input1;
 }
 void  __gpu_DIV_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_DIV_cpu_inner (
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          __out_arg_output);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_DIV::operator()(const ::brook::Stream< int >& input0,
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_DIV_fp[] = {
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_DIV_cal,
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_DIV_cpu,
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_DIV_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 16 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 16 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -429,98 +429,98 @@ __THREAD__ __gpu_DIV gpu_DIV;
 
 
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_MUL_cpu_inner(const __BrtInt1  &input0,
                          const __BrtInt1  &input1,
                          __BrtInt1  &output)
 
-#line 23 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 23 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 24 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 24 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 * input1;
 }
 void  __gpu_MUL_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_MUL_cpu_inner (
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          __out_arg_output);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_MUL::operator()(const ::brook::Stream< int >& input0,
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_MUL_fp[] = {
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_MUL_cal,
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_MUL_cpu,
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_MUL_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 21 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 21 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -534,85 +534,85 @@ __THREAD__ __gpu_MUL gpu_MUL;
 
 
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_NOT_cpu_inner(const __BrtInt1  &input,
                          __BrtInt1  &output)
 
-#line 29 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 29 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 30 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 30 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = ~input;
 }
 void  __gpu_NOT_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_NOT_cpu_inner (
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input, __brt_idx)),
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          __out_arg_output);
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_NOT::operator()(const ::brook::Stream< int >& input,
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_NOT_fp[] = {
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_NOT_cal,
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_NOT_cpu,
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_NOT_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input);
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 27 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 27 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -626,98 +626,98 @@ __THREAD__ __gpu_NOT gpu_NOT;
 
 
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_OR_cpu_inner(const __BrtInt1  &input0,
                         const __BrtInt1  &input1,
                         __BrtInt1  &output)
 
-#line 34 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 34 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 35 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 35 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 | input1;
 }
 void  __gpu_OR_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_OR_cpu_inner (
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                         Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                         Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                         __out_arg_output);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_OR::operator()(const ::brook::Stream< int >& input0,
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_OR_fp[] = {
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_OR_cal,
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_OR_cpu,
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_OR_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 32 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 32 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -731,98 +731,98 @@ __THREAD__ __gpu_OR gpu_OR;
 
 
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_XOR_BIOP_cpu_inner(const __BrtInt1  &input0,
                               const __BrtInt1  &input1,
                               __BrtInt1  &output)
 
-#line 39 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 39 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 40 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 40 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 ^ input1;
 }
 void  __gpu_XOR_BIOP_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_XOR_BIOP_cpu_inner (
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                               Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                               Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                               __out_arg_output);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_XOR_BIOP::operator()(const ::brook::Stream< int >& input0,
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_XOR_BIOP_fp[] = {
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_XOR_BIOP_cal,
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_XOR_BIOP_cpu,
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_XOR_BIOP_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 37 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 37 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -836,111 +836,111 @@ __THREAD__ __gpu_XOR_BIOP gpu_XOR_BIOP;
 
 
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_XOR_TRIOP_cpu_inner(const __BrtInt1  &input0,
                                const __BrtInt1  &input1,
                                const __BrtInt1  &input2,
                                __BrtInt1  &output)
 
-#line 44 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 44 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 45 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 45 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 ^ input1 ^ input2;
 }
 void  __gpu_XOR_TRIOP_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input2 = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(3);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_XOR_TRIOP_cpu_inner (
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input2, __brt_idx)),
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                                __out_arg_output);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_XOR_TRIOP::operator()(const ::brook::Stream< int >& input0,
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input2,
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_XOR_TRIOP_fp[] = {
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_XOR_TRIOP_cal,
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_XOR_TRIOP_cpu,
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_XOR_TRIOP_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input2);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 42 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 42 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -954,98 +954,98 @@ __THREAD__ __gpu_XOR_TRIOP gpu_XOR_TRIOP;
 
 
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_AND_cpu_inner(const __BrtInt1  &input0,
                          const __BrtInt1  &input1,
                          __BrtInt1  &output)
 
-#line 49 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 49 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 50 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 50 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input0 & input1;
 }
 void  __gpu_AND_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input0 = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input1 = (::brt::StreamInterface *) __k->getVectorElement(1);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_AND_cpu_inner (
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input0, __brt_idx)),
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input1, __brt_idx)),
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                          __out_arg_output);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_AND::operator()(const ::brook::Stream< int >& input0,
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream< int >& input1,
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_AND_fp[] = {
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_AND_cal,
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_AND_cpu,
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_AND_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input0);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input1);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 47 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 47 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -1059,99 +1059,99 @@ __THREAD__ __gpu_AND gpu_AND;
 
 
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_LSHIFT_cpu_inner(const __BrtInt1  &input,
                             const __BrtInt1  &shift,
                             __BrtInt1  &output)
 
-#line 55 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 55 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 56 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 56 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input << shift;
 }
 void  __gpu_LSHIFT_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __BrtInt1 *arg_shift = (__BrtInt1 *) __k->getVectorElement(1);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_LSHIFT_cpu_inner (
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                             Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input, __brt_idx)),
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                             *arg_shift,
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                             __out_arg_output);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_LSHIFT::operator()(const ::brook::Stream< int >& input,
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const int  shift,
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_LSHIFT_fp[] = {
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_LSHIFT_cal,
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_LSHIFT_cpu,
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_LSHIFT_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   brook::Constant<int > constant_1(shift);
   __k.PushConstant(constant_1);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 53 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 53 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 
@@ -1165,99 +1165,99 @@ __THREAD__ __gpu_LSHIFT gpu_LSHIFT;
 
 
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void  __gpu_RSHIFT_cpu_inner(const __BrtInt1  &input,
                             const __BrtInt1  &shift,
                             __BrtInt1  &output)
 
-#line 60 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 60 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 61 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 61 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   output = input >> shift;
 }
 void  __gpu_RSHIFT_cpu(::brt::KernelC *__k, int __brt_idxstart, int __brt_idxend, bool __brt_isreduce)
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 {
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_input = (::brt::StreamInterface *) __k->getVectorElement(0);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __BrtInt1 *arg_shift = (__BrtInt1 *) __k->getVectorElement(1);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brt::StreamInterface *arg_output = (::brt::StreamInterface *) __k->getVectorElement(2);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     for(int __brt_idx=__brt_idxstart; __brt_idx<__brt_idxend; __brt_idx++) {
   if(!(__k->isValidAddress(__brt_idx))){ continue; }
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     Addressable <__BrtInt1  > __out_arg_output((__BrtInt1 *) __k->FetchElem(arg_output, __brt_idx));
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     __gpu_RSHIFT_cpu_inner (
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                             Addressable <__BrtInt1 >((__BrtInt1 *) __k->FetchElem(arg_input, __brt_idx)),
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                             *arg_shift,
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
                             __out_arg_output);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
     *reinterpret_cast<__BrtInt1 *>(__out_arg_output.address) = __out_arg_output.castToArg(*reinterpret_cast<__BrtInt1 *>(__out_arg_output.address));
   }
 }
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 void __gpu_RSHIFT::operator()(const ::brook::Stream< int >& input,
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const int  shift,
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 		const ::brook::Stream<  int >& output)
 {
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   static const void *__gpu_RSHIFT_fp[] = {
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cal", __gpu_RSHIFT_cal,
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      "cpu", (void *) __gpu_RSHIFT_cpu,
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
      NULL, NULL };
 
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   ::brook::Kernel  __k(__gpu_RSHIFT_fp, brook::KERNEL_MAP);
   ::brook::ArgumentInfo __argumentInfo;
 
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushStream(input);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   brook::Constant<int > constant_1(shift);
   __k.PushConstant(constant_1);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __k.PushOutput(output);
 
-#line 58 "c:/lavernasbrute_trunk/source/brook/STREAM_OPS.br"
+#line 58 "d:/Projects/Laverna's Brute/trunk/source/brook/STREAM_OPS.br"
   __argumentInfo.startExecDomain = _domainOffset;
   __argumentInfo.domainDimension = _domainSize;
 

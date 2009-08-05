@@ -4,7 +4,6 @@
 #define GPUPATH_H_
 
 #include "ProcessingPath.h"
-#include "MasterThread.h"
 
 class GPUPath : public processingPath
 {

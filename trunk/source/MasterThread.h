@@ -24,8 +24,6 @@ public:
 
 	static bool getSuccess();
 	static void setSuccess(bool boolean);
-	static void printToConsole(std::string print);
-	static void writeIterations();
 	static void setInterval(int input);
 	static bool getSilent();
 	static void setSilent(bool input);

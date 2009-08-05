@@ -22,24 +22,20 @@ class processingPath
 	processingPath();
 	~processingPath();
 
+	//The loop that is run to crack a given target hash
 	virtual void operator()() = 0;
 
-	void integerToKey(unsigned long long location, std::string* output);
-
 	static char* getTarget();
-	static void setTarget(char* write);
-	static void setMaxChars(int write);
-	static void setTotalThreads(int write);
+	static void setTarget(std::string input);
+	static void setTarget(char* input);
+	static void setMaxChars(int input);
+	static void setTotalThreads(int input);
 
 protected:
 
-	NTLM ntlm;
-
-	int id;
-
 	static int maxChars;
 	static int totalThreads;
-	static char* target;
+	static char target[33];
 
 	char* charset;
 	int charsetLength;

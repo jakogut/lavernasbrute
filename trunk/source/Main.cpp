@@ -31,14 +31,14 @@ string masterThread::crackedPassword = "";
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 
-char* processingPath::target = "";
+char processingPath::target[33];
 int processingPath::maxChars = 0;
 int processingPath::totalThreads = 0;
 
 unsigned int NTLM::nt_buffer[16];
 unsigned int NTLM::crypted[4];
 char NTLM::hex_format[33];
-char* NTLM::itoa16;
+char* NTLM::itoa16 = "0123456789abcdef";
 
 //A counter to log the number of iterations run
 long long masterThread::iterations = 0;
@@ -175,13 +175,13 @@ int main(int argc, char** argv)
 		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
 			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
 
-		processingPath::setTarget((char*)hashTemp.c_str());
+		processingPath::setTarget(hashTemp);
 	}
 	else
 	{
-		cerr << "\nERROR: Invalid input. Please choose a valid action." << endl;
+		cerr << "\nERROR: Invalid input. Please choose a valid action." << endl
+			 << "Use flag '-h' to see the possible options." << endl;
 
-		printHelp();
 		return 1;
 	}
 
