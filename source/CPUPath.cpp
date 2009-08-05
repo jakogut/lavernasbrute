@@ -27,6 +27,15 @@ void CPUPath::operator()()
 		currentKey = new char[maxChars + 1];
 
 		integerToKey(keyLocation);
+
+		if(keyLocation == 5335482)
+		{
+			std::cout << target << std::endl <<
+				currentKey << std::endl <<
+				ntlm.getNTLMHash(currentKey) << std::endl <<
+				charsetLength << std::endl;
+		}
+
 		keyLocation++;
 
 		if(strcmp(ntlm.getNTLMHash(currentKey), target) == 0)
@@ -67,5 +76,5 @@ void CPUPath::integerToKey(unsigned long long location)
 		num /= charsetLength + 1;
 	}
 
-	currentKey[i + 1] = 0;
+	currentKey[i + 1] = '\0';
 }
