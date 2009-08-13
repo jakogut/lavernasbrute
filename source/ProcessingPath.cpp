@@ -11,7 +11,8 @@ processingPath::processingPath()
 	{
 		maxChars = 8;
 	}
-	else if (maxChars > 10)
+	//Currently, the size of an unsigned 64-bit integer limits the maximum size of the keyspace to ten chars
+	else if (maxChars > 10)	
 	{
 		maxChars = 10;
 	}
@@ -29,7 +30,7 @@ void processingPath::setTarget(std::string input)
 void processingPath::setTarget(char* input)
 {
 	strcpy(target, input);
-	target[32] = 0;
+	target[32] = '\0';
 }
 
 char* processingPath::getTarget()

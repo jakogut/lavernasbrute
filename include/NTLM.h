@@ -13,13 +13,14 @@ public:
 
 	NTLM()
 	{
+		itoa16 = "0123456789abcdef";
 	}
 
 	~NTLM()
 	{
 	}
 
-	static char* getNTLMHash(std::string* input)
+	inline char* getNTLMHash(std::string* input)
 	{
 		prepare_key((char*)input->c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -27,7 +28,7 @@ public:
 		return convert_hex(crypted);
 	}
 
-	static char* getNTLMHash(std::string input)
+	inline char* getNTLMHash(std::string input)
 	{
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -35,7 +36,7 @@ public:
 		return convert_hex(crypted);
 	}
 
-	static char* getNTLMHash(char* input)
+	inline char* getNTLMHash(char* input)
 	{
 		prepare_key(input, nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -45,7 +46,7 @@ public:
 
 protected:
 
-	static void prepare_key(char* input, unsigned int* output)
+	void prepare_key(char* input, unsigned int* output)
 	{
 		int i=0;
 		int length=(int)(strlen(input));
@@ -63,7 +64,7 @@ protected:
 		output[14] = length << 4;
 	}
 
-	static void ntlm_crypt(unsigned int* input, unsigned int* output)
+	void ntlm_crypt(unsigned int* input, unsigned int* output)
 	{
 		unsigned int a = 0x67452301;
 		unsigned int b = 0xefcdab89;
@@ -141,7 +142,7 @@ protected:
 		output[3] = d + (unsigned int)0x10325476;
 	}
 
-	static char* convert_hex(unsigned int* output)
+	char* convert_hex(unsigned int* output)
 	{
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
@@ -163,10 +164,10 @@ protected:
 		return hex_format;
 	}
 
-	static unsigned int nt_buffer[16];
-	static unsigned int crypted[4];
-	static char hex_format[33];
-	static char* itoa16;
+	unsigned int nt_buffer[16];
+	unsigned int crypted[4];
+	char hex_format[33];
+	char* itoa16;
 };
 
 #endif

@@ -6,7 +6,7 @@
 #include "ProcessingPath.h"
 #include "Math.h"
 
-class CPUPath : public processingPath
+class CPUPath : protected processingPath
 {
 public:
 

@@ -360,39 +360,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\GPUPath.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\source\Main.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\source\MasterThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\OCLPath.cpp"
 				>
 			</File>
 			<File
@@ -410,39 +386,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\GPUPath.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\source\MasterThread.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\include\NTLM.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\OCLPath.h"
 				>
 			</File>
 			<File
