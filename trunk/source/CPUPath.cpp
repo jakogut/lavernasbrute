@@ -7,13 +7,11 @@ CPUPath::CPUPath(int id)
 {
 	keyspaceSize = (unsigned long long)(pow((long double)charsetLength, maxChars) / totalThreads);
 
-	startKeyspace = (keyspaceSize  * id);
+	startKeyspace = (keyspaceSize * id);
 	endKeyspace = (startKeyspace + keyspaceSize);
 
 	//Assign a unique portion of the keyspace to the thread
 	keyLocation = startKeyspace;
-
-	localProgress = 0;
 }
 
 CPUPath::~CPUPath()
@@ -22,25 +20,29 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
+	localProgress = 0;
+
 	do
 	{
 		currentKey = new char[maxChars + 1];
 
+		//Convert the keyspace location to a key
 		integerToKey(keyLocation);
 
 		keyLocation++;
 
-		if(strcmp(ntlm.getNTLMHash(currentKey), target) == 0)
+		//Hash and compare
+		if(strcmp(ntlm.getNTLMHash(currentKey), target) == 0) //Comparison returns a match
 		{
 			masterThread::setCrackedPassword(currentKey);
 			masterThread::setSuccess(true);
 		}
-		else
+		else //No match
 		{
 			//Increment a local counter for the number of iterations until it reaches a certain point.
 			//Once that point has been reached, the local count is committed to the global count and the local
 			//variable is reset. This helps keep an accurate count of the iterations without using semaphores.
-			if(localProgress > 100000)
+			if(localProgress > 250000)
 			{
 				masterThread::increaseIterations(localProgress);
 				localProgress = 0;
@@ -51,12 +53,13 @@ void CPUPath::operator()()
 			}
 		}
 
-		delete [] currentKey;
+		delete [] this->currentKey;
+		currentKey = 0;
 
-	} while(!masterThread::getSuccess() && keyLocation < endKeyspace);
+	} while(!masterThread::getSuccess() && (keyLocation < endKeyspace));
 }
 
-//Convert the integer key location to a text string
+//Convert the integer key location to a text string using base conversion
 void CPUPath::integerToKey(unsigned long long location)
 {
 	unsigned long long num = location;
@@ -64,7 +67,7 @@ void CPUPath::integerToKey(unsigned long long location)
 
 	for(; num > 0; i++)
 	{
-		currentKey[i] = charset[num % (charsetLength + 1)];
+		currentKey[i] = charset[num % (charsetLength)];
 		num /= charsetLength + 1;
 	}
 

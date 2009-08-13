@@ -15,9 +15,6 @@
 
 //Processing paths (Slaves)
 #include "CPUPath.h"
-#include "GPUPath.h"
-
-#include "StreamOperations.h"
 
 using namespace std;
 
@@ -34,11 +31,6 @@ int masterThread::charsetLength = 0;
 char processingPath::target[33];
 int processingPath::maxChars = 0;
 int processingPath::totalThreads = 0;
-
-unsigned int NTLM::nt_buffer[16];
-unsigned int NTLM::crypted[4];
-char NTLM::hex_format[33];
-char* NTLM::itoa16 = "0123456789abcdef";
 
 //A counter to log the number of iterations run
 long long masterThread::iterations = 0;
@@ -192,9 +184,6 @@ int main(int argc, char** argv)
 
 	//Set the total number of worker threads in use for this run
 	processingPath::setTotalThreads(totalThreads);
-
-	//Add a thread for our Stream processing path
-	//threadGroup.create_thread(GPUPath(1));
 
 	//Add a master thread to the group
 	threadGroup.create_thread(masterThread());
