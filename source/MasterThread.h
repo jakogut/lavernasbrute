@@ -22,13 +22,13 @@ public:
 
 	void operator()();
 
-	inline static bool getSuccess();
+	static bool getSuccess();
 	static void setSuccess(bool boolean);
 	static void setInterval(int input);
 	static bool getSilent();
 	static void setSilent(bool input);
 
-	inline static long long getIterations();
+	static long long getIterations();
 	static void incrementIterations();
 	static void increaseIterations(int input);
 
