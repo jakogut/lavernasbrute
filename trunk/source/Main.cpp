@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 	int interval = 5;
 
 	//Number of threads for the CPU path
-	int totalThreads = 4;
+	int totalThreads = 2;
 
 	//Parse command-line arguments
 	for(int i = 0; i < argc; i++)

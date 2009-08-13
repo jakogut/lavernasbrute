@@ -227,7 +227,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="brook.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
+				AdditionalLibraryDirectories="&quot;D:\BoostLibs\1_38_0\MSVC-32&quot;;&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="1"
