@@ -22,7 +22,7 @@ protected:
 	NTLM ntlm;
 
 	//Function for converting an integer to a text string (key)
-	void integerToKey(unsigned long long location);
+	inline void integerToKey(unsigned long long location);
 	char* currentKey;
 
 	unsigned long long keyspaceSize, startKeyspace, endKeyspace, keyLocation;

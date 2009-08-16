@@ -23,7 +23,7 @@ public:
 	void operator()();
 
 	static bool getSuccess();
-	static void setSuccess(bool boolean);
+	static void setSuccess(bool input);
 	static void setInterval(int input);
 	static bool getSilent();
 	static void setSilent(bool input);
@@ -36,6 +36,8 @@ public:
 
 	static char* getCharset();
 	static int getCharsetLength();
+
+	static void setRandomizeCharset(bool input);
 
 	void printResult();
 
@@ -56,10 +58,15 @@ protected:
 	//That the job is done.
 	static bool success;
 
+	//Randomize the character set in order to prevent prediction of keyspace searches
+	static bool randomizeCharset;
+
 	static std::string crackedPassword;
 
 	static char* charset;
 	static int charsetLength;
+
+	std::string randomizedCharset;
 };
 
 #endif

@@ -22,9 +22,9 @@ void CPUPath::operator()()
 {
 	localProgress = 0;
 
-	do
+	while(!masterThread::getSuccess() && (keyLocation < endKeyspace))
 	{
-		currentKey = new char[maxChars + 1];
+		currentKey = new char[];
 
 		//Convert the keyspace location to a key
 		integerToKey(keyLocation);
@@ -53,10 +53,8 @@ void CPUPath::operator()()
 			}
 		}
 
-		delete [] this->currentKey;
-		currentKey = 0;
-
-	} while(!masterThread::getSuccess() && (keyLocation < endKeyspace));
+		delete [] currentKey;
+	}
 }
 
 //Convert the integer key location to a text string using base conversion
@@ -68,7 +66,7 @@ void CPUPath::integerToKey(unsigned long long location)
 	for(; num > 0; i++)
 	{
 		currentKey[i] = charset[num % (charsetLength)];
-		num /= charsetLength + 1;
+		num /= charsetLength;
 	}
 
 	currentKey[i + 1] = '\0';
