@@ -225,7 +225,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="brook.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;D:\BoostLibs\1_38_0\MSVC-32&quot;;&quot;$(BROOKROOT)\sdk\lib&quot;;..\..\lib"
 				IgnoreAllDefaultLibraries="false"
@@ -284,8 +283,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="0"
+				Optimization="3"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				EnableFiberSafeOptimizations="true"
@@ -293,8 +292,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
-				StructMemberAlignment="5"
-				BufferSecurityCheck="true"
+				StructMemberAlignment="0"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				EnableEnhancedInstructionSet="0"
 				FloatingPointModel="2"

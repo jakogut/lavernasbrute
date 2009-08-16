@@ -27,6 +27,7 @@ int masterThread::interval = 0;
 string masterThread::crackedPassword = "";
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
+bool masterThread::randomizeCharset;
 
 char processingPath::target[33];
 int processingPath::maxChars = 0;
@@ -45,16 +46,28 @@ void printHelp()
 	"\nSee \"http://lavernasbrute.googlecode.com/\" for more details. "
 	"\n\nI am NOT responsible for loss of or damage to personal property as a result of "
 	"\nthe use of this program. Any use of this program is at your own risk.\n"
+
 	"\n\n[Flag] [Input]\tUsage."
+
 	"\n\n-h\t\tDisplay this help message. "
+
 	"\n\n-b HASH\t\tTake an NTLM hash and brute force it."
+
 	"\n\n-s STRING\tGenerate an NTLM hash from a text string and brute force it."
+
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
 	"\n\t\tThis should match the core count of your CPU."
+
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
+
 	"\n\n-i INTEGER\tInterval in seconds for iterations logged to the console."
 	"\n\t\tThe interval may be raised for a slight performance gain."
+
 	"\n\n--silent\tRun the program in silent mode."
+
+	"\n\n--randomize-charset\n\t\tRandomizes the character set in order to prevent"
+	"\n\t\tprediction of the keyspace search order."
+
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
 
@@ -145,12 +158,6 @@ int main(int argc, char** argv)
 			masterThread::setInterval(interval);
 		}
 
-		//Disable threading
-		if(strcmp(argv[i], "--disable-threading") == 0)
-		{
-			totalThreads = 1;
-		}
-
 		//Disable iteration logging
 		if(strcmp(argv[i], "--silent") == 0)
 		{
@@ -160,8 +167,23 @@ int main(int argc, char** argv)
 		{
 			silent = false;
 		}
+
+		/* Randomizing the order of the charset makes it impossible to predict the order in which the keyspace will be searched,
+		This means that no string is better protected from cracking than any other string by its contents alone.
+		With this option enabled, length is the only sure way to increase cracking times. */
+		if(strcmp(argv[i], "--randomize-charset") == 0)
+		{
+			masterThread::setRandomizeCharset(true);
+		}
+
+		//Disable threading
+		if(strcmp(argv[i], "--disable-threading") == 0)
+		{
+			totalThreads = 1;
+		}
 	}
 
+	//Check to see that we have a valid target
 	if(hashTemp.length() > 0)
 	{
 		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl

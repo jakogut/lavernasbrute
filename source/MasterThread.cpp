@@ -9,6 +9,25 @@ masterThread::masterThread()
 
 	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	charsetLength = (int)(strlen(charset));
+
+	if(randomizeCharset)
+	{
+		srand(time(NULL));
+
+		std::string::iterator charsetIterator;
+		std::string originalCharset = charset;
+
+		while(originalCharset.length() > 0)
+		{
+			int randomChar = (rand() % originalCharset.length());
+			randomizedCharset.append(originalCharset.substr(randomChar, 1));
+
+			charsetIterator = originalCharset.begin() + randomChar;
+			originalCharset.erase(charsetIterator);
+		}
+
+		charset = (char*)randomizedCharset.c_str();
+	}
 }
 
 masterThread::~masterThread()
@@ -63,9 +82,9 @@ void masterThread::incrementIterations()
 	++iterations;
 }
 
-void masterThread::setSuccess(bool boolean)
+void masterThread::setSuccess(bool input)
 {
-	success = boolean;
+	success = input;
 }
 
 char* masterThread::getCharset()
@@ -76,6 +95,11 @@ char* masterThread::getCharset()
 int masterThread::getCharsetLength()
 {
 	return charsetLength;
+}
+
+void masterThread::setRandomizeCharset(bool input)
+{
+	randomizeCharset = input;
 }
 
 long long masterThread::getIterations()
