@@ -39,6 +39,11 @@ protected:
 
 	char* charset;
 	int charsetLength;
+
+	char** integerToKeyLookup;
+
+	//This must be defined for every processing path
+	virtual void integerToKey(unsigned long long location) = 0;
 };
 
 #endif

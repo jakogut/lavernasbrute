@@ -22,10 +22,11 @@ protected:
 	NTLM ntlm;
 
 	//Function for converting an integer to a text string (key)
-	inline void integerToKey(unsigned long long location);
-	char* currentKey;
+	void integerToKey(unsigned long long location);
+	std::string currentKey;
 
 	unsigned long long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
+	long expandedLookupSize;
 	int localProgress;
 };
 

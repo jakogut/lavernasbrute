@@ -7,11 +7,13 @@ processingPath::processingPath()
 	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
 
+	integerToKeyLookup = masterThread::getLookup();
+
+	//Make sure the keyspace size is within the supported limits
 	if(maxChars <= 0)
 	{
 		maxChars = 8;
 	}
-	//Currently, the size of an unsigned 64-bit integer limits the maximum size of the keyspace to ten chars
 	else if (maxChars > 10)	
 	{
 		maxChars = 10;
@@ -20,6 +22,7 @@ processingPath::processingPath()
 
 processingPath::~processingPath()
 {
+	integerToKeyLookup = NULL;
 }
 
 void processingPath::setTarget(std::string input)

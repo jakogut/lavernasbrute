@@ -5,13 +5,15 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
+	//Assign a unique portion of the keyspace to the thread (Based on id)
 	keyspaceSize = (unsigned long long)(pow((long double)charsetLength, maxChars) / totalThreads);
 
 	startKeyspace = (keyspaceSize * id);
 	endKeyspace = (startKeyspace + keyspaceSize);
 
-	//Assign a unique portion of the keyspace to the thread
 	keyLocation = startKeyspace;
+
+	localProgress = 0;
 }
 
 CPUPath::~CPUPath()
@@ -20,15 +22,10 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
-	localProgress = 0;
-
 	while(!masterThread::getSuccess() && (keyLocation < endKeyspace))
 	{
-		currentKey = new char[];
-
 		//Convert the keyspace location to a key
 		integerToKey(keyLocation);
-
 		keyLocation++;
 
 		//Hash and compare
@@ -52,8 +49,6 @@ void CPUPath::operator()()
 				localProgress++;
 			}
 		}
-
-		delete [] currentKey;
 	}
 }
 
@@ -61,13 +56,15 @@ void CPUPath::operator()()
 void CPUPath::integerToKey(unsigned long long location)
 {
 	unsigned long long num = location;
+	int lookupSize = masterThread::getLookupSize();
 	int i = 0;
+
+	currentKey.clear();
+	currentKey.reserve(maxChars);
 
 	for(; num > 0; i++)
 	{
-		currentKey[i] = charset[num % (charsetLength)];
-		num /= charsetLength;
+		currentKey += integerToKeyLookup[num % lookupSize];
+		num /= lookupSize;
 	}
-
-	currentKey[i + 1] = '\0';
 }

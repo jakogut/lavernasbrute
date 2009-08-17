@@ -2,14 +2,13 @@
 
 #include "MasterThread.h"
 
-masterThread::masterThread() 
+masterThread::masterThread(bool largeLookup) 
 {
-	//Start the clock
-	startTime = time(NULL);
-
+	//Set the charset and charset length variables
 	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	charsetLength = (int)(strlen(charset));
 
+	//If specified, randomize the order of the character set
 	if(randomizeCharset)
 	{
 		srand(time(NULL));
@@ -28,6 +27,32 @@ masterThread::masterThread()
 
 		charset = (char*)randomizedCharset.c_str();
 	}
+
+	//Create the integer to key conversion lookup array
+	int lookupChars;
+	largeLookup ? lookupChars = 4 : lookupChars = 3;
+
+	lookupSize = pow((double)charsetLength, lookupChars);
+	integerToKeyLookup = new char*[lookupSize];
+
+	for(int i = 0; i < lookupSize; i++)
+	{
+		unsigned long long num = i;
+		int j = 0;
+
+		integerToKeyLookup[i] = new char[lookupChars + 1];
+
+		for(; num > 0; j++)
+		{
+			integerToKeyLookup[i][j] = charset[num % (charsetLength)];
+			num /= charsetLength;
+		}
+
+		integerToKeyLookup[i][lookupChars + 1] = '\0';
+	}
+
+	//Start the clock
+	startTime = time(NULL);
 }
 
 masterThread::~masterThread()
@@ -97,6 +122,16 @@ int masterThread::getCharsetLength()
 	return charsetLength;
 }
 
+char** masterThread::getLookup()
+{
+	return integerToKeyLookup;
+}
+
+long masterThread::getLookupSize()
+{
+	return lookupSize;
+}
+
 void masterThread::setRandomizeCharset(bool input)
 {
 	randomizeCharset = input;
@@ -129,5 +164,5 @@ void masterThread::setInterval(int input)
 
 void masterThread::setCrackedPassword(std::string input)
 {
-	crackedPassword = input;
+	crackedPassword.assign(input);
 }
