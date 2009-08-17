@@ -27,7 +27,9 @@ int masterThread::interval = 0;
 string masterThread::crackedPassword = "";
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
-bool masterThread::randomizeCharset;
+bool masterThread::randomizeCharset = 0;
+char** masterThread::integerToKeyLookup = 0;
+long masterThread::lookupSize = 0;
 
 char processingPath::target[33];
 int processingPath::maxChars = 0;
@@ -68,6 +70,10 @@ void printHelp()
 	"\n\n--randomize-charset\n\t\tRandomizes the character set in order to prevent"
 	"\n\t\tprediction of the keyspace search order."
 
+	"\n\n--large-lookup\tUses a larger lookup table to improve speed."
+	"\n\t\tIt is recommended that you have at least 350mb of free memory"
+	"\n\t\tin order to use this option."
+
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
 
@@ -85,7 +91,8 @@ void printHelp()
 
 int main(int argc, char** argv)
 {
-	bool silent;
+	bool silent = false;
+	bool largeLookup = false;
 	string hashTemp;
 	int interval = 5;
 
@@ -96,7 +103,7 @@ int main(int argc, char** argv)
 	for(int i = 0; i < argc; i++)
 	{
 		//Set the password string to be cracked
-		if(strcmp(argv[i], "-h") == 0)
+		if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
 		{
 			printHelp();
 			return 0;
@@ -168,6 +175,11 @@ int main(int argc, char** argv)
 			silent = false;
 		}
 
+		if(strcmp(argv[i], "--large-lookup") == 0)
+		{
+			largeLookup = true;
+		}
+
 		/* Randomizing the order of the charset makes it impossible to predict the order in which the keyspace will be searched,
 		This means that no string is better protected from cracking than any other string by its contents alone.
 		With this option enabled, length is the only sure way to increase cracking times. */
@@ -208,7 +220,7 @@ int main(int argc, char** argv)
 	processingPath::setTotalThreads(totalThreads);
 
 	//Add a master thread to the group
-	threadGroup.create_thread(masterThread());
+	threadGroup.create_thread(masterThread(largeLookup));
 
 	//Create a number of threads for the CPU path
 	for(int i = 0; i < totalThreads; i++)

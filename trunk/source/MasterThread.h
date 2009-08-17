@@ -17,7 +17,7 @@ class masterThread
 {
 public:
 
-	masterThread();
+	masterThread(bool largeLookup);
 	~masterThread();
 
 	void operator()();
@@ -37,6 +37,9 @@ public:
 	static char* getCharset();
 	static int getCharsetLength();
 
+	static char** getLookup();
+	static long getLookupSize();
+
 	static void setRandomizeCharset(bool input);
 
 	void printResult();
@@ -47,8 +50,6 @@ protected:
 
 	int id;
 	time_t startTime;
-
-	bool iterationsWrittenFlag;
 
 	static long long iterations;
 	static int interval;
@@ -61,10 +62,14 @@ protected:
 	//Randomize the character set in order to prevent prediction of keyspace searches
 	static bool randomizeCharset;
 
+	//When the plantext string to the hsah is cracked, it is stored here
 	static std::string crackedPassword;
 
 	static char* charset;
 	static int charsetLength;
+
+	static char** integerToKeyLookup;
+	static long lookupSize;
 
 	std::string randomizedCharset;
 };
