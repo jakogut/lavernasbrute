@@ -10,16 +10,13 @@ The aim of this project is to provide a free (in both senses) implementation of 
     * Threading support *Complete*
 
     * Support for cracking of Windows passwords *Complete*
-
-    * Support for cracking of network authentication keys
         
     * `*`NIX Support *Complete*
 
-    * Rainbow Tables
-
     * Alternative Processing Paths:
-        *  ATI (Stream) processing path *Partial*
-        *  NVIDIA (CUDA) processing path
+        *  <s>ATI (Stream) processing path</s> *Deprecated*
+        *  <s>NVIDIA (CUDA) processing path</s> *Deprecated*
+        *  OpenCL processing path
         *  Networked load distribution/coordination
 
     * Persistent runs (Saving/loading of progress in a run)
