@@ -48,7 +48,7 @@ masterThread::masterThread(bool largeLookup)
 			num /= charsetLength;
 		}
 
-		integerToKeyLookup[i][lookupChars + 1] = '\0';
+		integerToKeyLookup[i][lookupChars] = '\0';
 	}
 
 	//Start the clock
@@ -72,6 +72,10 @@ void masterThread::operator()()
 	}
 
 	printResult();
+
+	//Clean up
+	delete [] *integerToKeyLookup;
+	delete [] integerToKeyLookup;
 }
 
 void masterThread::printResult()
