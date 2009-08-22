@@ -13,6 +13,8 @@ CPUPath::CPUPath(int id)
 
 	keyLocation = startKeyspace;
 
+	currentKey.reserve(maxChars);
+
 	localProgress = 0;
 }
 
@@ -29,7 +31,7 @@ void CPUPath::operator()()
 		keyLocation++;
 
 		//Hash and compare
-		if(strcmp(ntlm.getNTLMHash(currentKey), target) == 0) //Comparison returns a match
+		if(strcmp(ntlm.getNTLMHash(&currentKey), target) == 0) //Comparison returns a match
 		{
 			masterThread::setCrackedPassword(currentKey);
 			masterThread::setSuccess(true);
@@ -60,7 +62,6 @@ void CPUPath::integerToKey(unsigned long long location)
 	int i = 0;
 
 	currentKey.clear();
-	currentKey.reserve(maxChars);
 
 	for(; num > 0; i++)
 	{
