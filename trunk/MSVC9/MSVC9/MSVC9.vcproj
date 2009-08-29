@@ -367,10 +367,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\OCLPath.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\ProcessingPath.cpp"
 				>
 			</File>
@@ -390,10 +386,6 @@
 			</File>
 			<File
 				RelativePath="..\..\include\NTLM.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\OCLPath.h"
 				>
 			</File>
 			<File
