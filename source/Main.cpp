@@ -28,7 +28,7 @@ string masterThread::crackedPassword = "";
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 bool masterThread::randomizeCharset = 0;
-char** masterThread::integerToKeyLookup = 0;
+string* masterThread::integerToKeyLookup = 0;
 long masterThread::lookupSize = 0;
 
 char processingPath::target[33];
