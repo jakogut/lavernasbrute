@@ -33,22 +33,18 @@ masterThread::masterThread(bool largeLookup)
 	largeLookup ? lookupChars = 4 : lookupChars = 3;
 
 	lookupSize = pow((double)charsetLength, lookupChars);
-	integerToKeyLookup = new char*[lookupSize];
+	integerToKeyLookup = new std::string[lookupSize];
 
 	for(int i = 0; i < lookupSize; i++)
 	{
 		unsigned long long num = i;
 		int j = 0;
 
-		integerToKeyLookup[i] = new char[lookupChars + 1];
-
-		for(; num > 0; j++)
+		while(num > 0)
 		{
-			integerToKeyLookup[i][j] = charset[num % (charsetLength)];
+			integerToKeyLookup[i] += charset[num % charsetLength];
 			num /= charsetLength;
 		}
-
-		integerToKeyLookup[i][lookupChars] = '\0';
 	}
 
 	//Start the clock
@@ -73,8 +69,6 @@ void masterThread::operator()()
 
 	printResult();
 
-	//Clean up
-	delete [] *integerToKeyLookup;
 	delete [] integerToKeyLookup;
 }
 
@@ -126,7 +120,7 @@ int masterThread::getCharsetLength()
 	return charsetLength;
 }
 
-char** masterThread::getLookup()
+std::string* masterThread::getLookup()
 {
 	return integerToKeyLookup;
 }
