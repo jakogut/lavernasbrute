@@ -359,6 +359,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\GPUPath.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\Main.cpp"
 				>
 			</File>
@@ -386,7 +390,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="&quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot; -o &quot;$(ProjectDir)\..\..\source\brook\$(InputName)&quot; &quot;$(InputPath)&quot;"
+						CommandLine="&quot;$(BROOKROOT)\sdk\bin\brcc.exe&quot; -o &quot;$(ProjectDir)\..\..\source\brook\$(InputName)&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(ProjectDir)\..\..\source\brook\$(InputName).cpp"
 					/>
 				</FileConfiguration>
@@ -414,11 +418,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\GPUPath.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\MasterThread.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\include\NTLM.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\NTLM_GPU.h"
 				>
 			</File>
 			<File

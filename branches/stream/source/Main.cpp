@@ -15,9 +15,7 @@
 
 //Processing paths (Slaves)
 #include "CPUPath.h"
-
-#include "StreamOperations.h"
-#include "NTLM.h"
+#include "GPUPath.h"
 
 using namespace std;
 
@@ -226,10 +224,12 @@ int main(int argc, char** argv)
 	threadGroup.create_thread(masterThread(largeLookup));
 
 	//Create a number of threads for the CPU path
-	for(int i = 0; i < totalThreads; i++)
-	{
-		threadGroup.create_thread(CPUPath(i));
-	}
+	//for(int i = 0; i < totalThreads; i++)
+	//{
+	//	threadGroup.create_thread(CPUPath(i));
+	//}
+
+	threadGroup.create_thread(GPUPath(0));
 
 	threadGroup.join_all();
 

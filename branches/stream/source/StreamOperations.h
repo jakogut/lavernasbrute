@@ -14,13 +14,11 @@ class streamOperations
 {
 public:
 
-    streamOperations(long long chunkSize);
+	streamOperations(int chunkSize);
    ~streamOperations();
 
-    void setChunkSize(int input);
-
     void writeStream(unsigned int* input);
-	void writeStream(Stream<unsigned int>* input);
+	void writeStream(Stream<unsigned int> input);
     void readStream(unsigned int* output);
 
    Stream<unsigned int>* getStreamPtr();
@@ -48,13 +46,16 @@ public:
    streamOperations operator <<(int shift);
    streamOperations operator >>(int shift);
 
+   void cleanUp();
+
 protected:
 
-   long long chunkSize;
+	int chunkSize;
 
-   Stream<unsigned int>* stream;
-   Stream<unsigned int>* result;
-   int* streamSize;
+	Stream<unsigned int>* stream;
+	Stream<unsigned int>* result;
+
+	unsigned int* streamSize;
 };
 
 #endif

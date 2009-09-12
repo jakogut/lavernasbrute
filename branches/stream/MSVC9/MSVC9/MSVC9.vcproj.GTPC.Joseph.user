@@ -95,7 +95,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="-s bill -i 1 -t 2"
+				CommandArguments="-s bill -i 1"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"

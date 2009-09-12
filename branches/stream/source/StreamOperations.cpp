@@ -1,12 +1,12 @@
 #include "StreamOperations.h"
 
-streamOperations::streamOperations(long long chunkSize)
+streamOperations::streamOperations(int chunkSize)
 : chunkSize(chunkSize)
 {
-   streamSize = new int(chunkSize);
+    streamSize = new unsigned int(chunkSize);
 
-   stream = new Stream<unsigned int>(1, (unsigned int*)streamSize);
-   result = new Stream<unsigned int>(1, (unsigned int*)streamSize);
+    stream = new Stream<unsigned int>(1, streamSize);
+    result = new Stream<unsigned int>(1, streamSize);
 }
 
 streamOperations::~streamOperations()
@@ -15,137 +15,212 @@ streamOperations::~streamOperations()
 
 void streamOperations::writeStream(unsigned int* input)
 {
-   streamRead(*stream, input);
+	streamRead(*stream, input);
 }
 
-void streamOperations::writeStream(Stream<unsigned int>* input)
+void streamOperations::writeStream(Stream<unsigned int> input)
 {
-   *stream = *input;
+	*stream = input;
 }
 
 void streamOperations::readStream(unsigned int* output)
 {
-   streamWrite(*stream, output);
+	streamWrite(*stream, output);
 }
 
 Stream<unsigned int>* streamOperations::getStreamPtr()
 {
-   return stream;
+	return stream;
 }
 
 void streamOperations::operator =(streamOperations ops)
 {
-   writeStream(ops.getStreamPtr());
+	writeStream(*ops.getStreamPtr());
 }
 
 void streamOperations::operator =(Stream<unsigned int> input)
 {
-   writeStream(&input);
+	writeStream(input);
 }
 
 streamOperations streamOperations::operator +(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_ADD(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_ADD(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator +(int operand)
 {
 	streamOperations returnOps(chunkSize);
-	gpu_ADD_CONST(*this->getStreamPtr(), operand, *returnOps.getStreamPtr());
+	gpu_ADD_CONST(*stream, operand, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator -(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_SUB(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_SUB(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator /(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_DIV(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_DIV(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator *(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_MUL(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_MUL(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 void streamOperations::operator +=(streamOperations ops)
 {
-	gpu_ADD(*this->getStreamPtr(), *ops.getStreamPtr(), *result);
-	this->writeStream(result);
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
+	gpu_ADD(*stream, temp, *result);
+	this->writeStream(*result);
 }
 
 void streamOperations::operator +=(int operand)
 {
-	gpu_ADD_CONST(*this->getStreamPtr(), operand, *result);
-	this->writeStream(result);
+	gpu_ADD_CONST(*stream, operand, *result);
+	this->writeStream(*result);
 }
 
 void streamOperations::operator -=(streamOperations ops)
 {
-	gpu_SUB(*this->getStreamPtr(), *ops.getStreamPtr(), *result);
-	this->writeStream(result);
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
+	gpu_SUB(*stream, temp, *result);
+	this->writeStream(*result);
 }
 
 void streamOperations::operator /=(streamOperations ops)
 {
-	gpu_DIV(*this->getStreamPtr(), *ops.getStreamPtr(), *result);
-	this->writeStream(result);
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+
+	//ops.cleanUp();
+	gpu_DIV(*stream, temp, *result);
+	this->writeStream(*result);
 }
 
 void streamOperations::operator *=(streamOperations ops)
 {
-	gpu_MUL(*this->getStreamPtr(), *ops.getStreamPtr(), *result);
-	this->writeStream(result);
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
+	gpu_MUL(*stream, temp, *result);
+	this->writeStream(*result);
 }
 
 streamOperations streamOperations::operator ~()
 {
 	streamOperations returnOps(chunkSize);
-	gpu_NOT(*this->getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_NOT(*stream, *returnOps.getStreamPtr());
 	return returnOps;
 }
 
 streamOperations streamOperations::operator |(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_OR(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_OR(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator ^(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_XOR_BIOP(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_XOR_BIOP(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator &(streamOperations ops)
 {
+	Stream<unsigned int> temp(1, streamSize);
+	temp = *ops.getStreamPtr();
+	//ops.cleanUp();
+
 	streamOperations returnOps(chunkSize);
-	gpu_AND(*this->getStreamPtr(), *ops.getStreamPtr(), *returnOps.getStreamPtr());
+	gpu_AND(*stream, temp, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator <<(int shift)
 {
 	streamOperations returnOps(chunkSize);
-	gpu_LSHIFT(*this->getStreamPtr(), shift, *returnOps.getStreamPtr());
+	gpu_LSHIFT(*stream, shift, *returnOps.getStreamPtr());
+
 	return returnOps;
 }
 
 streamOperations streamOperations::operator >>(int shift)
 {
 	streamOperations returnOps(chunkSize);
-	gpu_RSHIFT(*this->getStreamPtr(), shift, *returnOps.getStreamPtr());
+	gpu_RSHIFT(*stream, shift, *returnOps.getStreamPtr());
+
 	return returnOps;
+}
+
+void streamOperations::cleanUp()
+{
+	if(stream)
+	{
+		delete stream;
+		stream = NULL;
+	}
+
+	if(result)
+	{
+		delete result;
+		result = NULL;
+	}
+
+	if(streamSize)
+	{
+		delete streamSize;
+		streamSize = NULL;
+	}
 }
