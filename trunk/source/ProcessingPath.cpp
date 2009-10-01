@@ -2,9 +2,19 @@
 
 #include "ProcessingPath.h"
 
+////////////////////////////////////////////
+// Initialize our static variables /////////
+////////////////////////////////////////////
+
+std::string processingPath::target;
+int processingPath::maxChars = 0;
+int processingPath::totalThreads = 0;
+
+////////////////////////////////////////////
+
 processingPath::processingPath() 
 {
-	charset = masterThread::getCharset();
+	charset = masterThread::getCharsetPtr();
 	charsetLength = masterThread::getCharsetLength();
 
 	integerToKeyLookup = masterThread::getLookup();
@@ -27,16 +37,10 @@ processingPath::~processingPath()
 
 void processingPath::setTarget(std::string input)
 {
-	strcpy(target, (char*)input.c_str());
+	target = input;
 }
 
-void processingPath::setTarget(char* input)
-{
-	strcpy(target, input);
-	target[32] = '\0';
-}
-
-char* processingPath::getTarget()
+std::string processingPath::getTarget()
 {
 	return target;
 }

@@ -20,28 +20,13 @@ public:
 	{
 	}
 
-	inline char* getNTLMHash(std::string* input)
-	{
-		prepare_key((char*)input->c_str(), nt_buffer);
-		ntlm_crypt(nt_buffer, crypted);
-		
-		return convert_hex(crypted);
-	}
-
-	inline char* getNTLMHash(std::string input)
+	inline std::string getNTLMHash(std::string input)
 	{
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
 		
-		return convert_hex(crypted);
-	}
-
-	inline char* getNTLMHash(char* input)
-	{
-		prepare_key(input, nt_buffer);
-		ntlm_crypt(nt_buffer, crypted);
-		
-		return convert_hex(crypted);
+		std::string result = convert_hex(crypted);
+		return result;
 	}
 
 protected:
