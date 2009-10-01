@@ -52,8 +52,10 @@ void printHelp()
 	"\n\t\tIt is recommended that you have at least 350mb of free memory"
 	"\n\t\tin order to use this option."
 
-	"\n\n--disable-lookup\tDisable the character lookup table."
-	"\n\tThis may improve performance depending on the specifications of your computer."
+	"\n\n--disable-lookup\n\t\tDisable the character lookup table."
+	"\n\t\tThis may improve performance depending on the specifications" 
+	"\n\t\tof your computer. This option also drastically decreases the"
+	"\n\t\tamount of memory needed to run Laverna's Brute."
 
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
