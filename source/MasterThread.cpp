@@ -2,11 +2,30 @@
 
 #include "MasterThread.h"
 
-masterThread::masterThread(bool largeLookup) 
+////////////////////////////////////////////
+// Initialize our static variables /////////
+////////////////////////////////////////////
+
+bool masterThread::success = 0;
+bool masterThread::silent = 0;
+int masterThread::interval = 0;
+std::string masterThread::crackedPassword = "";
+std::string masterThread::charset = "";
+int masterThread::charsetLength = 0;
+bool masterThread::randomizeCharset = 0;
+std::string* masterThread::integerToKeyLookup = 0;
+long masterThread::lookupSize = 0;
+long long masterThread::iterations = 0;
+bool masterThread::largeLookup = false;
+bool masterThread::disableLookup = false;
+
+////////////////////////////////////////////
+
+masterThread::masterThread() 
 {
 	//Set the charset and charset length variables
 	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	charsetLength = (int)(strlen(charset));
+	charsetLength = charset.length();
 
 	//If specified, randomize the order of the character set
 	if(randomizeCharset)
@@ -25,12 +44,16 @@ masterThread::masterThread(bool largeLookup)
 			originalCharset.erase(charsetIterator);
 		}
 
-		charset = (char*)randomizedCharset.c_str();
+		charset = randomizedCharset;
 	}
 
 	//Create the integer to key conversion lookup array
 	int lookupChars;
-	largeLookup ? lookupChars = 4 : lookupChars = 3;
+
+	if(disableLookup)
+		lookupChars = 1;
+	else
+		largeLookup ? lookupChars = 4 : lookupChars = 2;
 
 	lookupSize = pow((double)charsetLength, lookupChars);
 	integerToKeyLookup = new std::string[lookupSize];
@@ -110,14 +133,29 @@ void masterThread::setSuccess(bool input)
 	success = input;
 }
 
-char* masterThread::getCharset()
+std::string masterThread::getCharset()
 {
 	return charset;
+}
+
+std::string* masterThread::getCharsetPtr()
+{
+	return &charset;
 }
 
 int masterThread::getCharsetLength()
 {
 	return charsetLength;
+}
+
+void masterThread::setLargeLookup(bool input)
+{
+	largeLookup = input;
+}
+
+void masterThread::setDisableLookup(bool input)
+{
+	disableLookup = input;
 }
 
 std::string* masterThread::getLookup()

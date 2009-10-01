@@ -18,28 +18,6 @@
 
 using namespace std;
 
-//Initialize our static variables:
-//////////////////////////////////////////////////////////////////////////////////////////
-
-bool masterThread::success = 0;
-bool masterThread::silent = 0;
-int masterThread::interval = 0;
-string masterThread::crackedPassword = "";
-char* masterThread::charset = 0;
-int masterThread::charsetLength = 0;
-bool masterThread::randomizeCharset = 0;
-string* masterThread::integerToKeyLookup = 0;
-long masterThread::lookupSize = 0;
-
-char processingPath::target[33];
-int processingPath::maxChars = 0;
-int processingPath::totalThreads = 0;
-
-//A counter to log the number of iterations run
-long long masterThread::iterations = 0;
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
 void printHelp()
 {
 	cout << "\nLaverna's Brute."
@@ -74,6 +52,9 @@ void printHelp()
 	"\n\t\tIt is recommended that you have at least 350mb of free memory"
 	"\n\t\tin order to use this option."
 
+	"\n\n--disable-lookup\tDisable the character lookup table."
+	"\n\tThis may improve performance depending on the specifications of your computer."
+
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
 
@@ -89,10 +70,25 @@ void printHelp()
 	return result;
 }
 
+//Convert a string to lowercase
+string toLower(const string input)
+{
+	string result = input;
+
+	for(unsigned int i = 0; i < result.length(); i++)
+	{
+		if(result[i] >= 0x41 && result[i] <= 0x5A)
+		{
+			result[i] += 0x20;
+		}
+	}
+
+	return result;
+}
+
 int main(int argc, char** argv)
 {
 	bool silent = false;
-	bool largeLookup = false;
 	string hashTemp;
 	int interval = 5;
 
@@ -100,19 +96,28 @@ int main(int argc, char** argv)
 	int totalThreads = 2;
 
 	//Parse command-line arguments
+	string flag, value;
+
 	for(int i = 0; i < argc; i++)
 	{
+		flag = argv[i];
+
+		if((i + 1) < argc)
+			value = argv[i + 1];
+
 		//Set the password string to be cracked
-		if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
+		if(flag == "-h" || flag == "--help")
 		{
 			printHelp();
 			return 0;
 		}
 
 		//Take an NTLM hash and crack it
-		if(strcmp(argv[i], "-b") == 0)
+		if(flag == "-b")
 		{
-			string newHash = argv[i + 1];
+			string newHash = value;
+
+			newHash = toLower(newHash);
  
 			//Check to see whether the hash has been entered correctly
 			//The length of a proper NTLM hash is always 32 characters
@@ -127,17 +132,17 @@ int main(int argc, char** argv)
 		}
 
 		//Take a plain text string, generate an NTLM hash of it, and crack it
-		if(strcmp(argv[i], "-s") == 0)
+		if(flag == "-s")
 		{
 			NTLM ntlm;
-			hashTemp = ntlm.getNTLMHash(argv[i + 1]);
+			hashTemp = ntlm.getNTLMHash(value);
 		}
 
 		//Set the number of threads
-		if(strcmp(argv[i], "-t") == 0)
+		if(flag == "-t")
 		{
 			string temp;
-			temp = argv[i + 1];
+			temp = value;
 
 			if(toInt(temp) >= 2)
 			{
@@ -149,15 +154,15 @@ int main(int argc, char** argv)
 			}
 		}
 
-		if(strcmp(argv[i], "-c") == 0)
+		if(flag == "-c")
 		{
-			processingPath::setMaxChars(toInt(argv[i + 1]));
+			processingPath::setMaxChars(toInt(value));
 		}
 
 		//Interval for iteration logging
-		if(strcmp(argv[i], "-i") == 0)
+		if(flag == "-i")
 		{
-			interval = toInt(argv[i + 1]);
+			interval = toInt(value);
 			masterThread::setInterval(interval);
 		}
 		else
@@ -166,7 +171,7 @@ int main(int argc, char** argv)
 		}
 
 		//Disable iteration logging
-		if(strcmp(argv[i], "--silent") == 0)
+		if(flag == "--silent")
 		{
 			masterThread::setSilent(true);
 		}
@@ -175,21 +180,26 @@ int main(int argc, char** argv)
 			silent = false;
 		}
 
-		if(strcmp(argv[i], "--large-lookup") == 0)
-		{
-			largeLookup = true;
-		}
-
 		/* Randomizing the order of the charset makes it impossible to predict the order in which the keyspace will be searched,
 		This means that no string is better protected from cracking than any other string by its contents alone.
 		With this option enabled, length is the only sure way to increase cracking times. */
-		if(strcmp(argv[i], "--randomize-charset") == 0)
+		if(flag == "--randomize-charset")
 		{
 			masterThread::setRandomizeCharset(true);
 		}
 
+		if(flag == "--large-lookup")
+		{
+			masterThread::setLargeLookup(true);
+		}
+
+		if(flag == "--disable-lookup")
+		{
+			masterThread::setDisableLookup(true);
+		}
+
 		//Disable threading
-		if(strcmp(argv[i], "--disable-threading") == 0)
+		if(flag == "--disable-threading")
 		{
 			totalThreads = 1;
 		}
@@ -220,7 +230,7 @@ int main(int argc, char** argv)
 	processingPath::setTotalThreads(totalThreads);
 
 	//Add a master thread to the group
-	threadGroup.create_thread(masterThread(largeLookup));
+	threadGroup.create_thread(masterThread());
 
 	//Create a number of threads for the CPU path
 	for(int i = 0; i < totalThreads; i++)

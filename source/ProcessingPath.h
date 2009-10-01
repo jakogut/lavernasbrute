@@ -25,9 +25,8 @@ class processingPath
 	//The loop that is run to crack a given target hash
 	virtual void operator()() = 0;
 
-	static char* getTarget();
+	static std::string getTarget();
 	static void setTarget(std::string input);
-	static void setTarget(char* input);
 	static void setMaxChars(int input);
 	static void setTotalThreads(int input);
 
@@ -35,9 +34,9 @@ protected:
 
 	static int maxChars;
 	static int totalThreads;
-	static char target[33];
+	static std::string target;
 
-	char* charset;
+	std::string* charset;
 	int charsetLength;
 
 	std::string* integerToKeyLookup;
