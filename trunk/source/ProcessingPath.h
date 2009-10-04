@@ -11,6 +11,7 @@
 #include <time.h>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "MasterThread.h"
 #include "NTLM.h"
@@ -25,19 +26,23 @@ class processingPath
 	//The loop that is run to crack a given target hash
 	virtual void operator()() = 0;
 
-	static std::string getTarget();
-	static void setTarget(std::string input);
+	static void pushTarget(std::string input);
 	static void setMaxChars(int input);
 	static void setTotalThreads(int input);
+
+	static int getNumTargets();
+	static std::vector<std::string> getTargets();
+	static std::vector<std::string> getValues();
 
 protected:
 
 	static int maxChars;
 	static int totalThreads;
-	static std::string target;
+
+	static std::vector<std::string> targets;
 
 	std::string* charset;
-	int charsetLength;
+	long charsetLength;
 
 	std::string* integerToKeyLookup;
 

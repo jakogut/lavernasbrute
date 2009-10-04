@@ -30,13 +30,17 @@ public:
 
 	static long long getIterations();
 	static void incrementIterations();
-	static void increaseIterations(int input);
+	static void increaseIterations(long input);
 
 	static void setCrackedPassword(std::string input);
 
 	static std::string getCharset();
 	static std::string* getCharsetPtr();
 	static int getCharsetLength();
+
+	static void setNumTargets(int input);
+	static void pushTargetHash(std::string input);
+	static void pushCrackedHash(std::string input);
 
 	static void setLargeLookup(bool input);
 	static void setDisableLookup(bool input);
@@ -49,8 +53,6 @@ public:
 	void printResult();
 
 protected:
-
-	static std::string target;
 
 	int id;
 	time_t startTime;
@@ -68,8 +70,9 @@ protected:
 
 	static bool largeLookup, disableLookup;
 
-	//When the plantext string to the hsah is cracked, it is stored here
-	static std::string crackedPassword;
+	static int numTargets;
+	static std::vector<std::string> targetHashes;
+	static std::vector<std::string> crackedHashes;
 
 	static std::string charset;
 	static int charsetLength;

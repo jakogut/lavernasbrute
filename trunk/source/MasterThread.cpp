@@ -9,15 +9,17 @@
 bool masterThread::success = 0;
 bool masterThread::silent = 0;
 int masterThread::interval = 0;
-std::string masterThread::crackedPassword = "";
 std::string masterThread::charset = "";
 int masterThread::charsetLength = 0;
+int masterThread::numTargets = 0;
 bool masterThread::randomizeCharset = 0;
 std::string* masterThread::integerToKeyLookup = 0;
 long masterThread::lookupSize = 0;
 long long masterThread::iterations = 0;
 bool masterThread::largeLookup = false;
 bool masterThread::disableLookup = false;
+std::vector<std::string> masterThread::targetHashes;
+std::vector<std::string> masterThread::crackedHashes;
 
 ////////////////////////////////////////////
 
@@ -58,10 +60,9 @@ masterThread::masterThread()
 	lookupSize = pow((double)charsetLength, lookupChars);
 	integerToKeyLookup = new std::string[lookupSize];
 
-	for(int i = 0; i < lookupSize; i++)
+	for(long i = 0; i < lookupSize; i++)
 	{
 		unsigned long long num = i;
-		int j = 0;
 
 		while(num > 0)
 		{
@@ -107,8 +108,12 @@ void masterThread::printResult()
 	minutes -= hours * 60;
 	seconds -= minutes * 60;
 
-	std::cout << std::endl << "Successful Attack! Cracked password is: " << crackedPassword << std::endl
-		<< "Attack duration: " << getIterations() << " iterations." << std::endl
+	std::cout << std::endl << "The run has completed! The hash inputs are as follows:" << std::endl;
+
+	for(long i = 0; i < numTargets; i++)
+		std::cout << targetHashes[i] << " == " << crackedHashes[i] << std::endl;
+	
+	std::cout << "\nAttack duration: " << getIterations() << " iterations." << std::endl
 		<< "Completed in: " << hours << " hours, " << minutes << " minutes, and " << seconds
 		<< " seconds. " << std::endl;
 			
@@ -148,6 +153,21 @@ int masterThread::getCharsetLength()
 	return charsetLength;
 }
 
+void masterThread::setNumTargets(int input)
+{
+	numTargets = input;
+}
+
+void masterThread::pushTargetHash(std::string input)
+{
+	targetHashes.push_back(input);
+}
+
+void masterThread::pushCrackedHash(std::string input)
+{
+	crackedHashes.push_back(input);
+}
+
 void masterThread::setLargeLookup(bool input)
 {
 	largeLookup = input;
@@ -178,7 +198,7 @@ long long masterThread::getIterations()
 	return iterations;
 }
 
-void masterThread::increaseIterations(int input)
+void masterThread::increaseIterations(long input)
 {
 	iterations += input;
 }
@@ -196,9 +216,4 @@ void masterThread::setSilent(bool input)
 void masterThread::setInterval(int input)
 {
 	interval = input;
-}
-
-void masterThread::setCrackedPassword(std::string input)
-{
-	crackedPassword.assign(input);
 }

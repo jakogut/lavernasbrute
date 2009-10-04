@@ -22,42 +22,56 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
-	while(!masterThread::getSuccess() && (keyLocation < endKeyspace))
+	masterThread::setNumTargets(getNumTargets());
+	int totalTargets = getNumTargets();
+
+	while(!masterThread::getSuccess() && (keyLocation < endKeyspace) && targets.size() > 0)
 	{
 		//Convert the keyspace location to a key
 		integerToKey(keyLocation);
 		keyLocation++;
 
 		//Hash and compare
-		if(ntlm.getNTLMHash(currentKey) == target) //Comparison returns a match
+		std::string hashedKey = ntlm.getNTLMHash(&currentKey);
+
+		for(long i = 0; i < targets.size(); i++)
 		{
-			masterThread::setCrackedPassword(currentKey);
-			masterThread::setSuccess(true);
-		}
-		else //No match
-		{
-			//Increment a local counter for the number of iterations until it reaches a certain point.
-			//Once that point has been reached, the local count is committed to the global count and the local
-			//variable is reset. This helps keep an accurate count of the iterations without using semaphores.
-			if(localProgress > 250000)
+			if(hashedKey == targets[i]) //Comparison returns a match
 			{
-				masterThread::increaseIterations(localProgress);
-				localProgress = 0;
+				masterThread::pushTargetHash(targets[i]);
+				masterThread::pushCrackedHash(currentKey);
+
+				std::cout << "Hash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl;
+
+				targets.erase(targets.begin() + i);
 			}
-			else
+			else //No match
 			{
-				localProgress++;
+				//Increment a local counter for the number of iterations until it reaches a certain point.
+				//Once that point has been reached, the local count is committed to the global count and the local
+				//variable is reset. This helps keep an accurate count of the iterations without using semaphores.
+				if(localProgress > 250000)
+				{
+					masterThread::increaseIterations(localProgress);
+					localProgress = 0;
+				}
+				else
+				{
+					localProgress++;
+				}
 			}
 		}
 	}
+
+	masterThread::setSuccess(true);
 }
 
 //Convert the integer key location to a text string using base conversion
 void CPUPath::integerToKey(unsigned long long location)
 {
 	unsigned long long num = location;
-	int lookupSize = masterThread::getLookupSize();
-	int i = 0;
+	long long lookupSize = masterThread::getLookupSize();
+	long i = 0;
 
 	currentKey.clear();
 

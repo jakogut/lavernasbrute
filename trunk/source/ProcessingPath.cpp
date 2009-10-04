@@ -6,7 +6,7 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-std::string processingPath::target;
+std::vector<std::string> processingPath::targets;
 int processingPath::maxChars = 0;
 int processingPath::totalThreads = 0;
 
@@ -35,14 +35,9 @@ processingPath::~processingPath()
 	integerToKeyLookup = NULL;
 }
 
-void processingPath::setTarget(std::string input)
+void processingPath::pushTarget(std::string input)
 {
-	target = input;
-}
-
-std::string processingPath::getTarget()
-{
-	return target;
+	targets.push_back(input);
 }
 
 void processingPath::setMaxChars(int input)
@@ -53,4 +48,14 @@ void processingPath::setMaxChars(int input)
 void processingPath::setTotalThreads(int input)
 {
 	totalThreads = input;
+}
+
+int processingPath::getNumTargets()
+{
+	return targets.size();
+}
+
+std::vector<std::string> processingPath::getTargets()
+{
+	return targets;
 }
