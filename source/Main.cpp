@@ -31,9 +31,8 @@ void printHelp()
 
 	"\n\n-h\t\tDisplay this help message. "
 
-	"\n\n-b HASH\t\tTake an NTLM hash and brute force it."
-
-	"\n\n-s STRING\tGenerate an NTLM hash from a text string and brute force it."
+	"\n\nntlm:HASH\tPush an NTLM hash onto the target list."
+	"\n\t\tMultiple hashes can be attacked at once."
 
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
 	"\n\t\tThis should match the core count of your CPU."
@@ -61,7 +60,7 @@ void printHelp()
 }
 
 //Character array to integer (atoi) alternative, standards compliant.
- int toInt(string input)
+int toInt(string input)
 {
 	stringstream ss;
 	int result;
@@ -91,6 +90,7 @@ string toLower(const string input)
 int main(int argc, char** argv)
 {
 	bool silent = false;
+	bool targetPresent = false;
 	string hashTemp;
 	int interval = 5;
 
@@ -115,9 +115,9 @@ int main(int argc, char** argv)
 		}
 
 		//Take an NTLM hash and crack it
-		if(flag == "-b")
+		if(flag.substr(0, 5) == "ntlm:")
 		{
-			string newHash = value;
+			string newHash = flag.substr(5);
 
 			newHash = toLower(newHash);
  
@@ -125,19 +125,14 @@ int main(int argc, char** argv)
 			//The length of a proper NTLM hash is always 32 characters
 			if(newHash.length() == 32)
 			{
-				hashTemp = newHash;
+				processingPath::pushTarget(newHash);
+				targetPresent = true;
 			}
 			else
 			{
-				cerr << "\nERROR: Invalid hash! String must be 32 characters in length." << endl;
+				cerr << "\nERROR: \"" << newHash << "\" is an invalid hash! "
+						"String must be 32 characters in length." << endl;
 			}
-		}
-
-		//Take a plain text string, generate an NTLM hash of it, and crack it
-		if(flag == "-s")
-		{
-			NTLM ntlm;
-			hashTemp = ntlm.getNTLMHash(value);
 		}
 
 		//Set the number of threads
@@ -177,10 +172,6 @@ int main(int argc, char** argv)
 		{
 			masterThread::setSilent(true);
 		}
-		else 
-		{
-			silent = false;
-		}
 
 		/* Randomizing the order of the charset makes it impossible to predict the order in which the keyspace will be searched,
 		This means that no string is better protected from cracking than any other string by its contents alone.
@@ -208,12 +199,10 @@ int main(int argc, char** argv)
 	}
 
 	//Check to see that we have a valid target
-	if(hashTemp.length() > 0)
+	if(targetPresent)
 	{
 		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
-			 << "Cracking NTLM hash " << hashTemp << ".\n\n";
-
-		processingPath::setTarget(hashTemp);
+			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).\n\n";
 	}
 	else
 	{

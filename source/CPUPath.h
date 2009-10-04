@@ -4,7 +4,7 @@
 #define CPUPATH_H_
 
 #include "ProcessingPath.h"
-#include "Math.h"
+#include <math.h>
 
 class CPUPath : protected processingPath
 {
@@ -26,8 +26,7 @@ protected:
 	std::string currentKey;
 
 	unsigned long long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
-	long expandedLookupSize;
-	int localProgress;
+	long long localProgress;
 };
 
 #endif

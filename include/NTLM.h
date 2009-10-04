@@ -20,9 +20,9 @@ public:
 	{
 	}
 
-	inline std::string getNTLMHash(std::string input)
+	inline std::string getNTLMHash(std::string* input)
 	{
-		prepare_key((char*)input.c_str(), nt_buffer);
+		prepare_key((char*)input->c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
 		
 		std::string result = convert_hex(crypted);
