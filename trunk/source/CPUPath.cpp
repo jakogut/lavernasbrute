@@ -6,7 +6,7 @@ CPUPath::CPUPath(int id)
 : id(id)
 {
 	//Assign a unique portion of the keyspace to the thread (Based on id)
-	keyspaceSize = (unsigned long long)(pow((long double)charsetLength, maxChars) / totalThreads);
+	keyspaceSize = (pow64(charsetLength, maxChars) / totalThreads);
 
 	startKeyspace = (keyspaceSize * id);
 	endKeyspace = (startKeyspace + keyspaceSize);
