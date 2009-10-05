@@ -29,6 +29,10 @@ masterThread::masterThread()
 	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	charsetLength = charset.length();
 
+	//Check that the update interval is set within bounds
+	if(interval <= 0)
+		interval = 5;
+
 	//If specified, randomize the order of the character set
 	if(randomizeCharset)
 	{

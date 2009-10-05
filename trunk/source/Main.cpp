@@ -78,9 +78,9 @@ string toLower(const string input)
 
 	for(unsigned int i = 0; i < result.length(); i++)
 	{
-		if(result[i] >= 0x41 && result[i] <= 0x5A)
+		if(result[i] >= 65 && result[i] <= 90)
 		{
-			result[i] += 0x20;
+			result[i] += 32;
 		}
 	}
 
@@ -89,12 +89,7 @@ string toLower(const string input)
 
 int main(int argc, char** argv)
 {
-	bool silent = false;
 	bool targetPresent = false;
-	string hashTemp;
-	int interval = 5;
-
-	//Number of threads for the CPU path
 	int totalThreads = 2;
 
 	//Parse command-line arguments
@@ -117,9 +112,7 @@ int main(int argc, char** argv)
 		//Take an NTLM hash and crack it
 		if(flag.substr(0, 5) == "ntlm:")
 		{
-			string newHash = flag.substr(5);
-
-			newHash = toLower(newHash);
+			string newHash = toLower(flag.substr(5));
  
 			//Check to see whether the hash has been entered correctly
 			//The length of a proper NTLM hash is always 32 characters
@@ -138,12 +131,9 @@ int main(int argc, char** argv)
 		//Set the number of threads
 		if(flag == "-t")
 		{
-			string temp;
-			temp = value;
-
-			if(toInt(temp) >= 2)
+			if(toInt(value) >= 2)
 			{
-				totalThreads = toInt(temp);
+				totalThreads = toInt(value);
 			}
 			else
 			{
@@ -159,13 +149,9 @@ int main(int argc, char** argv)
 		//Interval for iteration logging
 		if(flag == "-i")
 		{
-			interval = toInt(value);
-			masterThread::setInterval(interval);
+			masterThread::setInterval(toInt(value));
 		}
-		else
-		{
-			masterThread::setInterval(interval);
-		}
+		
 
 		//Disable iteration logging
 		if(flag == "--silent")

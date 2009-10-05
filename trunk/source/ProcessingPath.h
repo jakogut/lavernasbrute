@@ -32,7 +32,6 @@ class processingPath
 
 	static int getNumTargets();
 	static std::vector<std::string> getTargets();
-	static std::vector<std::string> getValues();
 
 protected:
 
