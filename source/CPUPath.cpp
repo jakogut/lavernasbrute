@@ -55,12 +55,11 @@ void CPUPath::operator()()
 					masterThread::increaseIterations(localProgress);
 					localProgress = 0;
 				}
-				else
-				{
-					localProgress++;
-				}
 			}
 		}
+
+		//Loop is done, increment the local iteration counter
+		localProgress++;
 	}
 
 	masterThread::setSuccess(true);
