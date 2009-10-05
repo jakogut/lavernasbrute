@@ -26,7 +26,7 @@ std::vector<std::string> masterThread::crackedHashes;
 masterThread::masterThread() 
 {
 	//Set the charset and charset length variables
-	charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	charsetLength = charset.length();
 
 	//Check that the update interval is set within bounds

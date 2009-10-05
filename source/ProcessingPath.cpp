@@ -24,9 +24,9 @@ processingPath::processingPath()
 	{
 		maxChars = 8;
 	}
-	else if (maxChars > 10)	
+	else if (maxChars > 14)	
 	{
-		maxChars = 10;
+		maxChars = 14;
 	}
 }
 
@@ -58,4 +58,14 @@ int processingPath::getNumTargets()
 std::vector<std::string> processingPath::getTargets()
 {
 	return targets;
+}
+
+unsigned long long processingPath::pow64(unsigned long long base, int power)
+{
+	unsigned long long result = 1;
+
+	for(int i = 0; i < power; i++)
+		result *= base;
+
+	return result;
 }

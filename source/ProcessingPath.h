@@ -35,6 +35,8 @@ class processingPath
 
 protected:
 
+	unsigned long long pow64(unsigned long long base, int power);
+
 	static int maxChars;
 	static int totalThreads;
 
