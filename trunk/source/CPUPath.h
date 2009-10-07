@@ -4,7 +4,6 @@
 #define CPUPATH_H_
 
 #include "ProcessingPath.h"
-#include <math.h>
 
 class CPUPath : protected processingPath
 {
@@ -22,11 +21,11 @@ protected:
 	NTLM ntlm;
 
 	//Function for converting an integer to a text string (key)
-	void integerToKey(unsigned long long location);
+	void integerToKey(unsigned long location);
 	std::string currentKey;
 
-	unsigned long long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
-	long long localProgress;
+	unsigned long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
+	long localProgress;
 };
 
 #endif

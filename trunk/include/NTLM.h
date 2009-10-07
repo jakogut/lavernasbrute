@@ -31,7 +31,7 @@ public:
 
 protected:
 
-	void prepare_key(char* input, unsigned int* output)
+	void prepare_key(char* input, unsigned long* output)
 	{
 		int i=0;
 		int length=(int)(strlen(input));
@@ -49,15 +49,15 @@ protected:
 		output[14] = length << 4;
 	}
 
-	void ntlm_crypt(unsigned int* input, unsigned int* output)
+	void ntlm_crypt(unsigned long* input, unsigned long* output)
 	{
-		unsigned int a = 0x67452301;
-		unsigned int b = 0xefcdab89;
-		unsigned int c = 0x98badcfe;
-		unsigned int d = 0x10325476;
+		unsigned long a = 0x67452301;
+		unsigned long b = 0xefcdab89;
+		unsigned long c = 0x98badcfe;
+		unsigned long d = 0x10325476;
 
-		unsigned int SQRT_2 = 0x5a827999;
-		unsigned int SQRT_3 = 0x6ed9eba1;
+		unsigned long SQRT_2 = 0x5a827999;
+		unsigned long SQRT_3 = 0x6ed9eba1;
 	 
 		a += (d ^ (b & (c ^ d)))  +  input[0]  ;a = (a << 3 ) | (a >> 29);
 		d += (c ^ (a & (b ^ c)))  +  input[1]  ;d = (d << 7 ) | (d >> 25);
@@ -121,22 +121,22 @@ protected:
 		c += (b ^ a ^ d) + input[7]  +  SQRT_3; c = (c << 11) | (c >> 21);
 		b += (a ^ d ^ c) + input[15] +  SQRT_3; b = (b << 15) | (b >> 17);
 	 
-		output[0] = a + (unsigned int)0x67452301;
-		output[1] = b + (unsigned int)0xefcdab89;
-		output[2] = c + (unsigned int)0x98badcfe;
-		output[3] = d + (unsigned int)0x10325476;
+		output[0] = a + 0x67452301;
+		output[1] = b + 0xefcdab89;
+		output[2] = c + 0x98badcfe;
+		output[3] = d + 0x10325476;
 	}
 
-	char* convert_hex(unsigned int* output)
+	char* convert_hex(unsigned long* output)
 	{
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
 		{
-			unsigned int n = output[i];
+			unsigned long n = output[i];
 			//iterate the bytes of the integer		
 			for(int j = 0; j < 4; j++)
 			{
-				unsigned int convert = n % 256;
+				unsigned long convert = n % 256;
 				hex_format[i*8+j*2+1]=itoa16[convert%16];
 				convert /= 16;
 				hex_format[i*8+j*2+0]=itoa16[convert%16];
@@ -149,8 +149,8 @@ protected:
 		return hex_format;
 	}
 
-	unsigned int nt_buffer[16];
-	unsigned int crypted[4];
+	unsigned long nt_buffer[16];
+	unsigned long crypted[4];
 	char hex_format[33];
 	char* itoa16;
 };

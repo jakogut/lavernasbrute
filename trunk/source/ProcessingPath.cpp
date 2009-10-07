@@ -14,7 +14,7 @@ int processingPath::totalThreads = 0;
 
 processingPath::processingPath() 
 {
-	charset = masterThread::getCharsetPtr();
+	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
 
 	integerToKeyLookup = masterThread::getLookup();
@@ -24,7 +24,11 @@ processingPath::processingPath()
 	{
 		maxChars = 8;
 	}
-	else if (maxChars > 14)	
+	else if(sizeof(long) == 4 && maxChars > 8) // A 32-bit system will allow for a keyspace of the size 62^8
+	{
+		maxChars = 8;
+	}
+	else if(sizeof(long) == 8 && maxChars > 14) // A 64-bit system will allow for 62^14
 	{
 		maxChars = 14;
 	}
@@ -60,11 +64,11 @@ std::vector<std::string> processingPath::getTargets()
 	return targets;
 }
 
-unsigned long long processingPath::pow64(unsigned long long base, int power)
+unsigned long processingPath::pow(unsigned long base, unsigned long power)
 {
-	unsigned long long result = 1;
+	unsigned long result = 1;
 
-	for(int i = 0; i < power; i++)
+	for(long i = 0; i < power; i++)
 		result *= base;
 
 	return result;

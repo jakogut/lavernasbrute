@@ -28,14 +28,13 @@ public:
 	static bool getSilent();
 	static void setSilent(bool input);
 
-	static long long getIterations();
+	static unsigned long getIterations();
 	static void incrementIterations();
 	static void increaseIterations(long input);
 
 	static void setCrackedPassword(std::string input);
 
-	static std::string getCharset();
-	static std::string* getCharsetPtr();
+	static char* getCharset();
 	static int getCharsetLength();
 
 	static void setNumTargets(int input);
@@ -43,7 +42,7 @@ public:
 	static void pushCrackedHash(std::string input);
 
 	static void setLargeLookup(bool input);
-	static void setDisableLookup(bool input);
+	static void disableLookup(bool input);
 
 	static std::string* getLookup();
 	static long getLookupSize();
@@ -57,7 +56,7 @@ protected:
 	int id;
 	time_t startTime;
 
-	static long long iterations;
+	static unsigned long iterations;
 	static int interval;
 	static bool silent;
 
@@ -68,13 +67,13 @@ protected:
 	//Randomize the character set in order to prevent prediction of keyspace searches
 	static bool randomizeCharset;
 
-	static bool largeLookup, disableLookup;
+	static bool largeLookup, lookupDisabled;
 
 	static int numTargets;
 	static std::vector<std::string> targetHashes;
 	static std::vector<std::string> crackedHashes;
 
-	static std::string charset;
+	static char* charset;
 	static int charsetLength;
 
 	static std::string* integerToKeyLookup;
