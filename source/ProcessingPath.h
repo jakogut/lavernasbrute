@@ -23,9 +23,6 @@ class processingPath
 	processingPath();
 	~processingPath();
 
-	//The loop that is run to crack a given target hash
-	virtual void operator()() = 0;
-
 	static void pushTarget(std::string input);
 	static void setMaxChars(int input);
 	static void setTotalThreads(int input);
@@ -35,20 +32,17 @@ class processingPath
 
 protected:
 
-	unsigned long long pow64(unsigned long long base, int power);
+	unsigned long pow(unsigned long base, unsigned long power);
 
 	static int maxChars;
 	static int totalThreads;
 
 	static std::vector<std::string> targets;
 
-	std::string* charset;
-	long charsetLength;
+	char* charset;
+	int charsetLength;
 
 	std::string* integerToKeyLookup;
-
-	//This must be defined for every processing path
-	virtual void integerToKey(unsigned long long location) = 0;
 };
 
 #endif

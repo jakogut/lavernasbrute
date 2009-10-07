@@ -6,7 +6,7 @@ CPUPath::CPUPath(int id)
 : id(id)
 {
 	//Assign a unique portion of the keyspace to the thread (Based on id)
-	keyspaceSize = (pow64(charsetLength, maxChars) / totalThreads);
+	keyspaceSize = (pow(charsetLength, maxChars) / totalThreads);
 
 	startKeyspace = (keyspaceSize * id);
 	endKeyspace = (startKeyspace + keyspaceSize);
@@ -25,7 +25,7 @@ void CPUPath::operator()()
 	masterThread::setNumTargets(getNumTargets());
 	int totalTargets = getNumTargets();
 
-	while(!masterThread::getSuccess() && (keyLocation < endKeyspace) && targets.size() > 0)
+	while(!masterThread::getSuccess() && (keyLocation < endKeyspace) && (targets.size() > 0))
 	{
 		//Convert the keyspace location to a key
 		integerToKey(keyLocation);
@@ -66,11 +66,11 @@ void CPUPath::operator()()
 }
 
 //Convert the integer key location to a text string using base conversion
-void CPUPath::integerToKey(unsigned long long location)
+void CPUPath::integerToKey(unsigned long location)
 {
-	unsigned long long num = location;
-	long long lookupSize = masterThread::getLookupSize();
-	long i = 0;
+	unsigned long num = location;
+	int lookupSize = masterThread::getLookupSize();
+	int i = 0;
 
 	currentKey.clear();
 

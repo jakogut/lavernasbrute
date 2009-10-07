@@ -150,8 +150,7 @@ int main(int argc, char** argv)
 		if(flag == "-i")
 		{
 			masterThread::setInterval(toInt(value));
-		}
-		
+		}		
 
 		//Disable iteration logging
 		if(flag == "--silent")
@@ -174,7 +173,7 @@ int main(int argc, char** argv)
 
 		if(flag == "--disable-lookup")
 		{
-			masterThread::setDisableLookup(true);
+			masterThread::disableLookup(true);
 		}
 
 		//Disable threading

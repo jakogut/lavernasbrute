@@ -9,15 +9,15 @@
 bool masterThread::success = 0;
 bool masterThread::silent = 0;
 int masterThread::interval = 0;
-std::string masterThread::charset = "";
+char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 int masterThread::numTargets = 0;
 bool masterThread::randomizeCharset = 0;
 std::string* masterThread::integerToKeyLookup = 0;
 long masterThread::lookupSize = 0;
-long long masterThread::iterations = 0;
+unsigned long masterThread::iterations = 0;
 bool masterThread::largeLookup = false;
-bool masterThread::disableLookup = false;
+bool masterThread::lookupDisabled = false;
 std::vector<std::string> masterThread::targetHashes;
 std::vector<std::string> masterThread::crackedHashes;
 
@@ -27,7 +27,7 @@ masterThread::masterThread()
 {
 	//Set the charset and charset length variables
 	charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	charsetLength = charset.length();
+	charsetLength = strlen(charset);
 
 	//Check that the update interval is set within bounds
 	if(interval <= 0)
@@ -50,13 +50,13 @@ masterThread::masterThread()
 			originalCharset.erase(charsetIterator);
 		}
 
-		charset = randomizedCharset;
+		charset = (char*)randomizedCharset.c_str();
 	}
 
 	//Create the integer to key conversion lookup array
 	int lookupChars;
 
-	if(disableLookup)
+	if(lookupDisabled)
 		lookupChars = 1;
 	else
 		largeLookup ? lookupChars = 4 : lookupChars = 2;
@@ -66,7 +66,7 @@ masterThread::masterThread()
 
 	for(long i = 0; i < lookupSize; i++)
 	{
-		unsigned long long num = i;
+		unsigned long num = i;
 
 		while(num > 0)
 		{
@@ -142,14 +142,9 @@ void masterThread::setSuccess(bool input)
 	success = input;
 }
 
-std::string masterThread::getCharset()
+char* masterThread::getCharset()
 {
 	return charset;
-}
-
-std::string* masterThread::getCharsetPtr()
-{
-	return &charset;
 }
 
 int masterThread::getCharsetLength()
@@ -177,9 +172,9 @@ void masterThread::setLargeLookup(bool input)
 	largeLookup = input;
 }
 
-void masterThread::setDisableLookup(bool input)
+void masterThread::disableLookup(bool input)
 {
-	disableLookup = input;
+	lookupDisabled = input;
 }
 
 std::string* masterThread::getLookup()
@@ -197,7 +192,7 @@ void masterThread::setRandomizeCharset(bool input)
 	randomizeCharset = input;
 }
 
-long long masterThread::getIterations()
+unsigned long masterThread::getIterations()
 {
 	return iterations;
 }
