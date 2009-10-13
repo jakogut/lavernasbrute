@@ -42,7 +42,7 @@ protected:
 	char* charset;
 	int charsetLength;
 
-	std::string* integerToKeyLookup;
+	char** integerToKeyLookup;
 };
 
 #endif

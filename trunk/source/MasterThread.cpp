@@ -13,7 +13,7 @@ char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 int masterThread::numTargets = 0;
 bool masterThread::randomizeCharset = 0;
-std::string* masterThread::integerToKeyLookup = 0;
+char** masterThread::integerToKeyLookup = 0;
 long masterThread::lookupSize = 0;
 unsigned long masterThread::iterations = 0;
 bool masterThread::largeLookup = false;
@@ -36,7 +36,7 @@ masterThread::masterThread()
 	//If specified, randomize the order of the character set
 	if(randomizeCharset)
 	{
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 
 		std::string::iterator charsetIterator;
 		std::string originalCharset = charset;
@@ -61,18 +61,26 @@ masterThread::masterThread()
 	else
 		largeLookup ? lookupChars = 4 : lookupChars = 2;
 
-	lookupSize = pow((double)charsetLength, lookupChars);
-	integerToKeyLookup = new std::string[lookupSize];
+	lookupSize = (long)pow((double)charsetLength, lookupChars);
+	integerToKeyLookup = new char*[lookupSize];
 
 	for(long i = 0; i < lookupSize; i++)
 	{
 		unsigned long num = i;
+		int j = 0;
+
+		integerToKeyLookup[i] = new char[lookupChars];
 
 		while(num > 0)
 		{
-			integerToKeyLookup[i] += charset[num % charsetLength];
+			integerToKeyLookup[i][j] = charset[num % charsetLength];
 			num /= charsetLength;
+
+			j++;
 		}
+
+		// Null terminate the string
+		integerToKeyLookup[i][j] = '\0';
 	}
 
 	//Start the clock
@@ -97,6 +105,7 @@ void masterThread::operator()()
 
 	printResult();
 
+	delete [] *integerToKeyLookup;
 	delete [] integerToKeyLookup;
 }
 
@@ -177,7 +186,7 @@ void masterThread::disableLookup(bool input)
 	lookupDisabled = input;
 }
 
-std::string* masterThread::getLookup()
+char** masterThread::getLookup()
 {
 	return integerToKeyLookup;
 }

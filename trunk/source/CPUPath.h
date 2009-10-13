@@ -22,7 +22,8 @@ protected:
 
 	//Function for converting an integer to a text string (key)
 	void integerToKey(unsigned long location);
-	std::string currentKey;
+
+	char *currentKey, *hashedKey;
 
 	unsigned long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
 	long localProgress;

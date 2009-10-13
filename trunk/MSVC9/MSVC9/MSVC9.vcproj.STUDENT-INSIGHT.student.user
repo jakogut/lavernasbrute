@@ -39,7 +39,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="ntlm:07E62144E82AF6789701A160E381BE6A -i 1 --large-lookup"
+				CommandArguments="str:billy -i 1 --large-lookup --randomize-charset"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"

@@ -25,18 +25,22 @@ void CPUPath::operator()()
 	masterThread::setNumTargets(getNumTargets());
 	int totalTargets = getNumTargets();
 
+	currentKey = new char[maxChars + 1];
+	hashedKey = new char[33];
+
 	while(!masterThread::getSuccess() && (keyLocation < endKeyspace) && (targets.size() > 0))
 	{
-		//Convert the keyspace location to a key
+		// Convert the keyspace location to a key
 		integerToKey(keyLocation);
 		keyLocation++;
 
-		//Hash and compare
-		std::string hashedKey = ntlm.getNTLMHash(&currentKey);
+		// Hash and compare 
+		hashedKey = ntlm.getNTLMHash(currentKey);
 
-		for(long i = 0; i < targets.size(); i++)
+		int numTargets = getNumTargets();
+		for(long i = 0; i < numTargets; i++)
 		{
-			if(hashedKey == targets[i]) //Comparison returns a match
+			if(strcmp(hashedKey, (char*)targets[i].c_str()) == 0) //Comparison returns a match
 			{
 				masterThread::pushTargetHash(targets[i]);
 				masterThread::pushCrackedHash(currentKey);
@@ -63,6 +67,9 @@ void CPUPath::operator()()
 	}
 
 	masterThread::setSuccess(true);
+
+	delete [] currentKey;
+	delete [] hashedKey;
 }
 
 //Convert the integer key location to a text string using base conversion
@@ -70,13 +77,22 @@ void CPUPath::integerToKey(unsigned long location)
 {
 	unsigned long num = location;
 	int lookupSize = masterThread::getLookupSize();
+
 	int i = 0;
+	std::string key;
 
-	currentKey.clear();
-
-	for(; num > 0; i++)
+	while(num > 0)
 	{
-		currentKey += integerToKeyLookup[num % lookupSize];
+		char* append = integerToKeyLookup[num % lookupSize];
+		int appendLength = strlen(append);
+
+		for(int j = 0; j < appendLength; j++)
+		{
+			currentKey[i++] = append[j];
+		}
+
 		num /= lookupSize;
 	}
+
+	currentKey[i] = '\0';
 }
