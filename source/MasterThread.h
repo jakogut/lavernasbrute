@@ -44,7 +44,7 @@ public:
 	static void setLargeLookup(bool input);
 	static void disableLookup(bool input);
 
-	static std::string* getLookup();
+	static char** getLookup();
 	static long getLookupSize();
 
 	static void setRandomizeCharset(bool input);
@@ -76,7 +76,7 @@ protected:
 	static char* charset;
 	static int charsetLength;
 
-	static std::string* integerToKeyLookup;
+	static char** integerToKeyLookup;
 	static long lookupSize;
 
 	std::string randomizedCharset;

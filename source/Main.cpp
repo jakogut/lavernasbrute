@@ -38,6 +38,7 @@ void printHelp()
 	"\n\t\tThis should match the core count of your CPU."
 
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
+	"\n\t\tMax for 32-bit is 8 chars, max for 64-bit is 14 chars."
 
 	"\n\n-i INTEGER\tInterval in seconds for iterations logged to the console."
 	"\n\t\tThe interval may be raised for a slight performance gain."
@@ -48,7 +49,7 @@ void printHelp()
 	"\n\t\tprediction of the keyspace search order."
 
 	"\n\n--large-lookup\tUses a larger lookup table to improve speed."
-	"\n\t\tIt is recommended that you have at least 350mb of free memory"
+	"\n\t\tIt is recommended that you have at least 1 GB memory"
 	"\n\t\tin order to use this option."
 
 	"\n\n--disable-lookup\n\t\tDisable the character lookup table."
@@ -126,6 +127,16 @@ int main(int argc, char** argv)
 				cerr << "\nERROR: \"" << newHash << "\" is an invalid hash! "
 						"String must be 32 characters in length." << endl;
 			}
+		}
+
+		// Take a string, hash it, and crack it (for debugging purposes)
+		if(flag.substr(0, 4) == "str:")
+		{
+			NTLM ntlm;
+			string newHash = ntlm.getNTLMHash((char*)flag.substr(4).c_str());
+
+			processingPath::pushTarget((char*)newHash.c_str());
+			targetPresent = true;
 		}
 
 		//Set the number of threads
