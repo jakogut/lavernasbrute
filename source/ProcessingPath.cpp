@@ -20,25 +20,9 @@ processingPath::processingPath()
 	integerToKeyLookup = masterThread::getLookup();
 
 	//Make sure the keyspace size is within the supported limits
-	switch(sizeof(long) * 8)
+	if(maxChars < 1 || maxChars > 14)
 	{
-	case 32: // Binary is 32-bit
-		if(maxChars < 1 || maxChars > 8)
-		{
-			maxChars = 8;
-		}
-		break;
-
-	case 64: // Binary is 64-bit
-		if(maxChars < 1 || maxChars > 14)
-		{
-			maxChars = 14;
-		}
-		break;
-
-	default:
 		maxChars = 8;
-		break;
 	}
 }
 

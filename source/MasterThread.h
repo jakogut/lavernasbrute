@@ -22,7 +22,7 @@ public:
 
 	void operator()();
 
-	static unsigned long pow(unsigned long base, unsigned long power);
+	static unsigned long long pow(unsigned long long base, unsigned long long power);
 
 	static bool getSuccess();
 	static void setSuccess(bool input);
@@ -30,7 +30,7 @@ public:
 	static bool getSilent();
 	static void setSilent(bool input);
 
-	static unsigned long getIterations();
+	static unsigned long long getIterations();
 	static void incrementIterations();
 	static void increaseIterations(long input);
 
@@ -47,7 +47,7 @@ public:
 	static void disableLookup(bool input);
 
 	static char** getLookup();
-	static long getLookupSize();
+	static unsigned long long getLookupSize();
 
 	static void setRandomizeCharset(bool input);
 
@@ -58,7 +58,7 @@ protected:
 	int id;
 	time_t startTime;
 
-	static unsigned long iterations;
+	static unsigned long long iterations;
 	static int interval;
 	static bool silent;
 
@@ -79,7 +79,7 @@ protected:
 	static int charsetLength;
 
 	static char** integerToKeyLookup;
-	static long lookupSize;
+	static unsigned long long lookupSize;
 
 	std::string randomizedCharset;
 };

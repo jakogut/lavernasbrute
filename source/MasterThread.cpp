@@ -14,8 +14,8 @@ int masterThread::charsetLength = 0;
 int masterThread::numTargets = 0;
 bool masterThread::randomizeCharset = 0;
 char** masterThread::integerToKeyLookup = 0;
-long masterThread::lookupSize = 0;
-unsigned long masterThread::iterations = 0;
+unsigned long long masterThread::lookupSize = 0;
+unsigned long long masterThread::iterations = 0;
 bool masterThread::largeLookup = false;
 bool masterThread::lookupDisabled = false;
 std::vector<std::string> masterThread::targetHashes;
@@ -109,11 +109,11 @@ void masterThread::operator()()
 	delete [] integerToKeyLookup;
 }
 
-unsigned long masterThread::pow(unsigned long base, unsigned long power)
+unsigned long long masterThread::pow(unsigned long long base, unsigned long long power)
 {
-	unsigned long result = 1;
+	unsigned long long result = 1;
 
-	for(long i = 0; i < power; i++)
+	for(unsigned long long i = 0; i < power; i++)
 		result *= base;
 
 	return result;
@@ -202,7 +202,7 @@ char** masterThread::getLookup()
 	return integerToKeyLookup;
 }
 
-long masterThread::getLookupSize()
+unsigned long long masterThread::getLookupSize()
 {
 	return lookupSize;
 }
@@ -212,7 +212,7 @@ void masterThread::setRandomizeCharset(bool input)
 	randomizeCharset = input;
 }
 
-unsigned long masterThread::getIterations()
+unsigned long long masterThread::getIterations()
 {
 	return iterations;
 }

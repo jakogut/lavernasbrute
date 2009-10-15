@@ -70,9 +70,9 @@ void CPUPath::operator()()
 }
 
 //Convert the integer key location to a text string using base conversion
-void CPUPath::integerToKey(unsigned long location)
+void CPUPath::integerToKey(unsigned long long location)
 {
-	unsigned long num = location;
+	unsigned long long num = location;
 	int lookupSize = masterThread::getLookupSize();
 
 	currentKey.clear();
