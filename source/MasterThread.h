@@ -22,6 +22,8 @@ public:
 
 	void operator()();
 
+	static unsigned long pow(unsigned long base, unsigned long power);
+
 	static bool getSuccess();
 	static void setSuccess(bool input);
 	static void setInterval(int input);

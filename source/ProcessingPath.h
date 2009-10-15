@@ -12,6 +12,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "MasterThread.h"
 #include "NTLM.h"
@@ -28,16 +29,14 @@ class processingPath
 	static void setTotalThreads(int input);
 
 	static int getNumTargets();
-	static std::vector<std::string> getTargets();
+	static std::map<std::string, std::string> getTargets();
 
 protected:
-
-	unsigned long pow(unsigned long base, unsigned long power);
 
 	static int maxChars;
 	static int totalThreads;
 
-	static std::vector<std::string> targets;
+	static std::map<std::string, std::string> targets;
 
 	char* charset;
 	int charsetLength;
