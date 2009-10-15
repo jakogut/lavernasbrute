@@ -11,8 +11,6 @@
 #include <time.h>
 #include <sstream>
 #include <string>
-#include <vector>
-#include <map>
 
 #include "MasterThread.h"
 #include "NTLM.h"
@@ -23,6 +21,9 @@ class processingPath
 
 	processingPath();
 	~processingPath();
+
+	//The loop that is run to crack a given target hash
+	virtual void operator()() = 0;
 
 	static void pushTarget(std::string input);
 	static void setMaxChars(int input);

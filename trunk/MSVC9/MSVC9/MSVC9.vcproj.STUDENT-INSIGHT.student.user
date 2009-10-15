@@ -39,7 +39,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="str:billy -i 1 --large-lookup"
+				CommandArguments="str:ZZZZ -i 1 --large-lookup"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"

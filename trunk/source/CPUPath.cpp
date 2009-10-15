@@ -14,6 +14,9 @@ CPUPath::CPUPath(int id)
 	keyLocation = startKeyspace;
 
 	localProgress = 0;
+
+	currentKey.reserve(maxChars);
+	hashedKey.reserve(32);
 }
 
 CPUPath::~CPUPath()
@@ -73,7 +76,7 @@ void CPUPath::operator()()
 void CPUPath::integerToKey(unsigned long long location)
 {
 	unsigned long long num = location;
-	int lookupSize = masterThread::getLookupSize();
+	unsigned long long lookupSize = masterThread::getLookupSize();
 
 	currentKey.clear();
 
