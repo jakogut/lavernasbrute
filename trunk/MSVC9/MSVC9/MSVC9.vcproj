@@ -394,6 +394,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\VTune\lavernasbrute.vpj"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

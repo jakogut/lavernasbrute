@@ -1,7 +1,7 @@
 CXX = g++ -pipe
 CXXFLAGS = -c -Wall -O3 -msse2 -msse3 -fomit-frame-pointer -march=$(ARCH) -mfpmath=sse
 INCLUDE = -I include/
-LIB = lib/libboost_date_time-mgw44-mt-1_38* lib/libboost_thread-mgw44-mt-1_38* -lpthread
+LIB = lib/libboost_date_time-*-mt-1_38.a lib/libboost_thread-*-mt-1_38.a -lpthread
 OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o
 ARCH = k8
 PLATFORM = GCC

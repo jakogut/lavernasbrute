@@ -61,7 +61,7 @@ masterThread::masterThread()
 	else
 		largeLookup ? lookupChars = 4 : lookupChars = 2;
 
-	lookupSize = (long)pow((double)charsetLength, lookupChars);
+	lookupSize = pow(charsetLength, lookupChars);
 	integerToKeyLookup = new char*[lookupSize];
 
 	for(long i = 0; i < lookupSize; i++)
@@ -109,17 +109,28 @@ void masterThread::operator()()
 	delete [] integerToKeyLookup;
 }
 
+unsigned long masterThread::pow(unsigned long base, unsigned long power)
+{
+	unsigned long result = 1;
+
+	for(long i = 0; i < power; i++)
+		result *= base;
+
+	return result;
+}
+
 void masterThread::printResult()
 {
-	time_t endTime = ((unsigned)time(NULL));
+	time_t endTime = time(NULL);
+	time_t totalTime = (endTime - startTime);
 
-	//This needs to be reworked
-	time_t hours = (endTime - startTime) / 3600;
-	time_t minutes = (endTime - startTime) / 60;
-	time_t seconds = (endTime - startTime);
+	time_t seconds = totalTime % 60;
+	totalTime /= 60;
 
-	minutes -= hours * 60;
-	seconds -= minutes * 60;
+	time_t minutes = totalTime % 60;
+	totalTime /= 60;
+
+	time_t hours = totalTime % 60;
 
 	std::cout << std::endl << "The run has completed! The hash inputs are as follows:" << std::endl;
 
@@ -132,7 +143,7 @@ void masterThread::printResult()
 			
 	if(endTime - startTime != 0)
 	{
-		std::cout << "Speed of this run: " << (getIterations() / (endTime - startTime)) << " Iterations per second." << std::endl;
+		std::cout << "Speed of this run: " << (getIterations() / (endTime - startTime)) << " keys per second." << std::endl;
 	}
 }
 

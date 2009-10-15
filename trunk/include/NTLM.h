@@ -32,8 +32,8 @@ protected:
 
 	void prepare_key(char* input, unsigned long* output)
 	{
-		int i=0;
-		int length=(int)(strlen(input));
+		long i = 0;
+		long length = (long)(strlen(input));
 		memset(output,0,16*4);
 		//The length of input need to be <= 27
 		for(;i<length/2;i++)	
@@ -129,11 +129,11 @@ protected:
 	char* convert_hex(unsigned long* output)
 	{
 		//Iterate the integer
-		for(int i = 0;i < 4; i++)
+		for(long i = 0; i < 4; i++)
 		{
 			unsigned long n = output[i];
 			//iterate the bytes of the integer		
-			for(int j = 0; j < 4; j++)
+			for(long j = 0; j < 4; j++)
 			{
 				unsigned long convert = n % 256;
 				hex_format[i*8+j*2+1]=itoa16[convert%16];

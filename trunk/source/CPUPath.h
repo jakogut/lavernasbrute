@@ -23,7 +23,7 @@ protected:
 	//Function for converting an integer to a text string (key)
 	void integerToKey(unsigned long location);
 
-	char *currentKey, *hashedKey;
+	std::string currentKey, hashedKey;
 
 	unsigned long keyspaceSize, startKeyspace, endKeyspace, keyLocation;
 	long localProgress;
