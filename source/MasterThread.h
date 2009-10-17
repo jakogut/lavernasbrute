@@ -34,14 +34,8 @@ public:
 	static void incrementIterations();
 	static void increaseIterations(long input);
 
-	static void setCrackedPassword(std::string input);
-
 	static char* getCharset();
 	static int getCharsetLength();
-
-	static void setNumTargets(int input);
-	static void pushTargetHash(std::string input);
-	static void pushCrackedHash(std::string input);
 
 	static void setLargeLookup(bool input);
 	static void disableLookup(bool input);
@@ -70,10 +64,6 @@ protected:
 	static bool randomizeCharset;
 
 	static bool largeLookup, lookupDisabled;
-
-	static int numTargets;
-	static std::vector<std::string> targetHashes;
-	static std::vector<std::string> crackedHashes;
 
 	static char* charset;
 	static int charsetLength;

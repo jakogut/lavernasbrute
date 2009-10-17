@@ -5,7 +5,7 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	//Assign a unique portion of the keyspace to the thread (Based on id)
+	// Assign a unique portion of the keyspace to the thread (Based on id)
 	keyspaceSize = (masterThread::pow(charsetLength, maxChars) / totalThreads);
 
 	startKeyspace = (keyspaceSize * id);
@@ -13,10 +13,9 @@ CPUPath::CPUPath(int id)
 
 	keyLocation = startKeyspace;
 
-	localProgress = 0;
+	lookupSize = masterThread::getLookupSize();
 
-	currentKey.reserve(maxChars);
-	hashedKey.reserve(32);
+	localProgress = 0;
 }
 
 CPUPath::~CPUPath()
@@ -25,36 +24,38 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
-	masterThread::setNumTargets(getNumTargets());
 	int totalTargets = getNumTargets();
 
 	std::map<std::string, std::string>::iterator targetIterator;
 
-	while(!masterThread::getSuccess() && (keyLocation < endKeyspace) && !targets.empty())
+	hashedKey.reserve(33);
+	currentKey.reserve(maxChars);
+
+	while((keyLocation < endKeyspace) && !targets.empty())
 	{
+		currentKey.clear();
+
 		// Convert the keyspace location to a key
-		integerToKey(keyLocation);
-		keyLocation++;
+		unsigned long long convert = keyLocation;
+		integerToKey(convert);
 
 		// Hash and compare 
-		hashedKey = ntlm.getNTLMHash((char*)currentKey.c_str());
+		hashedKey = ntlm.getNTLMHash(&currentKey);
 
 		targetIterator = targets.find(hashedKey.substr(0, 5));
 
 		if((targetIterator != targets.end()) && (targetIterator->second == hashedKey)) // Match was found
 		{
-			masterThread::pushTargetHash(targetIterator->second);
-			masterThread::pushCrackedHash(currentKey);
-
-			std::cout << "Hash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl;
+			std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
+					  << targetIterator->second << " == " << currentKey << "\n\n";
 
 			targets.erase(targetIterator);
 		}
 		else // No match
 		{
-			//Increment a local counter for the number of iterations until it reaches a certain point.
-			//Once that point has been reached, the local count is committed to the global count and the local
-			//variable is reset. This helps keep an accurate count of the iterations without using semaphores.
+			/* Increment a local counter for the number of iterations until it reaches a certain point.
+			Once that point has been reached, the local count is committed to the global count and the local
+			variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
 			if(localProgress > 250000)
 			{
 				masterThread::increaseIterations(localProgress);
@@ -62,7 +63,7 @@ void CPUPath::operator()()
 			}
 			else
 			{
-				//Loop is done, increment the local iteration counter
+				// Loop is done, increment the local iteration counter
 				localProgress++;
 			}
 		}
@@ -70,19 +71,22 @@ void CPUPath::operator()()
 
 	if(targets.empty())
 		masterThread::setSuccess(true);
+	else
+	{
+		// TODO: Request new keyspace section from the director
+	}
 }
 
-//Convert the integer key location to a text string using base conversion
+// Convert the integer key location to a text string using base conversion
 void CPUPath::integerToKey(unsigned long long location)
 {
-	unsigned long long num = location;
-	unsigned long long lookupSize = masterThread::getLookupSize();
-
-	currentKey.clear();
-
-	while(num > 0)
+	if(location)
 	{
-		currentKey += integerToKeyLookup[num % lookupSize];
-		num /= lookupSize;
+		currentKey += integerToKeyLookup[location % lookupSize];
+		location /= lookupSize;
+
+		integerToKey(location);
 	}
+	else
+		keyLocation++;
 }
