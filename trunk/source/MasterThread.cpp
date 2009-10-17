@@ -11,15 +11,12 @@ bool masterThread::silent = 0;
 int masterThread::interval = 0;
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
-int masterThread::numTargets = 0;
 bool masterThread::randomizeCharset = 0;
 char** masterThread::integerToKeyLookup = 0;
 unsigned long long masterThread::lookupSize = 0;
 unsigned long long masterThread::iterations = 0;
 bool masterThread::largeLookup = false;
 bool masterThread::lookupDisabled = false;
-std::vector<std::string> masterThread::targetHashes;
-std::vector<std::string> masterThread::crackedHashes;
 
 ////////////////////////////////////////////
 
@@ -93,13 +90,18 @@ masterThread::~masterThread()
 
 void masterThread::operator()()
 {
-	boost::posix_time::seconds updateInterval(interval);
+	// We have two timers so that the master thread can be updated independent of the print interval.
+	boost::posix_time::seconds updateInterval(1);
+	time_t printInterval = interval;
+
+	time_t startTime = time(NULL);
 
 	while(!success)
 	{
-		if(!silent)
+		if(!silent && ((time(NULL) - startTime) >= printInterval))
 			std::cout << getIterations() << " iterations" << std::endl;
 
+		startTime = time(NULL);
 		boost::this_thread::sleep(updateInterval);
 	}
 
@@ -132,14 +134,9 @@ void masterThread::printResult()
 
 	time_t hours = totalTime % 60;
 
-	std::cout << std::endl << "The run has completed! The hash inputs are as follows:" << std::endl;
-
-	for(long i = 0; i < numTargets; i++)
-		std::cout << targetHashes[i] << " == " << crackedHashes[i] << std::endl;
-	
-	std::cout << "\nAttack duration: " << getIterations() << " iterations." << std::endl
-		<< "Completed in: " << hours << " hours, " << minutes << " minutes, and " << seconds
-		<< " seconds. " << std::endl;
+	std::cout << "\nThe run has completed!"
+		<< "\nAttack duration: " << getIterations() << " iterations."
+		<< "\nCompleted in: " << hours << " hours, " << minutes << " minutes, and " << seconds << " seconds. " << std::endl;
 			
 	if(endTime - startTime != 0)
 	{
@@ -170,21 +167,6 @@ char* masterThread::getCharset()
 int masterThread::getCharsetLength()
 {
 	return charsetLength;
-}
-
-void masterThread::setNumTargets(int input)
-{
-	numTargets = input;
-}
-
-void masterThread::pushTargetHash(std::string input)
-{
-	targetHashes.push_back(input);
-}
-
-void masterThread::pushCrackedHash(std::string input)
-{
-	crackedHashes.push_back(input);
 }
 
 void masterThread::setLargeLookup(bool input)
