@@ -8,6 +8,7 @@
 
 bool masterThread::success = 0;
 bool masterThread::silent = 0;
+int masterThread::numWorkers = 0;
 int masterThread::interval = 0;
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
@@ -157,6 +158,16 @@ void masterThread::incrementIterations()
 void masterThread::setSuccess(bool input)
 {
 	success = input;
+}
+
+int masterThread::getNumWorkers()
+{
+	return numWorkers;
+}
+
+void masterThread::setNumWorkers(int input)
+{
+	numWorkers = input;
 }
 
 char* masterThread::getCharset()

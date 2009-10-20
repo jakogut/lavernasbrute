@@ -30,6 +30,9 @@ public:
 	static bool getSilent();
 	static void setSilent(bool input);
 
+	static int getNumWorkers();
+	static void setNumWorkers(int input);
+
 	static unsigned long long getIterations();
 	static void incrementIterations();
 	static void increaseIterations(long input);
@@ -55,6 +58,8 @@ protected:
 	static unsigned long long iterations;
 	static int interval;
 	static bool silent;
+
+	static int numWorkers;
 
 	//When a thread is successful, it sets this value to true, signaling the other threads
 	//That the job is done.

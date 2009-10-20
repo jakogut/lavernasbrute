@@ -22,9 +22,21 @@ class processingPath
 	processingPath();
 	~processingPath();
 
-	//The loop that is run to crack a given target hash
+	// The loop that is run to crack a given target hash
 	virtual void operator()() = 0;
+    
+    // Functions necessary for the Director to do its job
+	virtual int getThreadID();
 
+	virtual unsigned long long getKeyspaceEnd();
+	virtual unsigned long long getKeyspaceBegin();
+	virtual unsigned long long getKeyLocation();
+
+	virtual void moveKeyspaceEnd(unsigned long long input);
+	virtual void moveKeyspaceBegin(unsigned long long input);
+	virtual void moveKeylocation(unsigned long long input);
+
+    // Processing path options
 	static void pushTarget(std::string input);
 	static void setMaxChars(int input);
 	static void setTotalThreads(int input);

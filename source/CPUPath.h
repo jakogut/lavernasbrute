@@ -4,6 +4,7 @@
 #define CPUPATH_H_
 
 #include "ProcessingPath.h"
+#include "Director.h"
 
 class CPUPath : protected processingPath
 {
@@ -13,6 +14,17 @@ public:
 	~CPUPath();
 
 	void operator()();
+	void searchKeyspace();
+
+	int getThreadID();
+
+	unsigned long long getKeyspaceEnd();
+	unsigned long long getKeyspaceBegin();
+	unsigned long long getKeyLocation();
+
+	void moveKeyspaceEnd(unsigned long long input);
+	void moveKeyspaceBegin(unsigned long long input);
+	void moveKeylocation(unsigned long long input);
 
 protected:
 
@@ -25,7 +37,7 @@ protected:
 
 	std::string currentKey, hashedKey;
 
-	unsigned long long keyspaceSize, startKeyspace, endKeyspace, keyLocation, lookupSize;
+	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
 	long localProgress;
 };
 
