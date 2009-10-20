@@ -8,14 +8,20 @@ CPUPath::CPUPath(int id)
 	// Assign a unique portion of the keyspace to the thread (Based on id)
 	keyspaceSize = (masterThread::pow(charsetLength, maxChars) / totalThreads);
 
-	startKeyspace = (keyspaceSize * id);
-	endKeyspace = (startKeyspace + keyspaceSize);
+	keyspaceBegin = (keyspaceSize * id);
+	keyspaceEnd = (keyspaceBegin + keyspaceSize);
 
-	keyLocation = startKeyspace;
+    // Set the key location
+	keyLocation = keyspaceBegin;
 
+    // Get the integer to key lookup size
 	lookupSize = masterThread::getLookupSize();
+    
+    // Reserve space in our strings
+	currentKey.reserve(maxChars);
+	hashedKey.reserve(32);
 
-	localProgress = 0;
+	Director::setWorkerPtr(this, getThreadID());
 }
 
 CPUPath::~CPUPath()
@@ -24,14 +30,16 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
+	searchKeyspace();
+}
+
+void CPUPath::searchKeyspace()
+{
 	int totalTargets = getNumTargets();
 
 	std::map<std::string, std::string>::iterator targetIterator;
 
-	hashedKey.reserve(33);
-	currentKey.reserve(maxChars);
-
-	while((keyLocation < endKeyspace) && !targets.empty())
+	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		currentKey.clear();
 
@@ -40,7 +48,7 @@ void CPUPath::operator()()
 		integerToKey(convert);
 
 		// Hash and compare 
-		hashedKey = ntlm.getNTLMHash(&currentKey);
+		hashedKey = ntlm.getNTLMHash((char*)currentKey.c_str());
 
 		targetIterator = targets.find(hashedKey.substr(0, 5));
 
@@ -53,9 +61,9 @@ void CPUPath::operator()()
 		}
 		else // No match
 		{
-			/* Increment a local counter for the number of iterations until it reaches a certain point.
-			Once that point has been reached, the local count is committed to the global count and the local
-			variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
+			//Increment a local counter for the number of iterations until it reaches a certain point.
+			//Once that point has been reached, the local count is committed to the global count and the local
+			//variable is reset. This helps keep an accurate count of the iterations without using semaphores.
 			if(localProgress > 250000)
 			{
 				masterThread::increaseIterations(localProgress);
@@ -63,7 +71,7 @@ void CPUPath::operator()()
 			}
 			else
 			{
-				// Loop is done, increment the local iteration counter
+				//Loop is done, increment the local iteration counter
 				localProgress++;
 			}
 		}
@@ -73,8 +81,14 @@ void CPUPath::operator()()
 		masterThread::setSuccess(true);
 	else
 	{
-		// TODO: Request new keyspace section from the director
+		Director::reassignKeyspace(this);
+		searchKeyspace();
 	}
+}
+
+int CPUPath::getThreadID()
+{
+	return id;
 }
 
 // Convert the integer key location to a text string using base conversion
@@ -89,4 +103,34 @@ void CPUPath::integerToKey(unsigned long long location)
 	}
 	else
 		keyLocation++;
+}
+
+unsigned long long CPUPath::getKeyspaceEnd()
+{
+	return keyspaceEnd;
+}
+
+unsigned long long CPUPath::getKeyspaceBegin()
+{
+	return keyspaceBegin;
+}
+
+unsigned long long CPUPath::getKeyLocation()
+{
+	return keyLocation;
+}
+
+void CPUPath::moveKeyspaceEnd(unsigned long long input)
+{
+	keyspaceEnd = input;
+}
+
+void CPUPath::moveKeyspaceBegin(unsigned long long input)
+{
+	keyspaceBegin = input;
+}
+
+void CPUPath::moveKeylocation(unsigned long long input)
+{
+	keyLocation = input;
 }

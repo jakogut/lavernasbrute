@@ -31,6 +31,43 @@ processingPath::~processingPath()
 	integerToKeyLookup = NULL;
 }
 
+void processingPath::operator ()()
+{
+}
+
+int processingPath::getThreadID()
+{
+	return -1;
+}
+
+// These are all implementation specific
+unsigned long long processingPath::getKeyspaceEnd()
+{
+	return -1;
+}
+
+unsigned long long processingPath::getKeyspaceBegin()
+{
+	return -1;
+}
+
+unsigned long long processingPath::getKeyLocation()
+{
+	return -1;
+}
+
+void processingPath::moveKeyspaceEnd(unsigned long long input)
+{
+}
+
+void processingPath::moveKeyspaceBegin(unsigned long long input)
+{
+
+}
+void processingPath::moveKeylocation(unsigned long long input)
+{
+}
+
 void processingPath::pushTarget(std::string input)
 {
 	targets[input.substr(0, 5)] = input;
@@ -48,7 +85,7 @@ void processingPath::setTotalThreads(int input)
 
 int processingPath::getNumTargets()
 {
-	return targets.size();
+	return (int)targets.size();
 }
 
 std::map<std::string, std::string> processingPath::getTargets()

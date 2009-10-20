@@ -7,6 +7,9 @@
 //Boost thread
 #include <boost/thread/thread.hpp>
 
+// Director class 
+#include "Director.h"
+
 //Base class for processing paths
 #include "ProcessingPath.h"
 
@@ -215,6 +218,9 @@ int main(int argc, char** argv)
 
 	//Set the total number of worker threads in use for this run
 	processingPath::setTotalThreads(totalThreads);
+    
+    // Create a director thread
+	threadGroup.create_thread(Director());
 
 	//Add a master thread to the group
 	threadGroup.create_thread(masterThread());

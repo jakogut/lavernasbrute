@@ -359,6 +359,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\Director.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\Main.cpp"
 				>
 			</File>
@@ -378,6 +382,10 @@
 			>
 			<File
 				RelativePath="..\..\source\CPUPath.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\Director.h"
 				>
 			</File>
 			<File
