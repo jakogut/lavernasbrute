@@ -94,7 +94,8 @@ string toLower(const string input)
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
-	int totalThreads = 2;
+	int CPUThreads = 2;
+	int numWorkers = 0;
 
 	//Parse command-line arguments
 	string flag, value;
@@ -147,11 +148,11 @@ int main(int argc, char** argv)
 		{
 			if(toInt(value) >= 2)
 			{
-				totalThreads = toInt(value);
+				CPUThreads = toInt(value);
 			}
 			else
 			{
-				totalThreads = 2;
+				CPUThreads = 2;
 			}
 		}
 
@@ -193,14 +194,14 @@ int main(int argc, char** argv)
 		//Disable threading
 		if(flag == "--disable-threading")
 		{
-			totalThreads = 1;
+			CPUThreads = 1;
 		}
 	}
 
 	//Check to see that we have a valid target
 	if(targetPresent)
 	{
-		cout << "\nRunning " << totalThreads << " (+1) cooperative threads," << endl
+		cout << "\nRunning " << numWorkers << " (+1) cooperative threads," << endl
 			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).\n\n";
 	}
 	else
@@ -211,13 +212,11 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	//The thread group is like a big pile of zombie slaves which rise to do your bidding with a simple "join_all()"
-	//You can add a thread--or a thousand--per processing path. The latter scenario is not suggested for paths which
-	//are threaded by nature. (GPUs, for example. Try sending a GPU instructions from multiple threads, and you'll crash the app.
 	boost::thread_group threadGroup;
 
 	//Set the total number of worker threads in use for this run
-	processingPath::setTotalThreads(totalThreads);
+	numWorkers += CPUThreads;
+	masterThread::setNumWorkers(numWorkers);
     
     // Create a director thread
 	threadGroup.create_thread(Director());
@@ -226,7 +225,7 @@ int main(int argc, char** argv)
 	threadGroup.create_thread(masterThread());
 
 	//Create a number of threads for the CPU path
-	for(int i = 0; i < totalThreads; i++)
+	for(int i = 0; i < CPUThreads; i++)
 	{
 		threadGroup.create_thread(CPUPath(i));
 	}

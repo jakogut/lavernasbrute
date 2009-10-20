@@ -39,7 +39,6 @@ class processingPath
     // Processing path options
 	static void pushTarget(std::string input);
 	static void setMaxChars(int input);
-	static void setTotalThreads(int input);
 
 	static int getNumTargets();
 	static std::map<std::string, std::string> getTargets();
@@ -47,7 +46,7 @@ class processingPath
 protected:
 
 	static int maxChars;
-	static int totalThreads;
+	static int numWorkers;
 
 	static std::map<std::string, std::string> targets;
 

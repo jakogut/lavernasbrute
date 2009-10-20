@@ -33,26 +33,27 @@ processingPath* Director::getWorkerPtr(int id)
 	return workers[id];
 }
 
-void Director::setWorkerPtr(processingPath* worker, int id)
+void Director::setWorkerPtr(processingPath* worker)
 {
-	workers[id] = worker;
+	workers[worker->getThreadID()] = worker;
 }
 
-void Director::reassignKeyspace(processingPath *worker)
+bool Director::reassignKeyspace(processingPath *worker)
 {
-	if(worker == workers[worker->getThreadID()])
+	int id = 0;
+	bool success;
+
+	// Find the worker with the largest remaining section of the keyspace
+	for(int i = 0; i < numWorkers; i++)
 	{
-		int id = 0;
-
-		// Find the worker with the largest remaining section of the keyspace
-		for(int i = 0; i < numWorkers; i++)
+		if(getRemainingKeyspace(i) > getRemainingKeyspace(id))
 		{
-			if(getKeyspaceSize(i) < getKeyspaceSize(id))
-			{
-				id = i;
-			}
+			id = i;
 		}
+	}
 
+	if(getRemainingKeyspace(id) > 0)
+	{
 		// Split the remaining section of the keyspace, and give it to the idle worker
 		worker->moveKeyspaceEnd(workers[id]->getKeyspaceEnd());
 		workers[id]->moveKeyspaceEnd((workers[id]->getKeyspaceEnd() - workers[id]->getKeyLocation()) / 2);
@@ -60,17 +61,24 @@ void Director::reassignKeyspace(processingPath *worker)
 		worker->moveKeyspaceBegin(workers[id]->getKeyspaceEnd() + 1);
 		worker->moveKeylocation(worker->getKeyLocation());
 
+		std::cout << workers[id]->getKeyLocation() << " -- " << workers[id]->getKeyspaceEnd() << std::endl;
 		std::cout << "Keyspace relocated" << std::endl;
+
+		success = true;
 	}
+	else
+		success = false;
+
+	return success;
 }
 
-unsigned long long Director::getKeyspaceSize(int id)
+unsigned long long Director::getRemainingKeyspace(int id)
 {
 	processingPath* worker = workers[id];
-	return worker->getKeyspaceEnd() - worker->getKeyspaceBegin();
+	return worker->getKeyLocation() - worker->getKeyspaceBegin();
 }
 
-unsigned long long Director::getKeyspaceSize(processingPath* worker)
+unsigned long long Director::getRemainingKeyspace(processingPath* worker)
 {
-	return worker->getKeyspaceEnd() - worker->getKeyspaceBegin();
+	return worker->getKeyLocation() - worker->getKeyspaceBegin();
 }
