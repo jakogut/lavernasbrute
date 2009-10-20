@@ -18,14 +18,15 @@ public:
 	void operator()();
 
 	static processingPath* getWorkerPtr(int id);
-	static void setWorkerPtr(processingPath* worker, int id);
+	static void setWorkerPtr(processingPath* worker);
 
-	static void reassignKeyspace(processingPath* worker);
+	// The return value is whether or not the director was able to create new work for the idle thread
+	static bool reassignKeyspace(processingPath* worker);
 
 protected:
 
-	static unsigned long long getKeyspaceSize(int id);
-	static unsigned long long getKeyspaceSize(processingPath* worker);
+	static unsigned long long getRemainingKeyspace(int id);
+	static unsigned long long getRemainingKeyspace(processingPath* worker);
 
 	static processingPath** workers;
 

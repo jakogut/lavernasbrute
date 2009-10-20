@@ -99,7 +99,7 @@ void masterThread::operator()()
 
 	while(!success)
 	{
-		if(!silent && ((time(NULL) - startTime) >= printInterval))
+		if(!silent && (int)((time(NULL) - startTime) >= printInterval))
 			std::cout << getIterations() << " iterations" << std::endl;
 
 		startTime = time(NULL);

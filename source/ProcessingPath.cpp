@@ -8,7 +8,7 @@
 
 std::map<std::string, std::string> processingPath::targets;
 int processingPath::maxChars = 0;
-int processingPath::totalThreads = 0;
+int processingPath::numWorkers = 0;
 
 ////////////////////////////////////////////
 
@@ -24,6 +24,8 @@ processingPath::processingPath()
 	{
 		maxChars = 8;
 	}
+
+	numWorkers = masterThread::getNumWorkers();
 }
 
 processingPath::~processingPath()
@@ -76,11 +78,6 @@ void processingPath::pushTarget(std::string input)
 void processingPath::setMaxChars(int input)
 {
 	maxChars = input;
-}
-
-void processingPath::setTotalThreads(int input)
-{
-	totalThreads = input;
 }
 
 int processingPath::getNumTargets()
