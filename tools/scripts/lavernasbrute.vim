@@ -7,7 +7,7 @@
 "       Place this script in your ~/.vim directory and add the following
 "       command to your .vimrc:
 "
-"       au BuffRead ~/path/to/lavernasbrute/* source ~/.vim/lavernasbrute.vim
+"       au BufRead ~/path/to/lavernasbrute/* source ~/.vim/lavernasbrute.vim
 "
 " Links:
 "       http://code.google.com/p/lavernasbrute/
