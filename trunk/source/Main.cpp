@@ -198,6 +198,10 @@ int main(int argc, char** argv)
 		}
 	}
 
+	//Set the total number of worker threads in use for this run
+	numWorkers += CPUThreads;
+	masterThread::setNumWorkers(numWorkers);
+
 	//Check to see that we have a valid target
 	if(targetPresent)
 	{
@@ -213,10 +217,6 @@ int main(int argc, char** argv)
 	}
 
 	boost::thread_group threadGroup;
-
-	//Set the total number of worker threads in use for this run
-	numWorkers += CPUThreads;
-	masterThread::setNumWorkers(numWorkers);
     
     // Create a director thread
 	threadGroup.create_thread(Director());

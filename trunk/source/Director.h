@@ -18,7 +18,7 @@ public:
 	void operator()();
 
 	static processingPath* getWorkerPtr(int id);
-	static void setWorkerPtr(processingPath* worker);
+	static void manageWorker(processingPath* worker);
 
 	// The return value is whether or not the director was able to create new work for the idle thread
 	static bool reassignKeyspace(processingPath* worker);

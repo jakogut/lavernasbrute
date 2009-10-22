@@ -21,7 +21,10 @@ CPUPath::CPUPath(int id)
 	currentKey.reserve(maxChars);
 	hashedKey.reserve(32);
 
-	Director::setWorkerPtr(this);
+	Director::manageWorker(this);
+
+	// Initialize the local progress counter to zero
+	localProgress = 0;
 }
 
 CPUPath::~CPUPath()
