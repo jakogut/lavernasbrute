@@ -9,15 +9,18 @@ DEST = bin/GCC
 
 OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/Director.o
 
+MKDIR = mkdir -p
+RM = rm -f
+
 lavernasbrute: $(OBJECTS)
+	$(MKDIR) $(DEST)
 	$(CXX) $(CXXFLAGS) $(LIB) $? -o $(DEST)/$@
 
 $(DEST)/%.o:
+	$(MKDIR) $(DEST)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c source/$*.cpp -o $@
 
 clean:
-	rm -f $(DEST)/lavernasbrute
-	rm -f $(DEST)/gmon.out
-	rm -f $(OBJECTS)
+	$(RM) $(DEST)/lavernasbrute $(DEST)/gmon.out $(OBJECTS)
 
 .PHONY: clean
