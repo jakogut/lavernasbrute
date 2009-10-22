@@ -1,5 +1,7 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 -pg
+CXXFLAGS = -Wall -O3 # $(DEBUG) $(PROFILE)
+DEBUG = -g
+PROFILE = -pg
 
 INCLUDE = -I/usr/include -Iinclude
 LIB = -L/usr/lib -Llib -lpthread -lboost_date_time-mt -lboost_thread-mt
