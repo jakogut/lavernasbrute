@@ -12,3 +12,10 @@ lavernasbrute: $(OBJECTS)
 
 $(DEST)/%.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c source/$*.cpp -o $@
+
+clean:
+	rm -f $(DEST)/lavernasbrute
+	rm -f $(DEST)/gmon.out
+	rm -f $(OBJECTS)
+
+.PHONY: clean
