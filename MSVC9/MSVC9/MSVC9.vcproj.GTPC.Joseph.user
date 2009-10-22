@@ -95,7 +95,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="str:billyo -i 1 -c 5"
+				CommandArguments="str:ZZZZ -i 1 -c 5 --large-lookup"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"

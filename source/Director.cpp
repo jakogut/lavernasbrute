@@ -33,7 +33,7 @@ processingPath* Director::getWorkerPtr(int id)
 	return workers[id];
 }
 
-void Director::setWorkerPtr(processingPath* worker)
+void Director::manageWorker(processingPath* worker)
 {
 	workers[worker->getThreadID()] = worker;
 }
@@ -62,7 +62,6 @@ bool Director::reassignKeyspace(processingPath *worker)
 		worker->moveKeylocation(worker->getKeyLocation());
 
 		std::cout << workers[id]->getKeyLocation() << " -- " << workers[id]->getKeyspaceEnd() << std::endl;
-		std::cout << "Keyspace relocated" << std::endl;
 
 		success = true;
 	}
