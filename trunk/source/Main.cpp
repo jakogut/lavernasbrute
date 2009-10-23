@@ -91,6 +91,26 @@ string toLower(const string input)
 	return result;
 }
 
+//Validates a string input as a lowercase hex digest of an NTLM hash
+bool isValidNTLMHexDigest(const string hash)
+{
+    //Require a length of 32
+    if (32 != hash.length()) return false;
+
+    //Allow only hexidecimal characters
+    for (unsigned int i = 0; i < hash.length(); ++i)
+    {
+        if (!(hash[i] >= '0' && hash[i] <= '9') &&
+            !(hash[i] >= 'a' && hash[i] <= 'f'))
+        {
+            return false;
+        }
+    }
+
+    //Passed validation
+    return true;
+}
+
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
@@ -121,7 +141,7 @@ int main(int argc, char** argv)
  
 			//Check to see whether the hash has been entered correctly
 			//The length of a proper NTLM hash is always 32 characters
-			if(newHash.length() == 32)
+			if (isValidNTLMHexDigest(newHash))
 			{
 				processingPath::pushTarget(newHash);
 				targetPresent = true;
@@ -129,7 +149,7 @@ int main(int argc, char** argv)
 			else
 			{
 				cerr << "\nERROR: \"" << newHash << "\" is an invalid hash! "
-						"String must be 32 characters in length." << endl;
+						"String must be a hex digest 32 characters in length." << endl;
 			}
 		}
 
