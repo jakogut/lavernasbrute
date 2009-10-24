@@ -127,6 +127,32 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
+		if(flag == "@TEST_MULTI")
+		{
+			string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			int charsetLength = charset.length();
+
+			int count = toInt(value);
+
+			NTLM ntlm;
+
+			for(int i = 0; i < count; i++)
+			{
+				unsigned long long num = 500000000 + i;
+				string target = "";
+
+				while(num)
+				{
+					target += charset[num % charsetLength];
+					num /= charsetLength;
+				}
+
+				processingPath::pushTarget(ntlm.getNTLMHash(target));
+			}
+
+			targetPresent = true;
+		}
+
 		//Set the password string to be cracked
 		if(flag == "-h" || flag == "--help")
 		{
