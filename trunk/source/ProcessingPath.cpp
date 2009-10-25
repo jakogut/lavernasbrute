@@ -6,7 +6,7 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-std::map<std::string, std::string> processingPath::targets;
+boost::unordered_map<std::string, std::string> processingPath::targets;
 int processingPath::maxChars = 0;
 int processingPath::numWorkers = 0;
 
@@ -83,9 +83,4 @@ void processingPath::setMaxChars(int input)
 int processingPath::getNumTargets()
 {
 	return (int)targets.size();
-}
-
-std::map<std::string, std::string> processingPath::getTargets()
-{
-	return targets;
 }
