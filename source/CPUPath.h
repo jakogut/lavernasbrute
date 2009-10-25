@@ -32,10 +32,10 @@ protected:
 
 	NTLM ntlm;
 
-	//Function for converting an integer to a text string (key)
-	inline void integerToKey(unsigned long long location);
+	// Function for converting the keyspace location to a key
+	void integerToKey(unsigned long long location);
 
-	std::string currentKey, hashedKey;
+	std::string currentKey, NTLMHashedKey;
 
 	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
 	long localProgress;

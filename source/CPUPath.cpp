@@ -19,7 +19,7 @@ CPUPath::CPUPath(int id)
     
     // Reserve space in our strings
 	currentKey.reserve(maxChars);
-	hashedKey.reserve(32);
+	NTLMHashedKey.reserve(32);
 
 	Director::manageWorker(this);
 
@@ -40,7 +40,7 @@ void CPUPath::searchKeyspace()
 {
 	int totalTargets = getNumTargets();
 
-	boost::unordered_map<std::string, std::string>::iterator targetIterator;
+	boost::unordered_map<unsigned int, std::string>::iterator targetIterator;
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
@@ -51,11 +51,10 @@ void CPUPath::searchKeyspace()
 		integerToKey(convert);
 
 		// Hash and compare 
-		hashedKey = ntlm.getNTLMHash((char*)currentKey.c_str());
+		NTLMHashedKey = ntlm.getNTLMHash(&currentKey);
+		targetIterator = targets.find(hash(&NTLMHashedKey));
 
-		targetIterator = targets.find(hashedKey.substr(0, 5));
-
-		if((targetIterator != targets.end()) && (targetIterator->second == hashedKey)) // Match was found
+		if((targetIterator != targets.end()) && (targetIterator->second == NTLMHashedKey)) // Match was found
 		{
 			std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
 					  << targetIterator->second << " == " << currentKey << "\n\n";

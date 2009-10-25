@@ -6,7 +6,7 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-boost::unordered_map<std::string, std::string> processingPath::targets;
+boost::unordered_map<unsigned int, std::string> processingPath::targets;
 int processingPath::maxChars = 0;
 int processingPath::numWorkers = 0;
 
@@ -72,7 +72,7 @@ void processingPath::moveKeylocation(unsigned long long input)
 
 void processingPath::pushTarget(std::string input)
 {
-	targets[input.substr(0, 5)] = input;
+	targets[hash(&input)] = input;
 }
 
 void processingPath::setMaxChars(int input)
@@ -83,4 +83,16 @@ void processingPath::setMaxChars(int input)
 int processingPath::getNumTargets()
 {
 	return (int)targets.size();
+}
+
+unsigned int processingPath::hash(std::string* input)
+{
+	unsigned char* str = (unsigned char*)input->c_str();
+	unsigned int hash = 0;
+	unsigned int c;
+
+	while(c = *str++)
+		hash = (hash << 5) * (hash >> 3) + c;
+
+	return hash;
 }
