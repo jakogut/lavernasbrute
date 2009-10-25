@@ -46,10 +46,13 @@ class processingPath
 
 protected:
 
+	// Hash an NTLM hash to create the key for the target hash map
+	static unsigned int hash(std::string* input);
+
 	static int maxChars;
 	static int numWorkers;
 
-	static boost::unordered_map<std::string, std::string> targets;
+	static boost::unordered_map<unsigned int, std::string> targets;
 
 	char* charset;
 	int charsetLength;
