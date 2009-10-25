@@ -48,6 +48,8 @@ void printHelp()
 
 	"\n\n--silent\tRun the program in silent mode."
 
+	"\n\n--frequency-charset\n\t\tUse a character set sorted by letter frequency."
+
 	"\n\n--randomize-charset\n\t\tRandomizes the character set in order to prevent"
 	"\n\t\tprediction of the keyspace search order."
 
@@ -217,6 +219,12 @@ int main(int argc, char** argv)
 		if(flag == "--silent")
 		{
 			masterThread::setSilent(true);
+		}
+
+		// Use a character set sorted by letter frequency
+		if(flag == "--frequency-charset")
+		{
+			masterThread::setFrequencyCharset(true);
 		}
 
 		/* Randomizing the order of the charset makes it impossible to predict the order in which the keyspace will be searched,

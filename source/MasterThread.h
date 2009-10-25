@@ -47,6 +47,7 @@ public:
 	static unsigned long long getLookupSize();
 
 	static void setRandomizeCharset(bool input);
+	static void setFrequencyCharset(bool input);
 
 	void printResult();
 
@@ -65,10 +66,17 @@ protected:
 	//That the job is done.
 	static bool success;
 
-	//Randomize the character set in order to prevent prediction of keyspace searches
+	// Use a larger than normal lookup
+	static bool largeLookup; 
+	
+	// Disable the lookup
+	static bool lookupDisabled;
+
+	// Randomize the character set in order to prevent prediction of keyspace searches
 	static bool randomizeCharset;
 
-	static bool largeLookup, lookupDisabled;
+	// Use a character set organized by letter frequency.
+	static bool frequencyCharset;
 
 	static char* charset;
 	static int charsetLength;

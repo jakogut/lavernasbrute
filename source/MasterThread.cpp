@@ -13,6 +13,7 @@ int masterThread::interval = 0;
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 bool masterThread::randomizeCharset = 0;
+bool masterThread::frequencyCharset = 0;
 char** masterThread::integerToKeyLookup = 0;
 unsigned long long masterThread::lookupSize = 0;
 unsigned long long masterThread::iterations = 0;
@@ -23,15 +24,20 @@ bool masterThread::lookupDisabled = false;
 
 masterThread::masterThread() 
 {
-	//Set the charset and charset length variables
-	charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	charsetLength = strlen(charset);
+	// If specified, use the letter frequency character set
+	if(frequencyCharset)
+		charset = " eEaArRiIoOtTnNsSlLcCuUdDpPmMhHgGbBfFyYwWkKvVxXzZjJqQ0123456789";
+	else
+		charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	//Check that the update interval is set within bounds
+	// Set the length of the character set
+	charsetLength = (int)strlen(charset);
+
+	// Check that the update interval is set within bounds
 	if(interval <= 0)
 		interval = 5;
 
-	//If specified, randomize the order of the character set
+	// If specified, randomize the order of the character set
 	if(randomizeCharset)
 	{
 		srand((unsigned int)time(NULL));
@@ -51,7 +57,7 @@ masterThread::masterThread()
 		charset = (char*)randomizedCharset.c_str();
 	}
 
-	//Create the integer to key conversion lookup array
+	// Create the integer to key conversion lookup array
 	int lookupChars;
 
 	if(lookupDisabled)
@@ -81,7 +87,7 @@ masterThread::masterThread()
 		integerToKeyLookup[i][j] = '\0';
 	}
 
-	//Start the clock
+	// Start the clock
 	startTime = time(NULL);
 }
 
@@ -100,9 +106,11 @@ void masterThread::operator()()
 	while(!success)
 	{
 		if(!silent && (int)((time(NULL) - startTime) >= printInterval))
+		{
 			std::cout << getIterations() << " iterations" << std::endl;
+			startTime = time(NULL);
+		}
 
-		startTime = time(NULL);
 		boost::this_thread::sleep(updateInterval);
 	}
 
@@ -203,6 +211,11 @@ unsigned long long masterThread::getLookupSize()
 void masterThread::setRandomizeCharset(bool input)
 {
 	randomizeCharset = input;
+}
+
+void masterThread::setFrequencyCharset(bool input)
+{
+	frequencyCharset = input;
 }
 
 unsigned long long masterThread::getIterations()
