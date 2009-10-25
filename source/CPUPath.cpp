@@ -40,7 +40,7 @@ void CPUPath::searchKeyspace()
 {
 	int totalTargets = getNumTargets();
 
-	std::map<std::string, std::string>::iterator targetIterator;
+	boost::unordered_map<std::string, std::string>::iterator targetIterator;
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{

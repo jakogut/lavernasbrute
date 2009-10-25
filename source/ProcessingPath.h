@@ -12,6 +12,8 @@
 #include <sstream>
 #include <string>
 
+#include <boost/unordered_map.hpp>
+
 #include "MasterThread.h"
 #include "NTLM.h"
 
@@ -41,14 +43,13 @@ class processingPath
 	static void setMaxChars(int input);
 
 	static int getNumTargets();
-	static std::map<std::string, std::string> getTargets();
 
 protected:
 
 	static int maxChars;
 	static int numWorkers;
 
-	static std::map<std::string, std::string> targets;
+	static boost::unordered_map<std::string, std::string> targets;
 
 	char* charset;
 	int charsetLength;
