@@ -20,7 +20,7 @@ public:
 	{
 	}
 
-	char* getNTLMHash(std::string* input)
+	inline char* getNTLMHash(const std::string* input)
 	{
 		prepare_key((char*)input->c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -28,7 +28,7 @@ public:
 		return convert_hex(crypted);
 	}
 
-	char* getNTLMHash(std::string input)
+	inline char* getNTLMHash(const std::string input)
 	{
 		prepare_key((char*)input.c_str(), nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -36,7 +36,7 @@ public:
 		return convert_hex(crypted);
 	}
 
-	char* getNTLMHash(char* input)
+	inline char* getNTLMHash(const char* input)
 	{
 		prepare_key(input, nt_buffer);
 		ntlm_crypt(nt_buffer, crypted);
@@ -46,7 +46,7 @@ public:
 
 protected:
 
-	void prepare_key(char* input, unsigned int* output)
+	void prepare_key(const char* input, unsigned int* output)
 	{
 		int i=0;
 		int length=(int)(strlen(input));

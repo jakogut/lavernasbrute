@@ -19,7 +19,6 @@ CPUPath::CPUPath(int id)
     
     // Reserve space in our strings
 	currentKey.reserve(maxChars);
-	NTLMHashedKey.reserve(32);
 
 	// Tell the director to manage this path 
 	// (If the path finishes its work and becomes idle, the director will find new work for it.)
@@ -41,7 +40,6 @@ void CPUPath::operator()()
 void CPUPath::searchKeyspace()
 {
 	int totalTargets = getNumTargets();
-	boost::unordered_map<unsigned int, std::string>::iterator targetIterator;
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
@@ -51,16 +49,16 @@ void CPUPath::searchKeyspace()
 		unsigned long long convert = keyLocation;
 		integerToKey(convert);
 
-		// Hash and compare 
-		NTLMHashedKey = ntlm.getNTLMHash(&currentKey);
-		targetIterator = targets.find(hash(&NTLMHashedKey));
+		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
+		char* NTLMKey = ntlm.getNTLMHash(&currentKey);
+		targetIterator = targets.find(hash(NTLMKey));
 
-		if(targetIterator->second == NTLMHashedKey) // Match was found
+		if(strcmp(NTLMKey, (char*)targetIterator->second.c_str()) == 0) // Match was found
 		{
 			std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
 					  << targetIterator->second << " == " << currentKey << "\n\n";
 
-			targets.erase(targetIterator);
+			removeTarget(targetIterator);
 		}
 		else // No match
 		{
@@ -97,7 +95,7 @@ int CPUPath::getThreadID()
 	return id;
 }
 
-// Convert the integer key location to a text string using base conversion.
+// Convert the integer key location to a text string using recursive base conversion.
 void CPUPath::integerToKey(unsigned long long location)
 {
 	if(location)

@@ -13,6 +13,7 @@
 #include <string>
 
 #include <boost/unordered_map.hpp>
+#include <boost/thread/thread.hpp>
 
 #include "MasterThread.h"
 #include "NTLM.h"
@@ -47,12 +48,15 @@ class processingPath
 protected:
 
 	// Hash an NTLM hash to create the key for the target hash map
-	static unsigned int hash(std::string* input);
+	inline static unsigned int hash(const char* input);
+
+	static void removeTarget(boost::unordered_map<unsigned int, std::string>::iterator it);
+
+	static boost::unordered_map<unsigned int, std::string> targets;
+	static boost::mutex targetsMutex;
 
 	static int maxChars;
 	static int numWorkers;
-
-	static boost::unordered_map<unsigned int, std::string> targets;
 
 	char* charset;
 	int charsetLength;

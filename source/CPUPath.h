@@ -16,7 +16,7 @@ public:
 	void operator()();
 	void searchKeyspace();
 
-	int getThreadID();
+	inline int getThreadID();
 
 	unsigned long long getKeyspaceEnd();
 	unsigned long long getKeyspaceBegin();
@@ -35,7 +35,8 @@ protected:
 	// Function for converting the keyspace location to a key
 	void integerToKey(unsigned long long location);
 
-	std::string currentKey, NTLMHashedKey;
+	std::string currentKey;
+	boost::unordered_map<unsigned int, std::string>::iterator targetIterator;
 
 	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
 	long localProgress;
