@@ -26,9 +26,9 @@ masterThread::masterThread()
 {
 	// If specified, use the letter frequency character set
 	if(frequencyCharset)
-		charset = " eEaArRiIoOtTnNsSlLcCuUdDpPmMhHgGbBfFyYwWkKvVxXzZjJqQ0123456789";
+		charset = (char*)" eEaArRiIoOtTnNsSlLcCuUdDpPmMhHgGbBfFyYwWkKvVxXzZjJqQ0123456789";
 	else
-		charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		charset = (char*)" 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	// Set the length of the character set
 	charsetLength = (int)strlen(charset);
@@ -68,7 +68,7 @@ masterThread::masterThread()
 	lookupSize = pow(charsetLength, lookupChars);
 	integerToKeyLookup = new char*[lookupSize];
 
-	for(long i = 0; i < lookupSize; i++)
+	for(unsigned long i = 0; i < lookupSize; i++)
 	{
 		unsigned long num = i;
 		int j = 0;
