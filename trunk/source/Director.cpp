@@ -9,6 +9,8 @@
 processingPath** Director::workers = 0;
 int Director::numWorkers = 0;
 
+////////////////////////////////////////////
+
 Director::Director()
 {
 	numWorkers = masterThread::getNumWorkers();
@@ -26,6 +28,8 @@ Director::~Director()
 
 void Director::operator()()
 {
+	/* We can use this thread in the future to gather data from threads, 
+	and write it to an XML file to create persistent runs. */
 }
 
 processingPath* Director::getWorkerPtr(int id)

@@ -95,7 +95,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="str:ZZZZ -i 1 -c 5 --large-lookup"
+				CommandArguments="str:ZZZZ @TEST_MULTI -i 1 --large-lookup"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"

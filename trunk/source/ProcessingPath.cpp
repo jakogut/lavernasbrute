@@ -7,6 +7,7 @@
 ////////////////////////////////////////////
 
 boost::unordered_map<unsigned int, std::string> processingPath::targets;
+boost::mutex processingPath::targetsMutex;
 int processingPath::maxChars = 0;
 int processingPath::numWorkers = 0;
 
@@ -72,7 +73,8 @@ void processingPath::moveKeylocation(unsigned long long input)
 
 void processingPath::pushTarget(std::string input)
 {
-	targets[hash(&input)] = input;
+	char* cstr = (char*)input.c_str();
+	targets[(hash(cstr))] = input;
 }
 
 void processingPath::setMaxChars(int input)
@@ -85,9 +87,9 @@ int processingPath::getNumTargets()
 	return (int)targets.size();
 }
 
-unsigned int processingPath::hash(std::string* input)
+unsigned int processingPath::hash(const char* input)
 {
-	unsigned char* str = (unsigned char*)input->c_str();
+	unsigned char* str = (unsigned char*)input;
 	unsigned int hash = 0;
 	unsigned int c;
 
@@ -95,4 +97,10 @@ unsigned int processingPath::hash(std::string* input)
 		hash = (hash << 5) * (hash >> 3) + c;
 
 	return hash;
+}
+
+void processingPath::removeTarget(boost::unordered_map<unsigned int, std::string>::iterator it)
+{
+	boost::mutex::scoped_lock lock(targetsMutex);
+	targets.erase(it);
 }
