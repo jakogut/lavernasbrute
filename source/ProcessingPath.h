@@ -48,11 +48,11 @@ class processingPath
 protected:
 
 	// Hash an NTLM hash to create the key for the target hash map
-	inline static unsigned int hash(const char* input);
+	static unsigned long long hash(const char* input);
 
-	static void removeTarget(boost::unordered_map<unsigned int, std::string>::iterator it);
+	static void removeTarget(boost::unordered_map<unsigned long long, std::string>::iterator it);
 
-	static boost::unordered_map<unsigned int, std::string> targets;
+	static boost::unordered_map<unsigned long long, std::string> targets;
 	static boost::mutex targetsMutex;
 
 	static int maxChars;

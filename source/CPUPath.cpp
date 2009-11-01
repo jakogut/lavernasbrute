@@ -50,10 +50,9 @@ void CPUPath::searchKeyspace()
 		integerToKey(convert);
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
-		char* NTLMKey = ntlm.getNTLMHash(&currentKey);
-		targetIterator = targets.find(hash(NTLMKey));
+		targetIterator = targets.find(hash(ntlm.getNTLMHash(&currentKey)));
 
-		if(strcmp(NTLMKey, (char*)targetIterator->second.c_str()) == 0) // Match was found
+		if(targetIterator != targets.end()) // Match was found
 		{
 			std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
 					  << targetIterator->second << " == " << currentKey << "\n\n";
