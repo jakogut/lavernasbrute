@@ -33,10 +33,10 @@ protected:
 	NTLM ntlm;
 
 	// Function for converting the keyspace location to a key
-	void integerToKey(unsigned long long location);
+	inline void integerToKey(unsigned long long location);
 
 	std::string currentKey;
-	boost::unordered_map<unsigned int, std::string>::iterator targetIterator;
+	boost::unordered_map<unsigned long long, std::string>::iterator targetIterator;
 
 	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
 	long localProgress;

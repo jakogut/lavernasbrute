@@ -6,7 +6,7 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-boost::unordered_map<unsigned int, std::string> processingPath::targets;
+boost::unordered_map<unsigned long long, std::string> processingPath::targets;
 boost::mutex processingPath::targetsMutex;
 int processingPath::maxChars = 0;
 int processingPath::numWorkers = 0;
@@ -87,19 +87,17 @@ int processingPath::getNumTargets()
 	return (int)targets.size();
 }
 
-unsigned int processingPath::hash(const char* input)
+unsigned long long processingPath::hash(const char* input)
 {
-	unsigned char* str = (unsigned char*)input;
-	unsigned int hash = 0;
-	unsigned int c;
+	unsigned long long hash = 0;
 
-	while(c = *str++)
-		hash = (hash << 5) * (hash >> 3) + c;
+	while(unsigned char c = *(unsigned char*)input++)
+		hash = ((hash << 2) + (hash << 8)) - c;
 
 	return hash;
 }
 
-void processingPath::removeTarget(boost::unordered_map<unsigned int, std::string>::iterator it)
+void processingPath::removeTarget(boost::unordered_map<unsigned long long, std::string>::iterator it)
 {
 	boost::mutex::scoped_lock lock(targetsMutex);
 	targets.erase(it);

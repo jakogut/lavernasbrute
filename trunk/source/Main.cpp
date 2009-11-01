@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 		if(flag == "@TEST_MULTI")
 		{
 			string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			int charsetLength = charset.length();
+			int charsetLength = (int)charset.length();
 
 			int count = toInt(value);
 
