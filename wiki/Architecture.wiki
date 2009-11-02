@@ -18,7 +18,7 @@ Master thread is a class used to create a single thread which monitors the opera
 The CPU path is a class derived from the processing path class. It is used to create worker threads which depend on the power of the CPU for operation. This path is thread-safe.
 
   *=== GPU Path ===
-The GPU path is a class derived from the processing path class. It is used to create worker threads which depend on the power of the GPU for operation. This path is *not* thread-safe. (This path is incomplete.)
+The GPU path will be a class derived from the processing path class. It will be used to create worker threads which depend on the power of the GPU for operation.
 
   *=== NTLM ===
 The NTLM class is used to provide NTLM hashing of text strings.
@@ -31,5 +31,5 @@ The Laverna's Brute processing engine utilizes a number of methods for parallel 
   *=== Processing Path ===
 The processing path class is a base class containing objects common to all paths, which implementations can derive from.
 
-  *=== Stream Operations ===
-The stream operations class is an object which wraps a number of stream accelerated mathematical operations, taking arrays as input and output, and applying the necessary conversions before sending the data off to the GPU. This eliminates the need for the programmer to know any GPU specific code when writing operations targeted for the GPU.
+  *=== Director ===
+The Director is a thread object which is used to track and manage information from various threads. Its current task is solely as a sort of work manager that makes work for idle processing paths when necessary. In the future, however, it can be extended to consolidate and save the progress of individual processing paths to create a persistent run system.
