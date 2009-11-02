@@ -25,10 +25,8 @@ bool masterThread::lookupDisabled = false;
 masterThread::masterThread() 
 {
 	// If specified, use the letter frequency character set
-	if(frequencyCharset)
-		charset = (char*)" eEaArRiIoOtTnNsSlLcCuUdDpPmMhHgGbBfFyYwWkKvVxXzZjJqQ0123456789";
-	else
-		charset = (char*)" 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	frequencyCharset ? 	charset = (char*)" eariotnscudpmhgbfywvkxzjqEARIOTNSlLCUDPMHGBFYWKVXZJQ0123456789" :
+		charset = (char*)" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	// Set the length of the character set
 	charsetLength = (int)strlen(charset);
