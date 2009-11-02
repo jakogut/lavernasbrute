@@ -13,11 +13,11 @@ MKDIR = mkdir -p
 RM = rm -f
 
 lavernasbrute: $(OBJECTS)
-	$(MKDIR) $(DEST)
+	@$(MKDIR) $(DEST)
 	$(CXX) $(CXXFLAGS) $(LIB) $? -o $(DEST)/$@
 
 $(DEST)/%.o:
-	$(MKDIR) $(DEST)
+	@$(MKDIR) $(DEST)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c source/$*.cpp -o $@
 
 clean:
