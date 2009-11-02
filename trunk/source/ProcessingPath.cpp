@@ -92,7 +92,7 @@ unsigned long long processingPath::hash(const char* input)
 	unsigned long long hash = 0;
 
 	while(unsigned char c = *(unsigned char*)input++)
-		hash = ((hash << 2) + (hash << 8)) - c;
+		hash = ((hash << 2) + (hash << 6)) - c;
 
 	return hash;
 }

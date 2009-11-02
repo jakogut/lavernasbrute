@@ -4,7 +4,6 @@
 #include <time.h>
 #include <string>
 
-//Boost thread
 #include <boost/thread/thread.hpp>
 
 // Director class 
@@ -13,10 +12,10 @@
 //Base class for processing paths
 #include "ProcessingPath.h"
 
-//Got to have a slave driver
+// The master thread helps organize the processing paths
 #include "MasterThread.h"
 
-//Processing paths (Slaves)
+// Processing paths
 #include "CPUPath.h"
 
 using namespace std;
@@ -65,7 +64,7 @@ void printHelp()
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
 
-//Character array to integer (atoi) alternative, standards compliant.
+// Portable character array to integer (atoi) alternative.
 int toInt(string input)
 {
 	stringstream ss;
@@ -77,7 +76,7 @@ int toInt(string input)
 	return result;
 }
 
-//Convert a string to lowercase
+// Convert a string to lowercase
 string toLower(const string input)
 {
 	string result = input;
@@ -93,13 +92,13 @@ string toLower(const string input)
 	return result;
 }
 
-//Validates a string input as a lowercase hex digest of an NTLM hash
+// Validates a string input as a lowercase hex digest of an NTLM hash
 bool isValidNTLMHexDigest(const string hash)
 {
-    //Require a length of 32
+    // Require a length of 32
     if (32 != hash.length()) return false;
 
-    //Allow only hexidecimal characters
+    // Allow only hexidecimal characters
     for (unsigned int i = 0; i < hash.length(); ++i)
     {
         if (!(hash[i] >= '0' && hash[i] <= '9') &&
@@ -109,7 +108,7 @@ bool isValidNTLMHexDigest(const string hash)
         }
     }
 
-    //Passed validation
+    // Passed validation
     return true;
 }
 
@@ -119,7 +118,7 @@ int main(int argc, char** argv)
 	int CPUThreads = 2;
 	int numWorkers = 0;
 
-	//Parse command-line arguments
+	// Parse command-line arguments
 	string flag, value;
 
 	for(int i = 0; i < argc; i++)
@@ -129,46 +128,20 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
-		if(flag == "@TEST_MULTI")
-		{
-			string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			int charsetLength = (int)charset.length();
-
-			int count = toInt(value);
-
-			NTLM ntlm;
-
-			for(int i = 0; i < count; i++)
-			{
-				unsigned long long num = 500000000 + i;
-				string target = "";
-
-				while(num)
-				{
-					target += charset[num % charsetLength];
-					num /= charsetLength;
-				}
-
-				processingPath::pushTarget(ntlm.getNTLMHash(target));
-			}
-
-			targetPresent = true;
-		}
-
-		//Set the password string to be cracked
+		// Print the help page
 		if(flag == "-h" || flag == "--help")
 		{
 			printHelp();
 			return 0;
 		}
 
-		//Take an NTLM hash and crack it
+		// Add an NTLM hash to the targets hash map
 		if(flag.substr(0, 5) == "ntlm:")
 		{
 			string newHash = toLower(flag.substr(5));
  
-			//Check to see whether the hash has been entered correctly
-			//The length of a proper NTLM hash is always 32 characters
+			// Check to see whether the hash has been entered correctly
+			// The length of a proper NTLM hash is always 32 characters
 			if (isValidNTLMHexDigest(newHash))
 			{
 				processingPath::pushTarget((char*)newHash.c_str());
@@ -181,41 +154,26 @@ int main(int argc, char** argv)
 			}
 		}
 
-		// Take a string, hash it, and crack it (for debugging purposes)
-		if(flag.substr(0, 4) == "str:")
-		{
-			NTLM ntlm;
-			string newHash = ntlm.getNTLMHash((char*)flag.substr(4).c_str());
-
-			processingPath::pushTarget((char*)newHash.c_str());
-			targetPresent = true;
-		}
-
-		//Set the number of threads
+		// Set the number of threads
 		if(flag == "-t")
 		{
-			if(toInt(value) >= 2)
-			{
-				CPUThreads = toInt(value);
-			}
-			else
-			{
-				CPUThreads = 2;
-			}
+			// If the specified number of threads is valid, use it. Otherwise, set it to two.
+			(toInt(value) >= 2) ? CPUThreads = toInt(value) : CPUThreads = 2;
 		}
 
+		// Set the maximum size of the keyspace in characters. The number of permutations is pow(charsetLength, maxChars).
 		if(flag == "-c")
 		{
 			processingPath::setMaxChars(toInt(value));
 		}
 
-		//Interval for iteration logging
+		// Interval for iteration logging
 		if(flag == "-i")
 		{
 			masterThread::setInterval(toInt(value));
 		}		
 
-		//Disable iteration logging
+		// Disable iteration logging
 		if(flag == "--silent")
 		{
 			masterThread::setSilent(true);
@@ -240,23 +198,24 @@ int main(int argc, char** argv)
 			masterThread::setLargeLookup(true);
 		}
 
+		// Disable the precomputed lookup table used in the creation of keys
 		if(flag == "--disable-lookup")
 		{
 			masterThread::disableLookup(true);
 		}
 
-		//Disable threading
+		// Disable threading
 		if(flag == "--disable-threading")
 		{
 			CPUThreads = 1;
 		}
 	}
 
-	//Set the total number of worker threads in use for this run
+	// Set the total number of worker threads in use for this run
 	numWorkers += CPUThreads;
 	masterThread::setNumWorkers(numWorkers);
 
-	//Check to see that we have a valid target
+	// Check to see that we have a valid target
 	if(targetPresent)
 	{
 		cout << "\nRunning " << numWorkers << " (+1) cooperative threads," << endl
@@ -270,20 +229,22 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	// Create a thread group
 	boost::thread_group threadGroup;
     
-    // Create a director thread
+    // Create the director thread
 	threadGroup.create_thread(Director());
 
-	//Add a master thread to the group
+	// Create the master thread
 	threadGroup.create_thread(masterThread());
 
-	//Create a number of threads for the CPU path
+	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
 		threadGroup.create_thread(CPUPath(i));
 	}
 
+	// Wait for the threads to complete their work
 	threadGroup.join_all();
 
 	return 0;
