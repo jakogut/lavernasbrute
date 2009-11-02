@@ -32,4 +32,6 @@ The Laverna's Brute processing engine utilizes a number of methods for parallel 
 The processing path class is a base class containing objects common to all paths, which implementations can derive from.
 
   *=== Director ===
-The Director is a thread object which is used to track and manage information from various threads. Its current task is solely as a sort of work manager that makes work for idle processing paths when necessary. In the future, however, it can be extended to consolidate and save the progress of individual processing paths to create a persistent run system.
+The Director is a thread object which is used to track and manage information from various threads. Its current task is solely as a sort of work manager that makes work for idle processing paths when necessary. In the future, however, it can be extended to consolidate and save the progress of individual processing paths to create a persistent run system. 
+
+The director can manage any thread derived from the processing path class that has defined the appropriate functions used modify the thread's local keyspace.
