@@ -11,13 +11,13 @@ CPUPath::CPUPath(int id)
 	keyspaceBegin = (keyspaceSize * id);
 	keyspaceEnd = (keyspaceBegin + keyspaceSize);
 
-    // Set the key location
+	// Set the key location
 	keyLocation = keyspaceBegin;
 
-    // Get the integer to key lookup size
+	// Get the integer to key lookup size
 	lookupSize = masterThread::getLookupSize();
     
-    // Reserve space in our strings
+	// Reserve space in our strings
 	currentKey.reserve(maxChars);
 
 	// Tell the director to manage this path 
@@ -46,8 +46,8 @@ void CPUPath::searchKeyspace()
 		currentKey.clear();
 
 		// Convert the keyspace location to a key
-		unsigned long long convert = keyLocation;
-		integerToKey(convert);
+		integerToKey(keyLocation);
+		keyLocation++;
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
 		targetIterator = targets.find(hash(ntlm.getNTLMHash(&currentKey)));
@@ -97,15 +97,15 @@ int CPUPath::getThreadID()
 // Convert the integer key location to a text string using recursive base conversion.
 void CPUPath::integerToKey(unsigned long long location)
 {
-	if(location)
-	{
-		currentKey += integerToKeyLookup[location % lookupSize];
-		location /= lookupSize;
+	unsigned long long num = location;
 
-		integerToKey(location);
+	while(num)
+	{
+		// This is some funky looking math, I know, but it's faster.
+
+		currentKey += integerToKeyLookup[num - (lookupSize * (num / lookupSize))]; // num % lookupSize
+		num *= (1 / lookupSize); // num /= lookupSize
 	}
-	else
-		keyLocation++;
 }
 
 unsigned long long CPUPath::getKeyspaceEnd()
