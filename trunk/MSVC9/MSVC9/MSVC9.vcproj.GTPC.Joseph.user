@@ -95,7 +95,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="str:ZZZZ @TEST_MULTI -i 1 --large-lookup"
+				CommandArguments=""
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
@@ -106,7 +106,7 @@
 				SQLDebugging=""
 				Environment=""
 				EnvironmentMerge="true"
-				DebuggerFlavor="0"
+				DebuggerFlavor=""
 				MPIRunCommand=""
 				MPIRunArguments=""
 				MPIRunWorkingDirectory=""

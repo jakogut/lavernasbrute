@@ -7,6 +7,8 @@
  
 #include <string.h>
 
+#define ROT(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
+
 class NTLM
 {
 public:
@@ -14,140 +16,170 @@ public:
 	NTLM()
 	{
 		itoa16 = (char*)"0123456789abcdef";
+
+		SQRT_2 = 0x5a827999;
+		SQRT_3 = 0x6ed9eba1;
 	}
 
 	~NTLM()
 	{
 	}
 
-	inline char* getNTLMHash(const std::string* input)
-	{
-		prepare_key((char*)input->c_str(), nt_buffer);
-		ntlm_crypt(nt_buffer, crypted);
-		
-		return convert_hex(crypted);
-	}
-
+	// Full NTLM hashing algorithm
 	inline char* getNTLMHash(const std::string input)
 	{
-		prepare_key((char*)input.c_str(), nt_buffer);
-		ntlm_crypt(nt_buffer, crypted);
+		prepare_key((char*)input.c_str());
+
+		// MD4 encrypt
+		initialize_words();
+		md4_crypt_round1();
+		md4_crypt_round2();
+		md4_crypt_round3();
+		finalize_md4();
 		
-		return convert_hex(crypted);
+		// Convert the result to hexadecimal
+		return convert_to_hex();
 	}
 
-	inline char* getNTLMHash(const char* input)
+	/* The third round is cut out, which saves us time when the target has been weakened.
+	However, before using this method, the third round of the MD4 encryption process has 
+	to be reversed for every target. */
+	inline int getWeakHash(const std::string input)
 	{
-		prepare_key(input, nt_buffer);
-		ntlm_crypt(nt_buffer, crypted);
+		prepare_key((char*)input.c_str());
+
+		initialize_words();
+		md4_crypt_round1();
+		md4_crypt_round2();
 		
-		return convert_hex(crypted);
+		/* Because we're not using a full NTLM hash, we don't need to convert hashed keys to hex.
+		Instead, we return our own hash of the partially reversed NTLM hash. */
+
+		return (wd[0] + wd[1] + wd[2] + wd[3]);
 	}
+
+	// Take an NTLM hash as input, and reverse the third round
+/*	inline int reverseThirdRound(const std::string input)
+	{
+		convert_from_hex(input);
+
+		// Reverse the third round of the MD4 encryption process
+
+		return (wb[0] + wb[1] + wb[2] + wb[3]);
+	}
+*/
 
 protected:
 
-	void prepare_key(const char* input, unsigned int* output)
+	void prepare_key(const char* input)
 	{
 		int i=0;
 		int length=(int)(strlen(input));
-		memset(output,0,16*4);
+		memset(nt_buffer,0,16*4);
 		//The length of input need to be <= 27
 		for(;i<length/2;i++)	
-			output[i] = input[2*i] | (input[2*i+1]<<16);
+			nt_buffer[i] = input[2*i] | (input[2*i+1]<<16);
 	 
 		//padding
 		if(length%2==1)
-			output[i] = input[length-1] | 0x800000;
+			nt_buffer[i] = input[length-1] | 0x800000;
 		else
-			output[i]=0x80;
+			nt_buffer[i]=0x80;
 		//put the length
-		output[14] = length << 4;
+		nt_buffer[14] = length << 4;
 	}
 
-	void ntlm_crypt(unsigned int* input, unsigned int* output)
+	void initialize_words()
 	{
-		unsigned int a = 0x67452301;
-		unsigned int b = 0xefcdab89;
-		unsigned int c = 0x98badcfe;
-		unsigned int d = 0x10325476;
-
-		unsigned int SQRT_2 = 0x5a827999;
-		unsigned int SQRT_3 = 0x6ed9eba1;
-	 
-		a += (d ^ (b & (c ^ d)))  +  input[0]  ;a = (a << 3 ) | (a >> 29);
-		d += (c ^ (a & (b ^ c)))  +  input[1]  ;d = (d << 7 ) | (d >> 25);
-		c += (b ^ (d & (a ^ b)))  +  input[2]  ;c = (c << 11) | (c >> 21);
-		b += (a ^ (c & (d ^ a)))  +  input[3]  ;b = (b << 19) | (b >> 13);
-	 
-		a += (d ^ (b & (c ^ d)))  +  input[4]  ;a = (a << 3 ) | (a >> 29);
-		d += (c ^ (a & (b ^ c)))  +  input[5]  ;d = (d << 7 ) | (d >> 25);
-		c += (b ^ (d & (a ^ b)))  +  input[6]  ;c = (c << 11) | (c >> 21);
-		b += (a ^ (c & (d ^ a)))  +  input[7]  ;b = (b << 19) | (b >> 13);
-	 
-		a += (d ^ (b & (c ^ d)))  +  input[8]  ;a = (a << 3 ) | (a >> 29);
-		d += (c ^ (a & (b ^ c)))  +  input[9]  ;d = (d << 7 ) | (d >> 25);
-		c += (b ^ (d & (a ^ b)))  +  input[10] ;c = (c << 11) | (c >> 21);
-		b += (a ^ (c & (d ^ a)))  +  input[11] ;b = (b << 19) | (b >> 13);
-	 
-		a += (d ^ (b & (c ^ d)))  +  input[12] ;a = (a << 3 ) | (a >> 29);
-		d += (c ^ (a & (b ^ c)))  +  input[13] ;d = (d << 7 ) | (d >> 25);
-		c += (b ^ (d & (a ^ b)))  +  input[14] ;c = (c << 11) | (c >> 21);
-		b += (a ^ (c & (d ^ a)))  +  input[15] ;b = (b << 19) | (b >> 13);
-	 
-
-		a += ((b & (c | d)) | (c & d)) + input[0] +SQRT_2; a = (a<<3 ) | (a>>29);
-		d += ((a & (b | c)) | (b & c)) + input[4] +SQRT_2; d = (d<<5 ) | (d>>27);
-		c += ((d & (a | b)) | (a & b)) + input[8] +SQRT_2; c = (c<<9 ) | (c>>23);
-		b += ((c & (d | a)) | (d & a)) + input[12]+SQRT_2; b = (b<<13) | (b>>19);
-	 
-		a += ((b & (c | d)) | (c & d)) + input[1] +SQRT_2; a = (a<<3 ) | (a>>29);
-		d += ((a & (b | c)) | (b & c)) + input[5] +SQRT_2; d = (d<<5 ) | (d>>27);
-		c += ((d & (a | b)) | (a & b)) + input[9] +SQRT_2; c = (c<<9 ) | (c>>23);
-		b += ((c & (d | a)) | (d & a)) + input[13]+SQRT_2; b = (b<<13) | (b>>19);
-	 
-		a += ((b & (c | d)) | (c & d)) + input[2] +SQRT_2; a = (a<<3 ) | (a>>29);
-		d += ((a & (b | c)) | (b & c)) + input[6] +SQRT_2; d = (d<<5 ) | (d>>27);
-		c += ((d & (a | b)) | (a & b)) + input[10]+SQRT_2; c = (c<<9 ) | (c>>23);
-		b += ((c & (d | a)) | (d & a)) + input[14]+SQRT_2; b = (b<<13) | (b>>19);
-	 
-		a += ((b & (c | d)) | (c & d)) + input[3] +SQRT_2; a = (a<<3 ) | (a>>29);
-		d += ((a & (b | c)) | (b & c)) + input[7] +SQRT_2; d = (d<<5 ) | (d>>27);
-		c += ((d & (a | b)) | (a & b)) + input[11]+SQRT_2; c = (c<<9 ) | (c>>23);
-		b += ((c & (d | a)) | (d & a)) + input[15]+SQRT_2; b = (b<<13) | (b>>19);
-	 
-
-		a += (d ^ c ^ b) + input[0]  +  SQRT_3; a = (a << 3 ) | (a >> 29);
-		d += (c ^ b ^ a) + input[8]  +  SQRT_3; d = (d << 9 ) | (d >> 23);
-		c += (b ^ a ^ d) + input[4]  +  SQRT_3; c = (c << 11) | (c >> 21);
-		b += (a ^ d ^ c) + input[12] +  SQRT_3; b = (b << 15) | (b >> 17);
-	 
-		a += (d ^ c ^ b) + input[2]  +  SQRT_3; a = (a << 3 ) | (a >> 29);
-		d += (c ^ b ^ a) + input[10] +  SQRT_3; d = (d << 9 ) | (d >> 23);
-		c += (b ^ a ^ d) + input[6]  +  SQRT_3; c = (c << 11) | (c >> 21);
-		b += (a ^ d ^ c) + input[14] +  SQRT_3; b = (b << 15) | (b >> 17);
-	 
-		a += (d ^ c ^ b) + input[1]  +  SQRT_3; a = (a << 3 ) | (a >> 29);
-		d += (c ^ b ^ a) + input[9]  +  SQRT_3; d = (d << 9 ) | (d >> 23);
-		c += (b ^ a ^ d) + input[5]  +  SQRT_3; c = (c << 11) | (c >> 21);
-		b += (a ^ d ^ c) + input[13] +  SQRT_3; b = (b << 15) | (b >> 17);
-	 
-		a += (d ^ c ^ b) + input[3]  +  SQRT_3; a = (a << 3 ) | (a >> 29);
-		d += (c ^ b ^ a) + input[11] +  SQRT_3; d = (d << 9 ) | (d >> 23);
-		c += (b ^ a ^ d) + input[7]  +  SQRT_3; c = (c << 11) | (c >> 21);
-		b += (a ^ d ^ c) + input[15] +  SQRT_3; b = (b << 15) | (b >> 17);
-	 
-		output[0] = a + (unsigned int)0x67452301;
-		output[1] = b + (unsigned int)0xefcdab89;
-		output[2] = c + (unsigned int)0x98badcfe;
-		output[3] = d + (unsigned int)0x10325476;
+		wd[0] = 0x67452301;
+		wd[1] = 0xefcdab89;
+		wd[2] = 0x98badcfe;
+		wd[3] = 0x10325476;
 	}
 
-	char* convert_hex(unsigned int* output)
+	void md4_crypt_round1()
+	{	 
+		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[0]  ;wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[1]  ;wd[3] = ROT(wd[3], 7, 32);
+		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[2]  ;wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[3]  ;wd[1] = ROT(wd[1], 19, 32);
+	 
+		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[4]  ;wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[5]  ;wd[3] = ROT(wd[3], 7, 32);
+		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[6]  ;wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[7]  ;wd[1] = ROT(wd[1], 19, 32);
+	 
+		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[8]  ;wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[9]  ;wd[3] = ROT(wd[3], 7, 32);
+		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[10] ;wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[11] ;wd[1] = ROT(wd[1], 19, 32);
+	 
+		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[12] ;wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[13] ;wd[3] = ROT(wd[3], 7, 32);
+		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[14] ;wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[15] ;wd[1] = ROT(wd[1], 19, 32);
+	}
+	 
+	void md4_crypt_round2()
+	{
+		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[0] +SQRT_2; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[4] +SQRT_2; wd[3] = ROT(wd[3], 5, 32);
+		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[8] +SQRT_2; wd[2] = ROT(wd[2], 9, 32);
+		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[12]+SQRT_2; wd[1] = ROT(wd[1], 13, 32);
+	 
+		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[1] +SQRT_2; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[5] +SQRT_2; wd[3] = ROT(wd[3], 5, 32);
+		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[9] +SQRT_2; wd[2] = ROT(wd[2], 9, 32);
+		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[13]+SQRT_2; wd[1] = ROT(wd[1], 13, 32);
+	 
+		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[2] +SQRT_2; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[6] +SQRT_2; wd[3] = ROT(wd[3], 5, 32);
+		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[10]+SQRT_2; wd[2] = ROT(wd[2], 9, 32);
+		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[14]+SQRT_2; wd[1] = ROT(wd[1], 13, 32);
+	 
+		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[3] +SQRT_2; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[7] +SQRT_2; wd[3] = ROT(wd[3], 5, 32);
+		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[11]+SQRT_2; wd[2] = ROT(wd[2], 9, 32);
+		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[15]+SQRT_2; wd[1] = ROT(wd[1], 13, 32);
+	}
+	 
+	void md4_crypt_round3()
+	{
+		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[0]  +  SQRT_3; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[8]  +  SQRT_3; wd[3] = ROT(wd[3], 9, 32);
+		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[4]  +  SQRT_3; wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[12] +  SQRT_3; wd[1] = ROT(wd[1], 15, 32);
+	 
+		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[2]  +  SQRT_3; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[10] +  SQRT_3; wd[3] = ROT(wd[3], 9, 32);
+		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[6]  +  SQRT_3; wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[14] +  SQRT_3; wd[1] = ROT(wd[1], 15, 32);
+	 
+		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[1]  +  SQRT_3; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[9]  +  SQRT_3; wd[3] = ROT(wd[3], 9, 32);
+		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[5]  +  SQRT_3; wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[13] +  SQRT_3; wd[1] = ROT(wd[1], 15, 32);
+	 
+		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[3]  +  SQRT_3; wd[0] = ROT(wd[0], 3, 32);
+		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[11] +  SQRT_3; wd[3] = ROT(wd[3], 9, 32);
+		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[7]  +  SQRT_3; wd[2] = ROT(wd[2], 11, 32);
+		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[15] +  SQRT_3; wd[1] = ROT(wd[1], 15, 32);
+	}
+	 
+	void finalize_md4()
+	{
+		crypted[0] = wd[0] + 0x67452301;
+		crypted[1] = wd[1] + 0xefcdab89;
+		crypted[2] = wd[2] + 0x98badcfe;
+		crypted[3] = wd[3] + 0x10325476;
+	}
+
+	char* convert_to_hex()
 	{
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
 		{
-			unsigned int n = output[i];
+			unsigned int n = crypted[i];
 			//iterate the bytes of the integer		
 			for(int j = 0; j < 4; j++)
 			{
@@ -163,6 +195,11 @@ protected:
 
 		return hex_format;
 	}
+
+	unsigned int wd[4];
+
+	unsigned int SQRT_2;
+	unsigned int SQRT_3;
 
 	unsigned int nt_buffer[16];
 	unsigned int crypted[4];
