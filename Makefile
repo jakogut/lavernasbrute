@@ -1,10 +1,8 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 -funroll-loops -msse2 -mfpmath=sse -fomit-frame-pointer # $(DEBUG) $(PROFILE)
-DEBUG = -g
-PROFILE = -pg
+CXXFLAGS = -Wall -O3  -msse -msse2 -mfpmath=sse -funroll-loops
 
-INCLUDE = -I/usr/include -Iinclude
-LIB = -L/usr/lib -Llib -lpthread -lboost_date_time -lboost_thread
+INCLUDE = -I/usr/include -Iinclude -Isource/hashing
+LIB = -L/usr/lib -Llib -lpthread -lboost_date_time-gcc43-mt -lboost_thread-gcc43-mt
 DEST = bin/GCC
 
 OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/Director.o
