@@ -27,8 +27,8 @@ class processingPath
 
 	// The loop that is run to crack a given target hash
 	virtual void operator()() = 0;
-    
-    // Functions necessary for the Director to do its job
+
+	// Functions necessary for the Director to do its job
 	virtual int getThreadID();
 
 	virtual unsigned long long getKeyspaceEnd();

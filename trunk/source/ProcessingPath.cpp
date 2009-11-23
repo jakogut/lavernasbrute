@@ -102,3 +102,4 @@ void processingPath::removeTarget(boost::unordered_map<unsigned long long, std::
 	boost::mutex::scoped_lock lock(targetsMutex);
 	targets.erase(it);
 }
+
