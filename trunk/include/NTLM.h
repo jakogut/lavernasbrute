@@ -44,30 +44,30 @@ public:
 	/* The third round is cut out, which saves us time when the target has been weakened.
 	However, before using this method, the third round of the MD4 encryption process has 
 	to be reversed for every target. */
-	inline int getWeakHash(const std::string input)
+	inline unsigned long long getWeakHash(const std::string input)
 	{
 		prepare_key((char*)input.c_str());
 
 		initialize_words();
 		md4_crypt_round1();
 		md4_crypt_round2();
+		md4_crypt_round3();
+		finalize_md4();
 		
 		/* Because we're not using a full NTLM hash, we don't need to convert hashed keys to hex.
 		Instead, we return our own hash of the partially reversed NTLM hash. */
 
-		return (wd[0] + wd[1] + wd[2] + wd[3]);
+		return crypted[0] + crypted[1] + crypted[2] + crypted[3];
 	}
 
-	// Take an NTLM hash as input, and reverse the third round
-/*	inline int reverseThirdRound(const std::string input)
+	// Take an NTLM hash as input, and reverse the hex encoding
+	inline unsigned long long weakenHash(const std::string input)
 	{
-		convert_from_hex(input);
+		convert_from_hex((char*)input.c_str());
 
-		// Reverse the third round of the MD4 encryption process
-
-		return (wb[0] + wb[1] + wb[2] + wb[3]);
+		// Return a simple hash of the crypted array
+		return crypted[0] + crypted[1] + crypted[2] + crypted[3];
 	}
-*/
 
 protected:
 
@@ -194,6 +194,30 @@ protected:
 		hex_format[32]=0;
 
 		return hex_format;
+	}
+
+	void convert_from_hex(char* hash)
+	{
+		char big_endian_hash[4][9];
+
+		for(int i = 0; i < 4; i++)
+		{
+			big_endian_hash[i][0] = hash[(i*8)+6];
+			big_endian_hash[i][1] = hash[(i*8)+7];
+			big_endian_hash[i][2] = hash[(i*8)+4];
+			big_endian_hash[i][3] = hash[(i*8)+5];
+			big_endian_hash[i][4] = hash[(i*8)+2];
+			big_endian_hash[i][5] = hash[(i*8)+3];
+			big_endian_hash[i][6] = hash[(i*8)+0];
+			big_endian_hash[i][7] = hash[(i*8)+1];
+
+			big_endian_hash[i][8] = '\0';
+		}
+
+		for(int i = 0; i < 4; i++)
+		{
+			crypted[i] = strtoul(big_endian_hash[i], 0, 16);
+		}
 	}
 
 	unsigned int wd[4];

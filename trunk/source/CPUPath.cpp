@@ -49,8 +49,7 @@ void CPUPath::searchKeyspace()
 		integerToKey(keyLocation);
 		keyLocation++;
 
-		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
-		targetIterator = targets.find(hash(ntlm.getNTLMHash(currentKey)));
+		targetIterator = targets.find(ntlm.getWeakHash(currentKey));
 
 		if(targetIterator != targets.end()) // Match was found
 		{
@@ -64,7 +63,7 @@ void CPUPath::searchKeyspace()
 			/* Increment a local counter for the number of iterations until it reaches a certain point.
 			Once that point has been reached, the local count is committed to the global count and the local
 			variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-			if(localProgress > 500000)
+			if(localProgress > 250000)
 			{
 				masterThread::increaseIterations(localProgress);
 				localProgress = 0;
