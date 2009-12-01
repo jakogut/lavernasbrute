@@ -1,11 +1,13 @@
-//Slightly modified for LB, orginal code written by Alain Espinosa <alainesp@gmail.com>.
-//All the credit goes to him; this wouldn't have been possible without his work. (Crypto isn't my gig.)
-//Thanks, Alain!
+/* Slightly modified for LB, orginal code written by Alain Espinosa <alainesp@gmail.com>.
+All the credit goes to him; he made my life wonderfully easy by providing such a fine example of the MD4 algorithm.
+Thanks, Alain! */
 
 #ifndef NTLM_H_
 #define NTLM_H_
  
 #include <string.h>
+
+#include "Int128.h"
 
 #define ROT(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
 
@@ -44,7 +46,7 @@ public:
 	/* The third round is cut out, which saves us time when the target has been weakened.
 	However, before using this method, the third round of the MD4 encryption process has 
 	to be reversed for every target. */
-	inline unsigned long long getWeakHash(const std::string input)
+	inline int128 getWeakHash(const std::string input)
 	{
 		prepare_key((char*)input.c_str());
 
@@ -57,16 +59,19 @@ public:
 		/* Because we're not using a full NTLM hash, we don't need to convert hashed keys to hex.
 		Instead, we return our own hash of the partially reversed NTLM hash. */
 
-		return crypted[0] + crypted[1] + crypted[2] + crypted[3];
+		int128 retval;
+		retval = crypted;
+		return retval;
 	}
 
 	// Take an NTLM hash as input, and reverse the hex encoding
-	inline unsigned long long weakenHash(const std::string input)
+	inline int128 weakenHash(const std::string input)
 	{
 		convert_from_hex((char*)input.c_str());
 
-		// Return a simple hash of the crypted array
-		return crypted[0] + crypted[1] + crypted[2] + crypted[3];
+		int128 retval;
+		retval = crypted;
+		return retval;
 	}
 
 protected:

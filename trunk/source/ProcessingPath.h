@@ -47,9 +47,9 @@ class processingPath
 
 protected:
 
-	static void removeTarget(boost::unordered_map<unsigned long long, std::string>::iterator it);
+	static void removeTarget(boost::unordered_map<int128, std::string>::iterator it);
 
-	static boost::unordered_map<unsigned long long, std::string> targets;
+	static boost::unordered_map<int128, std::string> targets;
 	static boost::mutex targetsMutex;
 
 	static int maxChars;
