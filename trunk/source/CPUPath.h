@@ -36,11 +36,10 @@ protected:
 	inline void integerToKey(unsigned long long location);
 
 	std::string currentKey;
-	boost::unordered_map<int128, std::string>::iterator targetIterator;
+	boost::unordered_map<unsigned long long, std::string>::iterator targetIterator;
 
 	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
 	long localProgress;
 };
 
 #endif
-

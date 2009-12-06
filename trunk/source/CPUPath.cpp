@@ -11,13 +11,13 @@ CPUPath::CPUPath(int id)
 	keyspaceBegin = (keyspaceSize * id);
 	keyspaceEnd = (keyspaceBegin + keyspaceSize);
 
-	// Set the key location
+    // Set the key location
 	keyLocation = keyspaceBegin;
 
-	// Get the integer to key lookup size
+    // Get the integer to key lookup size
 	lookupSize = masterThread::getLookupSize();
     
-	// Reserve space in our strings
+    // Reserve space in our strings
 	currentKey.reserve(maxChars);
 
 	// Tell the director to manage this path 
@@ -46,10 +46,11 @@ void CPUPath::searchKeyspace()
 		currentKey.clear();
 
 		// Convert the keyspace location to a key
-		integerToKey(keyLocation);
-		keyLocation++;
+		unsigned long long convert = keyLocation;
+		integerToKey(convert);
 
-		targetIterator = targets.find(ntlm.getWeakHash(currentKey));
+		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
+		targetIterator = targets.find(hash(ntlm.getNTLMHash(&currentKey)));
 
 		if(targetIterator != targets.end()) // Match was found
 		{
@@ -63,7 +64,7 @@ void CPUPath::searchKeyspace()
 			/* Increment a local counter for the number of iterations until it reaches a certain point.
 			Once that point has been reached, the local count is committed to the global count and the local
 			variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-			if(localProgress > 250000)
+			if(localProgress > 500000)
 			{
 				masterThread::increaseIterations(localProgress);
 				localProgress = 0;
@@ -96,10 +97,15 @@ int CPUPath::getThreadID()
 // Convert the integer key location to a text string using recursive base conversion.
 void CPUPath::integerToKey(unsigned long long location)
 {
-	do
+	if(location)
 	{
-		currentKey.append(integerToKeyLookup[location - (lookupSize * (location / lookupSize))]); // location % lookupSize
-	} while(location /= lookupSize);
+		currentKey += integerToKeyLookup[location % lookupSize];
+		location /= lookupSize;
+
+		integerToKey(location);
+	}
+	else
+		keyLocation++;
 }
 
 unsigned long long CPUPath::getKeyspaceEnd()

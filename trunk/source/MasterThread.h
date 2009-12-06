@@ -67,8 +67,8 @@ protected:
 	static bool success;
 
 	// Use a larger than normal lookup
-	static bool largeLookup;
-
+	static bool largeLookup; 
+	
 	// Disable the lookup
 	static bool lookupDisabled;
 
@@ -88,4 +88,3 @@ protected:
 };
 
 #endif
-
