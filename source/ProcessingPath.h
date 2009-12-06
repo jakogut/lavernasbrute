@@ -27,8 +27,8 @@ class processingPath
 
 	// The loop that is run to crack a given target hash
 	virtual void operator()() = 0;
-
-	// Functions necessary for the Director to do its job
+    
+    // Functions necessary for the Director to do its job
 	virtual int getThreadID();
 
 	virtual unsigned long long getKeyspaceEnd();
@@ -47,9 +47,12 @@ class processingPath
 
 protected:
 
-	static void removeTarget(boost::unordered_map<int128, std::string>::iterator it);
+	// Hash an NTLM hash to create the key for the target hash map
+	static unsigned long long hash(const char* input);
 
-	static boost::unordered_map<int128, std::string> targets;
+	static void removeTarget(boost::unordered_map<unsigned long long, std::string>::iterator it);
+
+	static boost::unordered_map<unsigned long long, std::string> targets;
 	static boost::mutex targetsMutex;
 
 	static int maxChars;

@@ -85,4 +85,3 @@ unsigned long long Director::getRemainingKeyspace(processingPath* worker)
 {
 	return worker->getKeyLocation() - worker->getKeyspaceBegin();
 }
-
