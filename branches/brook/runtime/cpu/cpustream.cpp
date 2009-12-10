@@ -11,6 +11,7 @@
 #include <iostream>
 #include <math.h>
 #include <assert.h>
+#include <string.h>
 
 using std::map;
 using std::string;

@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include <algorithm>
+#include <limits.h>
 
 // uncomment this to switch to slow-as-hell sort of exhaustive search
 //#define SPLIT_SEARCH_EXHAUSTIVE

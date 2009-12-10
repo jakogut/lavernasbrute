@@ -32,7 +32,7 @@ include $(BROOKDIR)/config/$(OS).mk
 
 BRCC = $(BROOKDIR)/bin/brcc$(BINSUFFIX)
 
-CFLAGS    += $(C_INCLUDE_FLAG). $(C_INCLUDE_FLAG)$(INCLUDEDIR)
+CFLAGS    += $(C_INCLUDE_FLAG). $(C_INCLUDE_FLAG)$(INCLUDEDIR) -Wno-write-strings
 
 ifdef EXTRAINCLUDEDIR
 TEMPINC := $(addprefix $(C_INCLUDE_FLAG), $(EXTRAINCLUDEDIR))

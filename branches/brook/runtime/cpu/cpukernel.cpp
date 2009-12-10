@@ -2,7 +2,7 @@
 #include <assert.h>
 #include "cpu.hpp"
 #include <stdio.h>
-
+#include <string.h>
 
 
 

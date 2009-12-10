@@ -1,4 +1,6 @@
 
+#include <string.h>
+
 #include "oglfunc.hpp"
 #include "oglcontext.hpp"
 #include "oglwindow.hpp"
