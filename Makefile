@@ -1,16 +1,23 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 # $(DEBUG) $(PROFILE)
+CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(DEBUG) $(PROFILE)
+ARCH = i386
 DEBUG = -g
 PROFILE = -pg
 
-INCLUDE = -I/usr/include -Iinclude
+INCLUDE = -I/usr/include -Iinclude -Isource/hashing
 LIB = -L/usr/lib -Llib -lpthread -lboost_date_time-mt -lboost_thread-mt
-DEST = bin/GCC
+DEST = bin/gcc/$(ARCH)
 
 OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/Director.o
 
 MKDIR = mkdir -p
 RM = rm -f
+
+ifneq ($(ARCH), x86-64)
+	CXXFLAGS += -m32
+else
+	CXXFLAGS += -m64
+endif
 
 lavernasbrute: $(OBJECTS)
 	$(MKDIR) $(DEST)
