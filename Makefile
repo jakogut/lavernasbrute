@@ -5,7 +5,7 @@ DEBUG = -g
 PROFILE = -pg
 
 INCLUDE = -I/usr/include -Iinclude -Isource/hashing
-LIB = -L/usr/lib -Llib -lpthread -lboost_date_time-mt-s -lboost_thread-mt-s
+LIB = -L/usr/lib -Llib -lpthread -lboost_date_time-mt -lboost_thread-mt
 DEST = bin/gcc/$(ARCH)
 
 OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/Director.o
