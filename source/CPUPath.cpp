@@ -50,7 +50,7 @@ void CPUPath::searchKeyspace()
 		integerToKey(convert);
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
-		targetIterator = targets.find(hash(ntlm.getNTLMHash(&currentKey)));
+		targetIterator = targets.find(hash(ntlm.getNTLMHash(currentKey)));
 
 		if(targetIterator != targets.end()) // Match was found
 		{
