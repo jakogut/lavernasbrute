@@ -43,14 +43,12 @@ void CPUPath::searchKeyspace()
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
-		currentKey.clear();
-
 		// Convert the keyspace location to a key
-		unsigned long long convert = keyLocation;
-		integerToKey(convert);
+		integerToKey(keyLocation);
+		keyLocation++;
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
-		targetIterator = targets.find(hash(ntlm.getNTLMHash(currentKey)));
+		targetIterator = targets.find(ntlm.getWeakHash(currentKey));
 
 		if(targetIterator != targets.end()) // Match was found
 		{
@@ -94,18 +92,14 @@ int CPUPath::getThreadID()
 	return id;
 }
 
-// Convert the integer key location to a text string using recursive base conversion.
 void CPUPath::integerToKey(unsigned long long location)
 {
-	if(location)
-	{
-		currentKey += integerToKeyLookup[location % lookupSize];
-		location /= lookupSize;
+	currentKey.clear();
 
-		integerToKey(location);
-	}
-	else
-		keyLocation++;
+	do
+	{
+		currentKey.append(integerToKeyLookup[location % lookupSize]);
+	} while(location /= lookupSize);
 }
 
 unsigned long long CPUPath::getKeyspaceEnd()
