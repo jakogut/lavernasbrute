@@ -6,7 +6,7 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-processingPath** Director::workers = 0;
+std::vector<processingPath*> Director::workers;
 int Director::numWorkers = 0;
 
 ////////////////////////////////////////////
@@ -14,8 +14,6 @@ int Director::numWorkers = 0;
 Director::Director()
 {
 	numWorkers = masterThread::getNumWorkers();
-
-	workers = new processingPath*[numWorkers];
 }
 
 Director::Director(unsigned long long beginKeyspace, unsigned long long keyspaceEnd)
@@ -39,13 +37,12 @@ processingPath* Director::getWorkerPtr(int id)
 
 void Director::manageWorker(processingPath* worker)
 {
-	workers[worker->getThreadID()] = worker;
+	workers.insert(workers.begin() + worker->getThreadID(), worker);
 }
 
 bool Director::reassignKeyspace(processingPath *worker)
 {
 	int id = 0;
-	bool success;
 
 	// Find the worker with the largest remaining section of the keyspace
 	for(int i = 0; i < numWorkers; i++)
@@ -67,12 +64,10 @@ bool Director::reassignKeyspace(processingPath *worker)
 
 		std::cout << workers[id]->getKeyLocation() << " -- " << workers[id]->getKeyspaceEnd() << std::endl;
 
-		success = true;
+		return true;
 	}
 	else
-		success = false;
-
-	return success;
+		return false;
 }
 
 unsigned long long Director::getRemainingKeyspace(int id)

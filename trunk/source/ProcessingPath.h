@@ -50,9 +50,9 @@ protected:
 	// Hash an NTLM hash to create the key for the target hash map
 	static unsigned long long hash(const char* input);
 
-	static void removeTarget(boost::unordered_map<unsigned long long, std::string>::iterator it);
+	static void removeTarget(boost::unordered_map<std::pair<unsigned long long, unsigned long long>, std::string>::iterator it);
 
-	static boost::unordered_map<unsigned long long, std::string> targets;
+	static boost::unordered_map<std::pair<unsigned long long, unsigned long long>, std::string> targets;
 	static boost::mutex targetsMutex;
 
 	static int maxChars;

@@ -28,7 +28,7 @@ protected:
 	static unsigned long long getRemainingKeyspace(int id);
 	static unsigned long long getRemainingKeyspace(processingPath* worker);
 
-	static processingPath** workers;
+	static std::vector<processingPath*> workers;
 
 	static bool server;
 	static int numWorkers;

@@ -8,6 +8,8 @@ Thanks, Alain! */
 #include <string.h>
 
 #define ROT(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
+typedef std::pair<unsigned long long, unsigned long long> int64_pair;
+
 
 class NTLM
 {
@@ -41,10 +43,7 @@ public:
 		return convert_to_hex();
 	}
 
-	/* The third round is cut out, which saves us time when the target has been weakened.
-	However, before using this method, the third round of the MD4 encryption process has 
-	to be reversed for every target. */
-	/*inline int128 getWeakHash(const std::string input)
+	int64_pair getWeakHash(const std::string& input)
 	{
 		prepare_key((char*)input.c_str());
 
@@ -53,24 +52,16 @@ public:
 		md4_crypt_round2();
 		md4_crypt_round3();
 		finalize_md4();
-		
-		/* Because we're not using a full NTLM hash, we don't need to convert hashed keys to hex.
-		Instead, we return our own hash of the partially reversed NTLM hash. *//*
 
-		int128 retval;
-		retval = crypted;
-		return retval;
-	}*/
+		return convert_to_int128();
+	}
 
 	// Take an NTLM hash as input, and reverse the hex encoding
-	/*inline int128 weakenHash(const std::string input)
+	inline int64_pair weakenHash(const std::string& input)
 	{
 		convert_from_hex((char*)input.c_str());
-
-		int128 retval;
-		retval = crypted;
-		return retval;
-	}*/
+		return convert_to_int128();
+	}
 
 protected:
 
@@ -171,10 +162,10 @@ protected:
 	 
 	void finalize_md4()
 	{
-		crypted[0] = wd[0] + 0x67452301;
-		crypted[1] = wd[1] + 0xefcdab89;
-		crypted[2] = wd[2] + 0x98badcfe;
-		crypted[3] = wd[3] + 0x10325476;
+		wd[0] += 0x67452301;
+		wd[1] += 0xefcdab89;
+		wd[2] += 0x98badcfe;
+		wd[3] += 0x10325476;
 	}
 
 	char* convert_to_hex()
@@ -182,7 +173,7 @@ protected:
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
 		{
-			unsigned int n = crypted[i];
+			unsigned int n = wd[i];
 			//iterate the bytes of the integer		
 			for(int j = 0; j < 4; j++)
 			{
@@ -205,6 +196,7 @@ protected:
 
 		for(int i = 0; i < 4; i++)
 		{
+			// This needs to be reworked
 			big_endian_hash[i][0] = hash[(i*8)+6];
 			big_endian_hash[i][1] = hash[(i*8)+7];
 			big_endian_hash[i][2] = hash[(i*8)+4];
@@ -219,17 +211,25 @@ protected:
 
 		for(int i = 0; i < 4; i++)
 		{
-			crypted[i] = strtoul(big_endian_hash[i], 0, 16);
+			wd[i] = strtoul(big_endian_hash[i], 0, 16);
 		}
 	}
 
-	unsigned int wd[4];
+	inline int64_pair convert_to_int128()
+	{
+		int64_pair retval;
+
+		retval.first = (wd[0] << 31) | wd[1];
+		retval.second = (wd[2] << 31) | wd[3];
+
+		return retval;
+	}
 
 	unsigned int SQRT_2;
 	unsigned int SQRT_3;
 
 	unsigned int nt_buffer[16];
-	unsigned int crypted[4];
+	unsigned int wd[4];
 	char hex_format[33];
 	char* itoa16;
 };
