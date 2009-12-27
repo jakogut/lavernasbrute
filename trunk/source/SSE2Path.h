@@ -1,17 +1,19 @@
-//Part of Laverna's Brute
+// Part of Laverna's Brute
 
-#ifndef CPUPATH_H_
-#define CPUPATH_H_
+#ifndef SSE2PATH_H_
+#define SSE2PATH_H_
 
-#include "ProcessingPath.h"
 #include "Director.h"
+#include "ProcessingPath.h"
 
-class CPUPath : protected processingPath
+#include "NTLM_MD.h"
+
+class SSE2Path : protected processingPath
 {
 public:
 
-	CPUPath(int id);
-	~CPUPath();
+	SSE2Path(int id);
+	~SSE2Path();
 
 	void operator()();
 	void searchKeyspace();
@@ -30,15 +32,18 @@ protected:
 
 	int id;
 
-	NTLM ntlm;
+	NTLM_SSE2 ntlm_md;
+	//NTLM ntlm;
 
 	// Function for converting the keyspace location to a key
-	inline void integerToKey(unsigned long long location);
+	inline void integerToKey();
 
-	std::string currentKey;
-	boost::unordered_map<std::pair<unsigned long long, unsigned long long>, std::string>::iterator targetIterator;
+	std::string currentKeys[4];
+	int64_pair weakHashedKeys[4];
 
-	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
+	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
+
+	unsigned long long keyspaceSize, keyspaceBegin, keyspaceEnd, keyLocation, lookupSize;
 	unsigned int localProgress;
 };
 
