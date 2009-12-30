@@ -17,7 +17,7 @@
 
 // Processing paths
 #include "CPUPath.h"
-#include "SSE2Path.h"
+//#include "64BitPath.h"
 
 using namespace std;
 
@@ -232,8 +232,8 @@ int main(int argc, char** argv)
 
 	// Create a thread group
 	boost::thread_group threadGroup;
-    
-    // Create the director thread
+
+	// Create the director thread
 	threadGroup.create_thread(Director());
 
 	// Create the master thread
@@ -242,8 +242,7 @@ int main(int argc, char** argv)
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
-		//threadGroup.create_thread(CPUPath(i));
-		threadGroup.create_thread(SSE2Path(i));
+		threadGroup.create_thread(CPUPath(i));
 	}
 
 	// Wait for the threads to complete their work
