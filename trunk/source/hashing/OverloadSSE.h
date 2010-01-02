@@ -3,6 +3,10 @@
 
 #include <emmintrin.h>
 
+// SSE rotate macro
+#define ROTL_md(num, places) (_mm_or_si128(_mm_slli_epi32(num, places), _mm_srli_epi32(num, (32 - places))))
+
+#ifdef WIN32
 // Overloaded operators for dealing with the 128-bit sse datatype
 inline __m128i operator +(const __m128i &a, const __m128i &b)
 {
@@ -50,11 +54,6 @@ inline __m128i operator &(const __m128i &a, const __m128i &b)
 {
 	return _mm_and_si128(a, b);
 }
-
-// SSE rotate function
-inline __m128i ROTL_md(const __m128i &input, const int places)
-{
-	return _mm_or_si128(_mm_slli_epi32(input, places), _mm_srli_epi32(input, (32 - places)));
-}
+#endif
 
 #endif
