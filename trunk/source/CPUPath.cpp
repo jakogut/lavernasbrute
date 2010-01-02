@@ -96,14 +96,9 @@ int CPUPath::getThreadID()
 
 void CPUPath::integerToKey(unsigned long long location)
 {
-<<<<<<< .mine
-	register unsigned long long location_reg = location;
-	register unsigned long long lookupSize_reg = lookupSize;
-=======
 	// The keyspace location is accessed a *lot* in this function, so we try to store it in a register.
 	register unsigned long long location_reg = location;
 	register unsigned long long lookupSize_reg = lookupSize;
->>>>>>> .r237
 
 	do
 	{
