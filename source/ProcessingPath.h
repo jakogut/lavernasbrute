@@ -47,11 +47,8 @@ class processingPath
 
 protected:
 
-<<<<<<< .mine
-=======
 	static void removeTarget(boost::unordered_map<int64_pair, std::string>::iterator it);
 
->>>>>>> .r237
 	static boost::unordered_map<int64_pair, std::string> targets;
 	static boost::mutex targetsMutex;
 

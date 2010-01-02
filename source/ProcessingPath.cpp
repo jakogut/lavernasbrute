@@ -87,13 +87,8 @@ int processingPath::getNumTargets()
 	return (int)targets.size();
 }
 
-<<<<<<< .mine
-void processingPath::removeTarget(boost::unordered_map<std::pair<unsigned long long, unsigned long long>, std::string>::iterator it)
-{
-=======
 void processingPath::removeTarget(boost::unordered_map<int64_pair, std::string>::iterator it)
 {
->>>>>>> .r237
 	boost::mutex::scoped_lock lock(targetsMutex);
 	targets.erase(it);
 }

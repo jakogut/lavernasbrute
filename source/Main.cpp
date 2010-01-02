@@ -251,7 +251,6 @@ int main(int argc, char** argv)
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
-<<<<<<< .mine
 		if(enableSSE2)
 		{
 			threadGroup.create_thread(SSE2Path(i));
@@ -260,9 +259,6 @@ int main(int argc, char** argv)
 		{
 			threadGroup.create_thread(CPUPath(i));
 		}
-=======
-		threadGroup.create_thread(CPUPath(i));
->>>>>>> .r237
 	}
 
 	// Wait for the threads to complete their work
