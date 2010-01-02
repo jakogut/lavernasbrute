@@ -46,6 +46,8 @@ void printHelp()
 	"\n\n-i INTEGER\tInterval in seconds for iterations logged to the console."
 	"\n\t\tThe interval may be raised for a slight performance gain."
 
+	"\n\n--SSE2 (UNSTABLE)\tUse an SSE2 optimized CPU path."
+
 	"\n\n--silent\tRun the program in silent mode."
 
 	"\n\n--frequency-charset\n\t\tUse a character set sorted by letter frequency."
@@ -116,6 +118,7 @@ bool isValidNTLMHexDigest(const string hash)
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
+	bool enableSSE2 = false;
 	int CPUThreads = 2;
 	int numWorkers = 0;
 
@@ -169,10 +172,16 @@ int main(int argc, char** argv)
 		}
 
 		// Interval for iteration logging
-		if(flag == "-i")
+		if(flag == "-i" || flag == "--interval")
 		{
 			masterThread::setInterval(toInt(value));
 		}		
+
+		// Enable SSE2 path
+		if(flag == "--SSE2" || flag == "--sse2")
+		{
+			enableSSE2 = true;
+		}
 
 		// Disable iteration logging
 		if(flag == "--silent")
@@ -242,7 +251,18 @@ int main(int argc, char** argv)
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
+<<<<<<< .mine
+		if(enableSSE2)
+		{
+			threadGroup.create_thread(SSE2Path(i));
+		}
+		else
+		{
+			threadGroup.create_thread(CPUPath(i));
+		}
+=======
 		threadGroup.create_thread(CPUPath(i));
+>>>>>>> .r237
 	}
 
 	// Wait for the threads to complete their work
