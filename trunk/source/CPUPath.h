@@ -36,7 +36,7 @@ protected:
 	inline void integerToKey(unsigned long long location);
 
 	std::string currentKey;
-	boost::unordered_map<std::pair<unsigned long long, unsigned long long>, std::string>::iterator targetIterator;
+	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
 
 	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, lookupSize;
 	unsigned int localProgress;

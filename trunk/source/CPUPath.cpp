@@ -43,6 +43,8 @@ void CPUPath::searchKeyspace()
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
+		currentKey.clear();
+
 		// Convert the keyspace location to a key
 		integerToKey(keyLocation);
 		keyLocation++;
@@ -62,7 +64,7 @@ void CPUPath::searchKeyspace()
 			/* Increment a local counter for the number of iterations until it reaches a certain point.
 			Once that point has been reached, the local count is committed to the global count and the local
 			variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-			if(localProgress > 500000)
+			if(localProgress > 250000)
 			{
 				masterThread::increaseIterations(localProgress);
 				localProgress = 0;
@@ -94,12 +96,14 @@ int CPUPath::getThreadID()
 
 void CPUPath::integerToKey(unsigned long long location)
 {
-	currentKey.clear();
+	// The keyspace location is accessed a *lot* in this function, so we try to store it in a register.
+	register unsigned long long location_reg = location;
+	register unsigned long long lookupSize_reg = lookupSize;
 
 	do
 	{
-		currentKey.append(integerToKeyLookup[location % lookupSize]);
-	} while(location /= lookupSize);
+		currentKey.append(integerToKeyLookup[location_reg % lookupSize_reg]);
+	} while(location_reg /= lookupSize_reg);
 }
 
 unsigned long long CPUPath::getKeyspaceEnd()

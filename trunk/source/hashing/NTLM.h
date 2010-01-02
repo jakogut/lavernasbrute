@@ -1,5 +1,5 @@
 /* Slightly modified for LB, orginal code written by Alain Espinosa <alainesp@gmail.com>.
-All the credit goes to him; he made my life wonderfully easy by providing such a fine example of the MD4 algorithm.
+All the credit goes to him; he made my life wonderfully easy by providing such wd[0] fine example of the MD4 algorithm.
 Thanks, Alain! */
 
 #ifndef NTLM_H_
@@ -94,7 +94,7 @@ protected:
 	}
 
 	void md4_crypt_round1()
-	{	 
+	{
 		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[0];  wd[0] = ROTL(wd[0], 3, 32);
 		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[1];  wd[3] = ROTL(wd[3], 7, 32);
 		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[2];  wd[2] = ROTL(wd[2], 11, 32);
