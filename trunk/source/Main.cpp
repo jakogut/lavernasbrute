@@ -17,6 +17,7 @@
 
 // Processing paths
 #include "CPUPath.h"
+#include "SSE2Path.h"
 //#include "64BitPath.h"
 
 using namespace std;
