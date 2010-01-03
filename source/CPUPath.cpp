@@ -40,6 +40,7 @@ void CPUPath::operator()()
 void CPUPath::searchKeyspace()
 {
 	int totalTargets = getNumTargets();
+	masterThread::setRemainingTargets(totalTargets);
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
@@ -54,10 +55,13 @@ void CPUPath::searchKeyspace()
 
 		if(targetIterator != targets.end()) // Match was found
 		{
-			std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
-					  << targetIterator->second << " == " << currentKey << "\n\n";
+		//	std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
+		//			  << targetIterator->second << " == " << currentKey << "\n\n";
+
+			masterThread::addResult(targetIterator->second, currentKey);
 
 			removeTarget(targetIterator);
+			masterThread::setRemainingTargets(getNumTargets());
 		}
 		else // No match
 		{

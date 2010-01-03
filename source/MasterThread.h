@@ -33,6 +33,8 @@ public:
 	static int getNumWorkers();
 	static void setNumWorkers(int input);
 
+	static void setRemainingTargets(int input);
+
 	static unsigned long long getIterations();
 	static void incrementIterations();
 	static void increaseIterations(long input);
@@ -48,6 +50,8 @@ public:
 
 	static void setRandomizeCharset(bool input);
 	static void setFrequencyCharset(bool input);
+
+	static void addResult(std::string hash, std::string plaintext);
 
 	void printResult();
 
@@ -82,9 +86,13 @@ protected:
 	static int charsetLength;
 
 	static char** integerToKeyLookup;
-	static unsigned long long lookupSize;
+	static unsigned int lookupSize;
+
+	static int remainingTargets;
 
 	std::string randomizedCharset;
+
+	static std::vector<std::pair<std::string, std::string>> results;
 };
 
 #endif
