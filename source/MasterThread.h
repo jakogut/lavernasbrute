@@ -92,7 +92,7 @@ protected:
 
 	std::string randomizedCharset;
 
-	static std::vector<std::pair<std::string, std::string>> results;
+	static std::vector< std::pair<std::string, std::string> > results;
 };
 
 #endif

@@ -20,7 +20,7 @@ unsigned int masterThread::lookupSize = 0;
 unsigned long long masterThread::iterations = 0;
 bool masterThread::largeLookup = false;
 bool masterThread::lookupDisabled = false;
-std::vector<std::pair<std::string, std::string>> masterThread::results;
+std::vector< std::pair<std::string, std::string> > masterThread::results;
 
 ////////////////////////////////////////////
 
