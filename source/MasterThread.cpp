@@ -149,11 +149,15 @@ void masterThread::printResult()
 	time_t minutes = totalTime % 60;
 	totalTime /= 60;
 
-	time_t hours = totalTime % 60;
+	time_t hours = totalTime % 24;
+	totalTime /= 24;
+
+	time_t days = totalTime;
 
 	std::cout << "\nThe run has completed!"
 		<< "\nAttack duration: " << getIterations() << " iterations."
-		<< "\nCompleted in: " << hours << " hours, " << minutes << " minutes, and " << seconds << " seconds. " << std::endl;
+		<< "\nCompleted in: " << days << " days, " << hours << " hours, " 
+		<< minutes << " minutes, and " << seconds << " seconds. " << std::endl;
 }
 
 bool masterThread::getSuccess()
