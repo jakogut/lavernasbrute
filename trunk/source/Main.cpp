@@ -154,8 +154,8 @@ int main(int argc, char** argv)
 			}
 			else
 			{
-				cerr << "\nERROR: \"" << newHash << "\" is an invalid hash! "
-						"String must be a hex digest 32 characters in length." << endl;
+				cerr << "\nERROR: \"" << newHash << "\" is an invalid hash!"
+						"\nString must be a hex digest 32 characters in length." << endl;
 			}
 		}
 

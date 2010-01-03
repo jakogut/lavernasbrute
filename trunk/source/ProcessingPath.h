@@ -52,6 +52,8 @@ protected:
 	static boost::unordered_map<int64_pair, std::string> targets;
 	static boost::mutex targetsMutex;
 
+	std::vector<std::pair<std::string, std::string>> results;
+
 	static int maxChars;
 	static int numWorkers;
 
@@ -59,6 +61,8 @@ protected:
 	int charsetLength;
 
 	char** integerToKeyLookup;
+
+	int remainingTargets;
 };
 
 #endif
