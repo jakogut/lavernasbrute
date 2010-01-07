@@ -61,23 +61,26 @@ protected:
 		for(int i = 0; i < 4; i++)
 			length[i] = input[i].length();
 
-		memset(nt_buffer_md_sse, 0, 16*4*4);
+		memset(nt_buffer_md, 0, 16*4*4);
 
 		for(int i = 0; i < 4; i++)
 		{
 			int j = 0;
 			//The length of input need to be <= 27
 			for(;j<length[i]/2;j++)	
-				nt_buffer_md_sse[j].m128i_u32[i] = input[i].c_str()[2*j] | (input[i].c_str()[2*j+1]<<16);
+				nt_buffer_md[j][i] = input[i].c_str()[2*j] | (input[i].c_str()[2*j+1]<<16);
 		 
 			//padding
 			if(length[i]%2==1)
-				nt_buffer_md_sse[j].m128i_u32[i] = input[i].c_str()[length[i]-1] | 0x800000;
+				nt_buffer_md[j][i] = input[i].c_str()[length[i]-1] | 0x800000;
 			else
-				nt_buffer_md_sse[j].m128i_u32[i]=0x80;
+				nt_buffer_md[j][i]=0x80;
 			//put the length
-			nt_buffer_md_sse[14].m128i_u32[i] = length[i] << 4;
+			nt_buffer_md[14][i] = length[i] << 4;
 		}
+
+		for(int i = 0; i < 16; i++)
+			nt_buffer_md_sse[i] = _mm_loadu_si128((__m128i*)nt_buffer_md[i]);
 	}
 
 	void initialize_words_md()
