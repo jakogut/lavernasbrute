@@ -39,6 +39,8 @@ void SSE2Path::operator()()
 void SSE2Path::searchKeyspace()
 {
 	int totalTargets = getNumTargets();
+	masterThread::setRemainingTargets(totalTargets);
+
 	NTLM_SSE2 ntlm_md;
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
@@ -55,10 +57,10 @@ void SSE2Path::searchKeyspace()
 
 			if(targetIterator != targets.end()) // Match was found
 			{
-				std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
-						  << targetIterator->second << " == " << currentKeys[i] << "\n\n";
+				masterThread::addResult(targetIterator->second, currentKeys[i]);
 
 				removeTarget(targetIterator);
+				masterThread::setRemainingTargets(getNumTargets());
 			}
 			else // No match
 			{

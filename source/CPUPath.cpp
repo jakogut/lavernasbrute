@@ -55,9 +55,6 @@ void CPUPath::searchKeyspace()
 
 		if(targetIterator != targets.end()) // Match was found
 		{
-		//	std::cout << "\nHash " << (totalTargets - targets.size()) + 1 << " cracked!" << std::endl
-		//			  << targetIterator->second << " == " << currentKey << "\n\n";
-
 			masterThread::addResult(targetIterator->second, currentKey);
 
 			removeTarget(targetIterator);
@@ -100,14 +97,10 @@ int CPUPath::getThreadID()
 
 void CPUPath::integerToKey(unsigned long long location)
 {
-	// The keyspace location is accessed a *lot* in this function, so we try to store it in a register.
-	register unsigned long long location_reg = location;
-	register unsigned long long lookupSize_reg = lookupSize;
-
 	do
 	{
-		currentKey.append(integerToKeyLookup[location_reg % lookupSize_reg]);
-	} while(location_reg /= lookupSize_reg);
+		currentKey.append(integerToKeyLookup[location % lookupSize]);
+	} while(location /= lookupSize);
 }
 
 unsigned long long CPUPath::getKeyspaceEnd()
