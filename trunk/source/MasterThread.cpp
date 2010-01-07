@@ -108,7 +108,11 @@ void masterThread::operator()()
 	{
 		if(!silent && (int)((time(NULL) - printTimer) >= printInterval))
 		{
-			printf("Average speed: %.2f 10^6 keys/s, Hashes Remaining: %i \r", ((getIterations() / (time(NULL) - startTime)) / 1000000.0f), remainingTargets);
+			std::cout.precision(3);
+
+			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+				<< "\tHashes Remaining: " << remainingTargets << "\r";
+
 			printTimer = time(NULL);
 		}
 

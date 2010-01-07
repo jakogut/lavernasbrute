@@ -116,6 +116,7 @@ bool isValidNTLMHexDigest(const string hash)
     return true;
 }
 
+
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
@@ -267,3 +268,57 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
+#if 0
+#include <NTLM_MD.h>
+
+int main()
+{
+	NTLM ntlm;
+	NTLM_SSE2 ntlmmd;
+
+	std::string input[4] = {"bill", "rawr", "hello", "billy"};
+	std::string output[4];
+
+	for(int i = 0; i < 4; i++)
+	{
+		output[i] = ntlm.getNTLMHash(input[i]);
+		cout << output[i] << endl;
+	}
+
+	cout << endl;
+
+	ntlmmd.getMultipleHashes(input, output);
+
+	for(int i = 0; i < 4; i++)
+	{
+		cout << output[i] << endl;
+	}
+	/*
+	__declspec(align(16)) unsigned int input[4];
+	__declspec(align(16)) unsigned int output[4];
+
+	input[0] = 16;
+	input[1] = 256;
+	input[2] = 1024;
+	input[3] = 4096;
+
+	for(int i = 0; i < 4; i++)
+		cout << (input[i] << 12) << endl;
+
+	for(int i = 0; i < 4; i++)
+		output[i] = 0;
+
+	cout << endl;
+
+	__m128i a, b;
+	a = _mm_load_si128((__m128i*)input);
+	a = _mm_slli_epi32(a, 12);
+	a += _mm_set1_epi32(2);
+	_mm_store_si128((__m128i*)output, a);
+
+	for(int i = 0; i < 4; i++)
+		cout << output[i] << endl;
+		*/
+}
+#endif
