@@ -4,9 +4,6 @@
 #include "NTLM.h"
 #include "OverloadSSE.h"
 
-// The current implementation uses sucky, disgusting Visual C++ specific code.
-#ifdef WIN32
-
 class NTLM_SSE2 : public NTLM
 {
 public:
@@ -220,7 +217,5 @@ protected:
 
 	__m128i SQRT_2_md, SQRT_3_md;
 };
-
-#endif
 
 #endif
