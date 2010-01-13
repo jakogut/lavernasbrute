@@ -143,6 +143,11 @@ void sequentialKey::operator++()
 	}
 }
 
+void sequentialKey::operator++(int)
+{
+	this->operator++();
+}
+
 std::string sequentialKey::getKey()
 {
 	return key;
