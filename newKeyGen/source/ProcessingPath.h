@@ -73,6 +73,7 @@ public:
 	~sequentialKey();
 
 	void operator++();
+	void operator++(int);
 
 	void integerToKey();
 	unsigned long long keyToInteger();
