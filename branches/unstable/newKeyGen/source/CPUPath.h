@@ -30,6 +30,8 @@ protected:
 
 	int id;
 
+	std::string currentKey;
+
 	NTLM ntlm;
 
 	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;

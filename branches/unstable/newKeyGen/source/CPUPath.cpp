@@ -20,6 +20,8 @@ CPUPath::CPUPath(int id)
 
 	// Initialize the local progress counter to zero
 	localProgress = 0;
+
+	currentKey.reserve(maxChars);
 }
 
 CPUPath::~CPUPath()
@@ -36,16 +38,18 @@ void CPUPath::searchKeyspace()
 	int totalTargets = getNumTargets();
 	masterThread::setRemainingTargets(totalTargets);
 
-	sequentialKey currentKey(keyspaceBegin);
+	keyGenerator keygen(keyspaceBegin);
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
+		currentKey = keygen++;
+
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
-		targetIterator = targets.find(ntlm.getWeakHash(currentKey.getKey()));
+		targetIterator = targets.find(ntlm.getWeakHash(currentKey));
 
 		if(targetIterator != targets.end()) // Match was found
 		{
-			masterThread::addResult(targetIterator->second, currentKey.getKey());
+			masterThread::addResult(targetIterator->second, currentKey);
 
 			removeTarget(targetIterator);
 			masterThread::setRemainingTargets(getNumTargets());
@@ -66,9 +70,6 @@ void CPUPath::searchKeyspace()
 				localProgress++;
 			}
 		}
-
-		// Increment the key
-		currentKey++;
 	}
 
 	// If all targets have been cracked, rejoice and signal the master thread that we're done.
