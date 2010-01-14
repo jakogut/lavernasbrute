@@ -122,11 +122,13 @@ void keyGenerator::incrementKey()
 		{
 			// Overflow, reset char at place
 			key[place] = charset[0];
+			keyIndices[place] = 0;
 
 			if((key.length() - 1) < (place + 1))
 			{
 				// Carry, no space, insert char
 				key.insert(key.begin(), charset[0]);
+				keyIndices.insert(keyIndices.begin(), 0);
 				break;
 			}
 			else
@@ -137,7 +139,8 @@ void keyGenerator::incrementKey()
 		else
 		{
 			// Space available, increment char at place
-			key[place] = charset[charset.find(key[place]) + 1];
+			key[place] = charset[keyIndices[place] + 1];
+			keyIndices[place] = keyIndices[place] + 1;
 			break;
 		}
 	}
@@ -165,11 +168,17 @@ std::string keyGenerator::getKey()
 void keyGenerator::integerToKey()
 {
 	unsigned long long num = location;
+	unsigned int remainder;
+
 	key.clear();
 
 	do
 	{
-		key += charset[num % charsetLength];
+		remainder = num % charsetLength;
+
+		key.insert(key.begin(), charset[remainder]);
+		keyIndices.insert(keyIndices.begin(), remainder);
+
 	} while(num /= charsetLength);
 }
 
