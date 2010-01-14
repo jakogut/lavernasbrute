@@ -38,17 +38,14 @@ void SSE2Path::searchKeyspace()
 	int totalTargets = getNumTargets();
 	masterThread::setRemainingTargets(totalTargets);
 
-	sequentialKey seq(keyspaceBegin);
-
 	NTLM_SSE2 ntlm_md;
+
+	keyGenerator keygen(keyspaceBegin);
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		for(int i = 0; i < 4; i++)
-		{
-			currentKeys[i] = seq.getKey();
-			seq++;
-		}
+			currentKeys[i] = keygen++;
 
 		keyLocation += 4;
 

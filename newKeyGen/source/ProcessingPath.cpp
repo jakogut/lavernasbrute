@@ -99,7 +99,7 @@ void processingPath::removeTarget(boost::unordered_map<int64_pair, std::string>:
 // Sequential Key //////
 ////////////////////////
 
-sequentialKey::sequentialKey(unsigned long long input)
+keyGenerator::keyGenerator(unsigned long long input)
 {
 	charset = masterThread::getCharset();
 	charsetLength = masterThread::getCharsetLength();
@@ -110,11 +110,11 @@ sequentialKey::sequentialKey(unsigned long long input)
 	integerToKey();
 }
 
-sequentialKey::~sequentialKey()
+keyGenerator::~keyGenerator()
 {
 }
 
-void sequentialKey::operator++()
+void keyGenerator::incrementKey()
 {
 	for(unsigned int place = 0; place < key.length(); place++)
 	{
@@ -143,17 +143,26 @@ void sequentialKey::operator++()
 	}
 }
 
-void sequentialKey::operator++(int)
+std::string keyGenerator::operator++()
 {
-	this->operator++();
+	incrementKey();
+	return getKey();
 }
 
-std::string sequentialKey::getKey()
+std::string keyGenerator::operator++(int)
+{
+	std::string retval = key;
+	incrementKey();
+
+	return retval;
+}
+
+std::string keyGenerator::getKey()
 {
 	return key;
 }
 
-void sequentialKey::integerToKey()
+void keyGenerator::integerToKey()
 {
 	unsigned long long num = location;
 	key.clear();
@@ -164,7 +173,7 @@ void sequentialKey::integerToKey()
 	} while(num /= charsetLength);
 }
 
-unsigned long long sequentialKey::keyToInteger()
+unsigned long long keyGenerator::keyToInteger()
 {
 	// TODO
 	return 0;

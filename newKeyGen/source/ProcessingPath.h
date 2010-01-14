@@ -64,16 +64,18 @@ protected:
 	int remainingTargets;
 };
 
-class sequentialKey
+class keyGenerator
 {
 public:
 
-	sequentialKey(unsigned long long location);
+	keyGenerator(unsigned long long location);
 
-	~sequentialKey();
+	~keyGenerator();
 
-	void operator++();
-	void operator++(int);
+	void incrementKey();
+
+	std::string operator++();
+	std::string operator++(int);
 
 	void integerToKey();
 	unsigned long long keyToInteger();
