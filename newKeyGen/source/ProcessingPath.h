@@ -88,6 +88,8 @@ protected:
 	unsigned int charsetLength;
 
 	std::string key;
+	std::vector<unsigned int> keyIndices;
+
 	unsigned long long location;
 };
 
