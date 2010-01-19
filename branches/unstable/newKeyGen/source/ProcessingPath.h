@@ -69,6 +69,7 @@ class keyGenerator
 public:
 
 	keyGenerator(unsigned long long location);
+	keyGenerator(unsigned long long location, char* charset);
 
 	~keyGenerator();
 
