@@ -53,7 +53,6 @@ public:
 		md4_crypt_round1();
 		md4_crypt_round2();
 		md4_crypt_round3();
-		finalize_md4();
 
 		return convert_to_int128();
 	}
@@ -215,6 +214,11 @@ protected:
 		{
 			wd[i] = strtoul(big_endian_hash[i], 0, 16);
 		}
+
+		wd[0] -= 0x67452301;
+		wd[1] -= 0xefcdab89;
+		wd[2] -= 0x98badcfe;
+		wd[3] -= 0x10325476;
 	}
 
 	inline int64_pair convert_to_int128()
@@ -240,5 +244,4 @@ private:
 };
 
 #endif
-
 

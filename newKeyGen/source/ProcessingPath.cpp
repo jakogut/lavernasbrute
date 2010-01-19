@@ -110,6 +110,15 @@ keyGenerator::keyGenerator(unsigned long long input)
 	integerToKey();
 }
 
+keyGenerator::keyGenerator(unsigned long long input, char* charset)
+: charset(charset)
+{
+	charsetLength = strlen(charset);
+
+	location = input;
+	integerToKey();
+}
+
 keyGenerator::~keyGenerator()
 {
 }

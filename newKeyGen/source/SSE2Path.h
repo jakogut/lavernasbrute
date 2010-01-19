@@ -32,8 +32,8 @@ protected:
 
 	int id;
 
-	std::string currentKeys[4];
-	int64_pair weakHashedKeys[4];
+	std::string currentKeys[8];
+	int64_pair weakHashedKeys[8];
 
 	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
 

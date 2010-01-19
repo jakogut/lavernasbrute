@@ -13,7 +13,7 @@ SSE2Path::SSE2Path(int id)
 	keyLocation = keyspaceBegin;
     
     // Reserve space in our strings
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < 8; i++)
 		currentKeys[i].reserve(maxChars);
 
 	// Tell the director to manage this path 
@@ -44,15 +44,17 @@ void SSE2Path::searchKeyspace()
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 8; i++)
+		{
 			currentKeys[i] = keygen++;
+		}
 
-		keyLocation += 4;
+		keyLocation += 8;
 
 		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it.
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			targetIterator = targets.find(weakHashedKeys[i]);
 
@@ -76,7 +78,7 @@ void SSE2Path::searchKeyspace()
 			}
 		}
 
-		localProgress += 4;
+		localProgress += 8;
 	}
 
 	// If all targets have been cracked, rejoice and signal the master thread that we're done.
