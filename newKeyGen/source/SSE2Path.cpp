@@ -18,6 +18,9 @@ SSE2Path::SSE2Path(int id)
 
 	// Initialize the local progress counter to zero
 	localProgress = 0;
+
+	for(int i = 0; i < 12; i++)
+		currentKeys[i].reserve(maxChars);
 }
 
 SSE2Path::~SSE2Path()
@@ -32,8 +35,6 @@ void SSE2Path::operator()()
 void SSE2Path::searchKeyspace()
 {
 	NTLM_SSE2 ntlm_md;
-	std::string currentKeys[12];
-	int64_pair weakHashedKeys[12];
 
 	masterThread::setRemainingTargets(getNumTargets());
 

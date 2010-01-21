@@ -176,7 +176,7 @@ void masterThread::setFrequencyCharset(bool input)
 void masterThread::printResult(std::string hash, std::string plaintext)
 {
 	boost::mutex::scoped_lock lock(stdoutMutex);
-	std::cout << "\r" << hash << " == " << plaintext << "\t\t\n\n";
+	std::cout << "\r" << hash << " == " << plaintext << "\t\t\t\n\n";
 }
 
 unsigned long long masterThread::getIterations()
