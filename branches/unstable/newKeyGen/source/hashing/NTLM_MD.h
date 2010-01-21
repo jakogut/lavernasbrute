@@ -264,8 +264,8 @@ protected:
 		{
 			for(int j = 0; j < 4; j++)
 			{
-				output[j+4*i].first = (wd_md[i][0][j] << 32) | wd_md[i][1][j];
-				output[j+4*i].second = (wd_md[i][0][j] << 32) | wd_md[i][3][j];
+				output[j+4*i].first  = ((unsigned long long)wd_md[i][0][j] << 32) | wd_md[i][2][j];
+				output[j+4*i].second = ((unsigned long long)wd_md[i][1][j] << 32) | wd_md[i][3][j];
 			}
 		}
 	}

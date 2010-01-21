@@ -66,7 +66,7 @@ public:
 
 protected:
 
-	void prepare_key(const char* input)
+	inline void prepare_key(const char* input)
 	{
 		int i=0;
 		int length=(int)(strlen(input));
@@ -92,7 +92,7 @@ protected:
 		wd[3] = 0x10325476;
 	}
 
-	void md4_crypt_round1()
+	inline void md4_crypt_round1()
 	{	 
 		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[0];  wd[0] = ROTL(wd[0], 3, 32);
 		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[1];  wd[3] = ROTL(wd[3], 7, 32);
@@ -115,7 +115,7 @@ protected:
 		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[15]; wd[1] = ROTL(wd[1], 19, 32);
 	}
 	 
-	void md4_crypt_round2()
+	inline void md4_crypt_round2()
 	{
 		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[0] +SQRT_2; wd[0] = ROTL(wd[0], 3, 32);
 		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[4] +SQRT_2; wd[3] = ROTL(wd[3], 5, 32);
@@ -138,7 +138,7 @@ protected:
 		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[15]+SQRT_2; wd[1] = ROTL(wd[1], 13, 32);
 	}
 	 
-	void md4_crypt_round3()
+	inline void md4_crypt_round3()
 	{
 		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[0]  +  SQRT_3; wd[0] = ROTL(wd[0], 3, 32);
 		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[8]  +  SQRT_3; wd[3] = ROTL(wd[3], 9, 32);
@@ -223,10 +223,8 @@ protected:
 
 	inline int64_pair convert_to_int128()
 	{
-		int64_pair retval;
-
-		retval.first = (wd[0] << 32) | wd[1];
-		retval.second = (wd[2] << 32) | wd[3];
+		retval.first  = ((unsigned long long)wd[0] << 32) | wd[2];
+		retval.second = ((unsigned long long)wd[1] << 32) | wd[3];
 
 		return retval;
 	}
@@ -235,6 +233,8 @@ protected:
 	char* itoa16;
 
 private:
+
+	int64_pair retval;
 
 	unsigned int SQRT_2;
 	unsigned int SQRT_3;

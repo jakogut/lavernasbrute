@@ -124,6 +124,32 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
+		if(flag == "@TEST_MULTI")
+                {
+                        string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                        int charsetLength = charset.length();
+
+                        int count = toInt(value);
+
+                        NTLM ntlm;
+
+                        for(int i = 0; i < count; i++)
+                        {
+                                unsigned long long num = 500000000 + i;
+                                string target = "";
+
+                                while(num)
+                                {
+                                        target += charset[num % charsetLength];
+                                        num /= charsetLength;
+                                }
+
+                                processingPath::pushTarget(ntlm.getNTLMHash(target));
+                        }
+
+                        targetPresent = true;
+                }
+
 		// Print the help page
 		if(flag == "-h" || flag == "--help")
 		{
@@ -262,7 +288,7 @@ int main()
 	std::string input[12] = {"bill", "rawr", "hello", "billy", 
 							 "jeeers", "doggoniy", "fseetg", "efhj",
 							 "scuibw", "edvbi", "popples", "asfuih"};
-	int64_pair output[12];
+	unsigned long long output[12];
 
 	time_t startTime = time(NULL);
 
