@@ -16,6 +16,8 @@
 	wd[set][wd_index] += (wd[set][a] ^ wd[set][b] ^ wd[set][c]) + nt_buffer[set][ntb_index] + SQRT_3_md, \
 	wd[set][wd_index] = ROTL_md(wd[set][wd_index], rotation)
 
+#define ROTL_md(num, places) (_mm_or_si128(_mm_slli_epi32(num, places), _mm_srli_epi32(num, (32 - places))))
+
 class NTLM_SSE2 : public NTLM
 {
 public:
@@ -262,8 +264,8 @@ protected:
 		{
 			for(int j = 0; j < 4; j++)
 			{
-				output[j+4*i].first = (wd_md[i][0][j] << 31) | wd_md[i][1][j];
-				output[j+4*i].second = (wd_md[i][0][j] << 31) | wd_md[i][3][j];
+				output[j+4*i].first = (wd_md[i][0][j] << 32) | wd_md[i][1][j];
+				output[j+4*i].second = (wd_md[i][0][j] << 32) | wd_md[i][3][j];
 			}
 		}
 	}

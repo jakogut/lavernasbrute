@@ -225,8 +225,8 @@ protected:
 	{
 		int64_pair retval;
 
-		retval.first = (wd[0] << 31) | wd[1];
-		retval.second = (wd[2] << 31) | wd[3];
+		retval.first = (wd[0] << 32) | wd[1];
+		retval.second = (wd[2] << 32) | wd[3];
 
 		return retval;
 	}
