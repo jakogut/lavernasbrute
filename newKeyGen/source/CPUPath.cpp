@@ -35,8 +35,7 @@ void CPUPath::operator()()
 
 void CPUPath::searchKeyspace()
 {
-	int totalTargets = getNumTargets();
-	masterThread::setRemainingTargets(totalTargets);
+	masterThread::setRemainingTargets(getNumTargets());
 
 	keyGenerator keygen(keyspaceBegin);
 
@@ -49,7 +48,7 @@ void CPUPath::searchKeyspace()
 
 		if(targetIterator != targets.end()) // Match was found
 		{
-			masterThread::addResult(targetIterator->second, currentKey);
+			masterThread::printResult(targetIterator->second, currentKey);
 
 			removeTarget(targetIterator);
 			masterThread::setRemainingTargets(getNumTargets());

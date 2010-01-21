@@ -45,9 +45,9 @@ public:
 	static void setRandomizeCharset(bool input);
 	static void setFrequencyCharset(bool input);
 
-	static void addResult(std::string hash, std::string plaintext);
+	static void printResult(std::string hash, std::string plaintext);
 
-	void printResult();
+	void printStatistics();
 
 protected:
 
@@ -78,6 +78,8 @@ protected:
 	std::string randomizedCharset;
 
 	static std::vector< std::pair<std::string, std::string> > results;
+
+	static boost::mutex stdoutMutex;
 };
 
 #endif
