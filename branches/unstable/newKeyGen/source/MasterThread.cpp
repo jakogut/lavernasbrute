@@ -17,6 +17,7 @@ bool masterThread::randomizeCharset = 0;
 bool masterThread::frequencyCharset = 0;
 unsigned long long masterThread::iterations = 0;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
+boost::mutex masterThread::stdoutMutex;
 
 ////////////////////////////////////////////
 
@@ -65,27 +66,27 @@ void masterThread::operator()()
 {
 	// We have two timers so that the master thread can be updated independent of the print interval.
 	boost::posix_time::seconds updateInterval(1);
-	time_t printInterval = interval;
+
+	std::cout.precision(3);
 
 	time_t startTime = time(NULL);
-	time_t printTimer = time(NULL);
+
+	boost::this_thread::sleep(updateInterval);
 
 	while(!success)
 	{
-		if(!silent && (int)((time(NULL) - printTimer) >= printInterval))
+		if(!silent)
 		{
-			std::cout.precision(3);
+			boost::mutex::scoped_lock lock(stdoutMutex);
 
 			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
 				<< "\tHashes Remaining: " << remainingTargets << "\r";
-
-			printTimer = time(NULL);
 		}
 
 		boost::this_thread::sleep(updateInterval);
 	}
 
-	printResult();
+	printStatistics();
 }
 
 unsigned long long masterThread::pow(unsigned long long base, unsigned long long power)
@@ -98,14 +99,9 @@ unsigned long long masterThread::pow(unsigned long long base, unsigned long long
 	return result;
 }
 
-void masterThread::printResult()
+void masterThread::printStatistics()
 {
 	std::cout << std::endl << std::endl;
-
-	for(int i = 0; i < results.size(); i++)
-	{
-		std::cout << results[i].first << " == " << results[i].second << std::endl;
-	}
 
 	time_t endTime = time(NULL);
 	time_t totalTime = (endTime - startTime);
@@ -134,7 +130,7 @@ bool masterThread::getSuccess()
 
 void masterThread::incrementIterations()
 {
-	++iterations;
+	iterations++;
 }
 
 void masterThread::setSuccess(bool input)
@@ -177,14 +173,10 @@ void masterThread::setFrequencyCharset(bool input)
 	frequencyCharset = input;
 }
 
-void masterThread::addResult(std::string hash, std::string plaintext)
+void masterThread::printResult(std::string hash, std::string plaintext)
 {
-	std::pair<std::string, std::string> newResult;
-
-	newResult.first = hash;
-	newResult.second = plaintext;
-
-	results.push_back(newResult);
+	boost::mutex::scoped_lock lock(stdoutMutex);
+	std::cout << "\r" << hash << " == " << plaintext << "\t\t\n\n";
 }
 
 unsigned long long masterThread::getIterations()

@@ -11,10 +11,6 @@ SSE2Path::SSE2Path(int id)
 
     // Set the key location
 	keyLocation = keyspaceBegin;
-    
-    // Reserve space in our strings
-	for(int i = 0; i < 8; i++)
-		currentKeys[i].reserve(maxChars);
 
 	// Tell the director to manage this path 
 	// (If the path finishes its work and becomes idle, the director will find new work for it.)
@@ -35,32 +31,33 @@ void SSE2Path::operator()()
 
 void SSE2Path::searchKeyspace()
 {
-	int totalTargets = getNumTargets();
-	masterThread::setRemainingTargets(totalTargets);
-
 	NTLM_SSE2 ntlm_md;
+	std::string currentKeys[12];
+	int64_pair weakHashedKeys[12];
+
+	masterThread::setRemainingTargets(getNumTargets());
 
 	keyGenerator keygen(keyspaceBegin);
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 12; i++)
 		{
-			currentKeys[i] = keygen++;
+			currentKeys[i] = keygen++;			
 		}
 
-		keyLocation += 8;
+		keyLocation += 12;
 
 		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it.
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 12; i++)
 		{
 			targetIterator = targets.find(weakHashedKeys[i]);
 
 			if(targetIterator != targets.end()) // Match was found
 			{
-				masterThread::addResult(targetIterator->second, currentKeys[i]);
+				masterThread::printResult(targetIterator->second, currentKeys[i]);
 
 				removeTarget(targetIterator);
 				masterThread::setRemainingTargets(getNumTargets());
@@ -78,7 +75,7 @@ void SSE2Path::searchKeyspace()
 			}
 		}
 
-		localProgress += 8;
+		localProgress += 12;
 	}
 
 	// If all targets have been cracked, rejoice and signal the master thread that we're done.
@@ -90,6 +87,7 @@ void SSE2Path::searchKeyspace()
 	else if(Director::reassignKeyspace(this))
 	{
 		searchKeyspace();
+		std::cout << "Keyspace reassigned!" << std::endl;
 	}
 }
 

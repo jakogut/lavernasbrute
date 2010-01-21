@@ -4,6 +4,18 @@
 #include "NTLM.h"
 #include "OverloadSSE.h"
 
+#define round1_md(set, wd_index, a, b, c, ntb_index, rotation) \
+	wd[set][wd_index] += ((wd[set][a] & wd[set][b]) | (_mm_andnot_si128(wd[set][a], wd[set][c]))) + nt_buffer[set][ntb_index], \
+	wd[set][wd_index] = ROTL_md(wd[set][wd_index], rotation)
+
+#define round2_md(set, wd_index, a, b, c, ntb_index, rotation) \
+	wd[set][wd_index] += ((wd[set][a] & (wd[set][b] | wd[set][c])) | (wd[set][b] & wd[set][c])) + nt_buffer[set][ntb_index] + SQRT_2_md, \
+	wd[set][wd_index] = ROTL_md(wd[set][wd_index], rotation)
+
+#define round3_md(set, wd_index, a, b, c, ntb_index, rotation) \
+	wd[set][wd_index] += (wd[set][a] ^ wd[set][b] ^ wd[set][c]) + nt_buffer[set][ntb_index] + SQRT_3_md, \
+	wd[set][wd_index] = ROTL_md(wd[set][wd_index], rotation)
+
 class NTLM_SSE2 : public NTLM
 {
 public:
@@ -18,7 +30,7 @@ public:
 	{
 	}
 
-	void getMultipleWeakHashes(std::string input[8], int64_pair output[8])
+	void getMultipleWeakHashes(std::string input[12], int64_pair output[12])
 	{
 		prepare_key_md(input);
 
@@ -33,13 +45,13 @@ protected:
 
 	inline void prepare_key_md(std::string* input)
 	{
-		int length[2][4];
+		int length[3][4];
 
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
 				length[i][j] = input[j+4*i].length();
 
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 		{
 			memset(nt_buffer_md, 0, 16*4*4);
 
@@ -66,7 +78,7 @@ protected:
 
 	inline void initialize_words_md()
 	{
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 		{
 			wd[i][0] = _mm_set1_epi32(0x67452301);
 			wd[i][1] = _mm_set1_epi32(0xefcdab89);
@@ -77,122 +89,176 @@ protected:
 
 	inline void md4_crypt_md()
 	{	 
-		wd[0][0] += (wd[0][3] ^ (wd[0][1] & (wd[0][2] ^ wd[0][3])))  +  nt_buffer[0][0];  wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ (wd[1][1] & (wd[1][2] ^ wd[1][3])))  +  nt_buffer[1][0];  wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ (wd[0][0] & (wd[0][1] ^ wd[0][2])))  +  nt_buffer[0][1];  wd[0][3] = ROTL_md(wd[0][3], 7);
-		wd[1][3] += (wd[1][2] ^ (wd[1][0] & (wd[1][1] ^ wd[1][2])))  +  nt_buffer[1][1];  wd[1][3] = ROTL_md(wd[1][3], 7);
-		wd[0][2] += (wd[0][1] ^ (wd[0][3] & (wd[0][0] ^ wd[0][1])))  +  nt_buffer[0][2];  wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ (wd[1][3] & (wd[1][0] ^ wd[1][1])))  +  nt_buffer[1][2];  wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ (wd[0][2] & (wd[0][3] ^ wd[0][0])))  +  nt_buffer[0][3];  wd[0][1] = ROTL_md(wd[0][1], 19);
-		wd[1][1] += (wd[1][0] ^ (wd[1][2] & (wd[1][3] ^ wd[1][0])))  +  nt_buffer[1][3];  wd[1][1] = ROTL_md(wd[1][1], 19);
-	 
-		wd[0][0] += (wd[0][3] ^ (wd[0][1] & (wd[0][2] ^ wd[0][3])))  +  nt_buffer[0][4];  wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ (wd[1][1] & (wd[1][2] ^ wd[1][3])))  +  nt_buffer[1][4];  wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ (wd[0][0] & (wd[0][1] ^ wd[0][2])))  +  nt_buffer[0][5];  wd[0][3] = ROTL_md(wd[0][3], 7);
-		wd[1][3] += (wd[1][2] ^ (wd[1][0] & (wd[1][1] ^ wd[1][2])))  +  nt_buffer[1][5];  wd[1][3] = ROTL_md(wd[1][3], 7);
-		wd[0][2] += (wd[0][1] ^ (wd[0][3] & (wd[0][0] ^ wd[0][1])))  +  nt_buffer[0][6];  wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ (wd[1][3] & (wd[1][0] ^ wd[1][1])))  +  nt_buffer[1][6];  wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ (wd[0][2] & (wd[0][3] ^ wd[0][0])))  +  nt_buffer[0][7];  wd[0][1] = ROTL_md(wd[0][1], 19);
-		wd[1][1] += (wd[1][0] ^ (wd[1][2] & (wd[1][3] ^ wd[1][0])))  +  nt_buffer[1][7];  wd[1][1] = ROTL_md(wd[1][1], 19);
-	 
-		wd[0][0] += (wd[0][3] ^ (wd[0][1] & (wd[0][2] ^ wd[0][3])))  +  nt_buffer[0][8];  wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ (wd[1][1] & (wd[1][2] ^ wd[1][3])))  +  nt_buffer[1][8];  wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ (wd[0][0] & (wd[0][1] ^ wd[0][2])))  +  nt_buffer[0][9];  wd[0][3] = ROTL_md(wd[0][3], 7);
-		wd[1][3] += (wd[1][2] ^ (wd[1][0] & (wd[1][1] ^ wd[1][2])))  +  nt_buffer[1][9];  wd[1][3] = ROTL_md(wd[1][3], 7);
-		wd[0][2] += (wd[0][1] ^ (wd[0][3] & (wd[0][0] ^ wd[0][1])))  +  nt_buffer[0][10];  wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ (wd[1][3] & (wd[1][0] ^ wd[1][1])))  +  nt_buffer[1][10];  wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ (wd[0][2] & (wd[0][3] ^ wd[0][0])))  +  nt_buffer[0][11];  wd[0][1] = ROTL_md(wd[0][1], 19);
-		wd[1][1] += (wd[1][0] ^ (wd[1][2] & (wd[1][3] ^ wd[1][0])))  +  nt_buffer[1][11];  wd[1][1] = ROTL_md(wd[1][1], 19);
+		// Round 1 // ---
 
-		wd[0][0] += (wd[0][3] ^ (wd[0][1] & (wd[0][2] ^ wd[0][3])))  +  nt_buffer[0][12];  wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ (wd[1][1] & (wd[1][2] ^ wd[1][3])))  +  nt_buffer[1][12];  wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ (wd[0][0] & (wd[0][1] ^ wd[0][2])))  +  nt_buffer[0][13];  wd[0][3] = ROTL_md(wd[0][3], 7);
-		wd[1][3] += (wd[1][2] ^ (wd[1][0] & (wd[1][1] ^ wd[1][2])))  +  nt_buffer[1][13];  wd[1][3] = ROTL_md(wd[1][3], 7);
-		wd[0][2] += (wd[0][1] ^ (wd[0][3] & (wd[0][0] ^ wd[0][1])))  +  nt_buffer[0][14];  wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ (wd[1][3] & (wd[1][0] ^ wd[1][1])))  +  nt_buffer[1][14];  wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ (wd[0][2] & (wd[0][3] ^ wd[0][0])))  +  nt_buffer[0][15];  wd[0][1] = ROTL_md(wd[0][1], 19);
-		wd[1][1] += (wd[1][0] ^ (wd[1][2] & (wd[1][3] ^ wd[1][0])))  +  nt_buffer[1][15];  wd[1][1] = ROTL_md(wd[1][1], 19);
+		round1_md(0, 0, 1, 2, 3, 0, 3);
+		round1_md(1, 0, 1, 2, 3, 0, 3);
+		round1_md(2, 0, 1, 2, 3, 0, 3);
+		round1_md(0, 3, 0, 1, 2, 1, 7);
+		round1_md(1, 3, 0, 1, 2, 1, 7);
+		round1_md(2, 3, 0, 1, 2, 1, 7);
+		round1_md(0, 2, 3, 0, 1, 2, 11);
+		round1_md(1, 2, 3, 0, 1, 2, 11);
+		round1_md(2, 2, 3, 0, 1, 2, 11);
+		round1_md(0, 1, 2, 3, 0, 3, 19);
+		round1_md(1, 1, 2, 3, 0, 3, 19);
+		round1_md(2, 1, 2, 3, 0, 3, 19);
 
-		wd[0][0] += ((wd[0][1] & (wd[0][2] | wd[0][3])) | (wd[0][2] & wd[0][3])) + nt_buffer[0][0] +SQRT_2_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += ((wd[1][1] & (wd[1][2] | wd[1][3])) | (wd[1][2] & wd[1][3])) + nt_buffer[1][0] +SQRT_2_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += ((wd[0][0] & (wd[0][1] | wd[0][2])) | (wd[0][1] & wd[0][2])) + nt_buffer[0][4] +SQRT_2_md; wd[0][3] = ROTL_md(wd[0][3], 5);
-		wd[1][3] += ((wd[1][0] & (wd[1][1] | wd[1][2])) | (wd[1][1] & wd[1][2])) + nt_buffer[1][4] +SQRT_2_md; wd[1][3] = ROTL_md(wd[1][3], 5);
-		wd[0][2] += ((wd[0][3] & (wd[0][0] | wd[0][1])) | (wd[0][0] & wd[0][1])) + nt_buffer[0][8] +SQRT_2_md; wd[0][2] = ROTL_md(wd[0][2], 9);
-		wd[1][2] += ((wd[1][3] & (wd[1][0] | wd[1][1])) | (wd[1][0] & wd[1][1])) + nt_buffer[1][8] +SQRT_2_md; wd[1][2] = ROTL_md(wd[1][2], 9);
-		wd[0][1] += ((wd[0][2] & (wd[0][3] | wd[0][0])) | (wd[0][3] & wd[0][0])) + nt_buffer[0][12]+SQRT_2_md; wd[0][1] = ROTL_md(wd[0][1], 13);
-		wd[1][1] += ((wd[1][2] & (wd[1][3] | wd[1][0])) | (wd[1][3] & wd[1][0])) + nt_buffer[1][12]+SQRT_2_md; wd[1][1] = ROTL_md(wd[1][1], 13);
-	 
-		wd[0][0] += ((wd[0][1] & (wd[0][2] | wd[0][3])) | (wd[0][2] & wd[0][3])) + nt_buffer[0][1] +SQRT_2_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += ((wd[1][1] & (wd[1][2] | wd[1][3])) | (wd[1][2] & wd[1][3])) + nt_buffer[1][1] +SQRT_2_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += ((wd[0][0] & (wd[0][1] | wd[0][2])) | (wd[0][1] & wd[0][2])) + nt_buffer[0][5] +SQRT_2_md; wd[0][3] = ROTL_md(wd[0][3], 5);
-		wd[1][3] += ((wd[1][0] & (wd[1][1] | wd[1][2])) | (wd[1][1] & wd[1][2])) + nt_buffer[1][5] +SQRT_2_md; wd[1][3] = ROTL_md(wd[1][3], 5);
-		wd[0][2] += ((wd[0][3] & (wd[0][0] | wd[0][1])) | (wd[0][0] & wd[0][1])) + nt_buffer[0][9] +SQRT_2_md; wd[0][2] = ROTL_md(wd[0][2], 9);
-		wd[1][2] += ((wd[1][3] & (wd[1][0] | wd[1][1])) | (wd[1][0] & wd[1][1])) + nt_buffer[1][9] +SQRT_2_md; wd[1][2] = ROTL_md(wd[1][2], 9);
-		wd[0][1] += ((wd[0][2] & (wd[0][3] | wd[0][0])) | (wd[0][3] & wd[0][0])) + nt_buffer[0][13]+SQRT_2_md; wd[0][1] = ROTL_md(wd[0][1], 13);
-		wd[1][1] += ((wd[1][2] & (wd[1][3] | wd[1][0])) | (wd[1][3] & wd[1][0])) + nt_buffer[1][13]+SQRT_2_md; wd[1][1] = ROTL_md(wd[1][1], 13);
-	 
-		wd[0][0] += ((wd[0][1] & (wd[0][2] | wd[0][3])) | (wd[0][2] & wd[0][3])) + nt_buffer[0][2] +SQRT_2_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += ((wd[1][1] & (wd[1][2] | wd[1][3])) | (wd[1][2] & wd[1][3])) + nt_buffer[1][2] +SQRT_2_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += ((wd[0][0] & (wd[0][1] | wd[0][2])) | (wd[0][1] & wd[0][2])) + nt_buffer[0][6] +SQRT_2_md; wd[0][3] = ROTL_md(wd[0][3], 5);
-		wd[1][3] += ((wd[1][0] & (wd[1][1] | wd[1][2])) | (wd[1][1] & wd[1][2])) + nt_buffer[1][6] +SQRT_2_md; wd[1][3] = ROTL_md(wd[1][3], 5);
-		wd[0][2] += ((wd[0][3] & (wd[0][0] | wd[0][1])) | (wd[0][0] & wd[0][1])) + nt_buffer[0][10]+SQRT_2_md; wd[0][2] = ROTL_md(wd[0][2], 9);
-		wd[1][2] += ((wd[1][3] & (wd[1][0] | wd[1][1])) | (wd[1][0] & wd[1][1])) + nt_buffer[1][10]+SQRT_2_md; wd[1][2] = ROTL_md(wd[1][2], 9);
-		wd[0][1] += ((wd[0][2] & (wd[0][3] | wd[0][0])) | (wd[0][3] & wd[0][0])) + nt_buffer[0][14]+SQRT_2_md; wd[0][1] = ROTL_md(wd[0][1], 13);
-		wd[1][1] += ((wd[1][2] & (wd[1][3] | wd[1][0])) | (wd[1][3] & wd[1][0])) + nt_buffer[1][14]+SQRT_2_md; wd[1][1] = ROTL_md(wd[1][1], 13);
-	 
-		wd[0][0] += ((wd[0][1] & (wd[0][2] | wd[0][3])) | (wd[0][2] & wd[0][3])) + nt_buffer[0][3] +SQRT_2_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += ((wd[1][1] & (wd[1][2] | wd[1][3])) | (wd[1][2] & wd[1][3])) + nt_buffer[1][3] +SQRT_2_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += ((wd[0][0] & (wd[0][1] | wd[0][2])) | (wd[0][1] & wd[0][2])) + nt_buffer[0][7] +SQRT_2_md; wd[0][3] = ROTL_md(wd[0][3], 5);
-		wd[1][3] += ((wd[1][0] & (wd[1][1] | wd[1][2])) | (wd[1][1] & wd[1][2])) + nt_buffer[1][7] +SQRT_2_md; wd[1][3] = ROTL_md(wd[1][3], 5);
-		wd[0][2] += ((wd[0][3] & (wd[0][0] | wd[0][1])) | (wd[0][0] & wd[0][1])) + nt_buffer[0][11]+SQRT_2_md; wd[0][2] = ROTL_md(wd[0][2], 9);
-		wd[1][2] += ((wd[1][3] & (wd[1][0] | wd[1][1])) | (wd[1][0] & wd[1][1])) + nt_buffer[1][11]+SQRT_2_md; wd[1][2] = ROTL_md(wd[1][2], 9);
-		wd[0][1] += ((wd[0][2] & (wd[0][3] | wd[0][0])) | (wd[0][3] & wd[0][0])) + nt_buffer[0][15]+SQRT_2_md; wd[0][1] = ROTL_md(wd[0][1], 13);
-		wd[1][1] += ((wd[1][2] & (wd[1][3] | wd[1][0])) | (wd[1][3] & wd[1][0])) + nt_buffer[1][15]+SQRT_2_md; wd[1][1] = ROTL_md(wd[1][1], 13);
+		round1_md(0, 0, 1, 2, 3, 4, 3);
+		round1_md(1, 0, 1, 2, 3, 4, 3);
+		round1_md(2, 0, 1, 2, 3, 4, 3);
+		round1_md(0, 3, 0, 1, 2, 5, 7);
+		round1_md(1, 3, 0, 1, 2, 5, 7);
+		round1_md(2, 3, 0, 1, 2, 5, 7);
+		round1_md(0, 2, 3, 0, 1, 6, 11);
+		round1_md(1, 2, 3, 0, 1, 6, 11);
+		round1_md(2, 2, 3, 0, 1, 6, 11);
+		round1_md(0, 1, 2, 3, 0, 7, 19);
+		round1_md(1, 1, 2, 3, 0, 7, 19);
+		round1_md(2, 1, 2, 3, 0, 7, 19);
 
-		wd[0][0] += (wd[0][3] ^ wd[0][2] ^ wd[0][1]) + nt_buffer[0][0]  +  SQRT_3_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ wd[1][2] ^ wd[1][1]) + nt_buffer[1][0]  +  SQRT_3_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ wd[0][1] ^ wd[0][0]) + nt_buffer[0][8]  +  SQRT_3_md; wd[0][3] = ROTL_md(wd[0][3], 9);
-		wd[1][3] += (wd[1][2] ^ wd[1][1] ^ wd[1][0]) + nt_buffer[1][8]  +  SQRT_3_md; wd[1][3] = ROTL_md(wd[1][3], 9);
-		wd[0][2] += (wd[0][1] ^ wd[0][0] ^ wd[0][3]) + nt_buffer[0][4]  +  SQRT_3_md; wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ wd[1][0] ^ wd[1][3]) + nt_buffer[1][4]  +  SQRT_3_md; wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ wd[0][3] ^ wd[0][2]) + nt_buffer[0][12] +  SQRT_3_md; wd[0][1] = ROTL_md(wd[0][1], 15);
-		wd[1][1] += (wd[1][0] ^ wd[1][3] ^ wd[1][2]) + nt_buffer[1][12] +  SQRT_3_md; wd[1][1] = ROTL_md(wd[1][1], 15);
-	 
-		wd[0][0] += (wd[0][3] ^ wd[0][2] ^ wd[0][1]) + nt_buffer[0][2]  +  SQRT_3_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ wd[1][2] ^ wd[1][1]) + nt_buffer[1][2]  +  SQRT_3_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ wd[0][1] ^ wd[0][0]) + nt_buffer[0][10] +  SQRT_3_md; wd[0][3] = ROTL_md(wd[0][3], 9);
-		wd[1][3] += (wd[1][2] ^ wd[1][1] ^ wd[1][0]) + nt_buffer[1][10] +  SQRT_3_md; wd[1][3] = ROTL_md(wd[1][3], 9);
-		wd[0][2] += (wd[0][1] ^ wd[0][0] ^ wd[0][3]) + nt_buffer[0][6]  +  SQRT_3_md; wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ wd[1][0] ^ wd[1][3]) + nt_buffer[1][6]  +  SQRT_3_md; wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ wd[0][3] ^ wd[0][2]) + nt_buffer[0][14] +  SQRT_3_md; wd[0][1] = ROTL_md(wd[0][1], 15);
-		wd[1][1] += (wd[1][0] ^ wd[1][3] ^ wd[1][2]) + nt_buffer[1][14] +  SQRT_3_md; wd[1][1] = ROTL_md(wd[1][1], 15);
-	 
-		wd[0][0] += (wd[0][3] ^ wd[0][2] ^ wd[0][1]) + nt_buffer[0][1]  +  SQRT_3_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ wd[1][2] ^ wd[1][1]) + nt_buffer[1][1]  +  SQRT_3_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ wd[0][1] ^ wd[0][0]) + nt_buffer[0][9]  +  SQRT_3_md; wd[0][3] = ROTL_md(wd[0][3], 9);
-		wd[1][3] += (wd[1][2] ^ wd[1][1] ^ wd[1][0]) + nt_buffer[1][9]  +  SQRT_3_md; wd[1][3] = ROTL_md(wd[1][3], 9);
-		wd[0][2] += (wd[0][1] ^ wd[0][0] ^ wd[0][3]) + nt_buffer[0][5]  +  SQRT_3_md; wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ wd[1][0] ^ wd[1][3]) + nt_buffer[1][5]  +  SQRT_3_md; wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ wd[0][3] ^ wd[0][2]) + nt_buffer[0][13] +  SQRT_3_md; wd[0][1] = ROTL_md(wd[0][1], 15);
-		wd[1][1] += (wd[1][0] ^ wd[1][3] ^ wd[1][2]) + nt_buffer[1][13] +  SQRT_3_md; wd[1][1] = ROTL_md(wd[1][1], 15);
-	 
-		wd[0][0] += (wd[0][3] ^ wd[0][2] ^ wd[0][1]) + nt_buffer[0][3]  +  SQRT_3_md; wd[0][0] = ROTL_md(wd[0][0], 3);
-		wd[1][0] += (wd[1][3] ^ wd[1][2] ^ wd[1][1]) + nt_buffer[1][3]  +  SQRT_3_md; wd[1][0] = ROTL_md(wd[1][0], 3);
-		wd[0][3] += (wd[0][2] ^ wd[0][1] ^ wd[0][0]) + nt_buffer[0][11] +  SQRT_3_md; wd[0][3] = ROTL_md(wd[0][3], 9);
-		wd[1][3] += (wd[1][2] ^ wd[1][1] ^ wd[1][0]) + nt_buffer[1][11] +  SQRT_3_md; wd[1][3] = ROTL_md(wd[1][3], 9);
-		wd[0][2] += (wd[0][1] ^ wd[0][0] ^ wd[0][3]) + nt_buffer[0][7]  +  SQRT_3_md; wd[0][2] = ROTL_md(wd[0][2], 11);
-		wd[1][2] += (wd[1][1] ^ wd[1][0] ^ wd[1][3]) + nt_buffer[1][7]  +  SQRT_3_md; wd[1][2] = ROTL_md(wd[1][2], 11);
-		wd[0][1] += (wd[0][0] ^ wd[0][3] ^ wd[0][2]) + nt_buffer[0][15] +  SQRT_3_md; wd[0][1] = ROTL_md(wd[0][1], 15);
-		wd[1][1] += (wd[1][0] ^ wd[1][3] ^ wd[1][2]) + nt_buffer[1][15] +  SQRT_3_md; wd[1][1] = ROTL_md(wd[1][1], 15);
+		round1_md(0, 0, 1, 2, 3, 8, 3);
+		round1_md(1, 0, 1, 2, 3, 8, 3);
+		round1_md(2, 0, 1, 2, 3, 8, 3);
+		round1_md(0, 3, 0, 1, 2, 9, 7);
+		round1_md(1, 3, 0, 1, 2, 9, 7);
+		round1_md(2, 3, 0, 1, 2, 9, 7);
+		round1_md(0, 2, 3, 0, 1, 10, 11);
+		round1_md(1, 2, 3, 0, 1, 10, 11);
+		round1_md(2, 2, 3, 0, 1, 10, 11);
+		round1_md(0, 1, 2, 3, 0, 11, 19);
+		round1_md(1, 1, 2, 3, 0, 11, 19);
+		round1_md(2, 1, 2, 3, 0, 11, 19);
 
-		for(int i = 0; i < 2; i++)
+		round1_md(0, 0, 1, 2, 3, 12, 3);
+		round1_md(1, 0, 1, 2, 3, 12, 3);
+		round1_md(2, 0, 1, 2, 3, 12, 3);
+		round1_md(0, 3, 0, 1, 2, 13, 7);
+		round1_md(1, 3, 0, 1, 2, 13, 7);
+		round1_md(2, 3, 0, 1, 2, 13, 7);
+		round1_md(0, 2, 3, 0, 1, 14, 11);
+		round1_md(1, 2, 3, 0, 1, 14, 11);
+		round1_md(2, 2, 3, 0, 1, 14, 11);
+		round1_md(0, 1, 2, 3, 0, 15, 19);
+		round1_md(1, 1, 2, 3, 0, 15, 19);
+		round1_md(2, 1, 2, 3, 0, 15, 19);
+
+		// Round 2 // ---
+
+		round2_md(0, 0, 1, 2, 3, 0, 3);
+		round2_md(1, 0, 1, 2, 3, 0, 3);
+		round2_md(2, 0, 1, 2, 3, 0, 3);
+		round2_md(0, 3, 0, 1, 2, 4, 5);
+		round2_md(1, 3, 0, 1, 2, 4, 5);
+		round2_md(2, 3, 0, 1, 2, 4, 5);
+		round2_md(0, 2, 3, 0, 1, 8, 9);
+		round2_md(1, 2, 3, 0, 1, 8, 9);
+		round2_md(2, 2, 3, 0, 1, 8, 9);
+		round2_md(0, 1, 2, 3, 0, 12, 13);
+		round2_md(1, 1, 2, 3, 0, 12, 13);
+		round2_md(2, 1, 2, 3, 0, 12, 13);
+
+		round2_md(0, 0, 1, 2, 3, 1, 3);
+		round2_md(1, 0, 1, 2, 3, 1, 3);
+		round2_md(2, 0, 1, 2, 3, 1, 3);
+		round2_md(0, 3, 0, 1, 2, 5, 5);
+		round2_md(1, 3, 0, 1, 2, 5, 5);
+		round2_md(2, 3, 0, 1, 2, 5, 5);
+		round2_md(0, 2, 3, 0, 1, 9, 9);
+		round2_md(1, 2, 3, 0, 1, 9, 9);
+		round2_md(2, 2, 3, 0, 1, 9, 9);
+		round2_md(0, 1, 2, 3, 0, 13, 13);
+		round2_md(1, 1, 2, 3, 0, 13, 13);
+		round2_md(2, 1, 2, 3, 0, 13, 13);
+
+		round2_md(0, 0, 1, 2, 3, 2, 3);
+		round2_md(1, 0, 1, 2, 3, 2, 3);
+		round2_md(2, 0, 1, 2, 3, 2, 3);
+		round2_md(0, 3, 0, 1, 2, 6, 5);
+		round2_md(1, 3, 0, 1, 2, 6, 5);
+		round2_md(2, 3, 0, 1, 2, 6, 5);
+		round2_md(0, 2, 3, 0, 1, 10, 9);
+		round2_md(1, 2, 3, 0, 1, 10, 9);
+		round2_md(2, 2, 3, 0, 1, 10, 9);
+		round2_md(0, 1, 2, 3, 0, 14, 13);
+		round2_md(1, 1, 2, 3, 0, 14, 13);
+		round2_md(2, 1, 2, 3, 0, 14, 13);
+
+		round2_md(0, 0, 1, 2, 3, 3, 3);
+		round2_md(1, 0, 1, 2, 3, 3, 3);
+		round2_md(2, 0, 1, 2, 3, 3, 3);
+		round2_md(0, 3, 0, 1, 2, 7, 5);
+		round2_md(1, 3, 0, 1, 2, 7, 5);
+		round2_md(2, 3, 0, 1, 2, 7, 5);
+		round2_md(0, 2, 3, 0, 1, 11, 9);
+		round2_md(1, 2, 3, 0, 1, 11, 9);
+		round2_md(2, 2, 3, 0, 1, 11, 9);
+		round2_md(0, 1, 2, 3, 0, 15, 13);
+		round2_md(1, 1, 2, 3, 0, 15, 13);
+		round2_md(2, 1, 2, 3, 0, 15, 13);
+
+		// Round 3 // --
+
+		round3_md(0, 0, 3, 2, 1, 0, 3);
+		round3_md(1, 0, 3, 2, 1, 0, 3);
+		round3_md(2, 0, 3, 2, 1, 0, 3);
+		round3_md(0, 3, 2, 1, 0, 8, 9);
+		round3_md(1, 3, 2, 1, 0, 8, 9);
+		round3_md(2, 3, 2, 1, 0, 8, 9);
+		round3_md(0, 2, 1, 0, 3, 4, 11);
+		round3_md(1, 2, 1, 0, 3, 4, 11);
+		round3_md(2, 2, 1, 0, 3, 4, 11);
+		round3_md(0, 1, 0, 3, 2, 12, 15);
+		round3_md(1, 1, 0, 3, 2, 12, 15);
+		round3_md(2, 1, 0, 3, 2, 12, 15);
+
+		round3_md(0, 0, 3, 2, 1, 2, 3);
+		round3_md(1, 0, 3, 2, 1, 2, 3);
+		round3_md(2, 0, 3, 2, 1, 2, 3);
+		round3_md(0, 3, 2, 1, 0, 10, 9);
+		round3_md(1, 3, 2, 1, 0, 10, 9);
+		round3_md(2, 3, 2, 1, 0, 10, 9);
+		round3_md(0, 2, 1, 0, 3, 6, 11);
+		round3_md(1, 2, 1, 0, 3, 6, 11);
+		round3_md(2, 2, 1, 0, 3, 6, 11);
+		round3_md(0, 1, 0, 3, 2, 14, 15);
+		round3_md(1, 1, 0, 3, 2, 14, 15);
+		round3_md(2, 1, 0, 3, 2, 14, 15);
+
+		round3_md(0, 0, 3, 2, 1, 1, 3);
+		round3_md(1, 0, 3, 2, 1, 1, 3);
+		round3_md(2, 0, 3, 2, 1, 1, 3);
+		round3_md(0, 3, 2, 1, 0, 9, 9);
+		round3_md(1, 3, 2, 1, 0, 9, 9);
+		round3_md(2, 3, 2, 1, 0, 9, 9);
+		round3_md(0, 2, 1, 0, 3, 5, 11);
+		round3_md(1, 2, 1, 0, 3, 5, 11);
+		round3_md(2, 2, 1, 0, 3, 5, 11);
+		round3_md(0, 1, 0, 3, 2, 13, 15);
+		round3_md(1, 1, 0, 3, 2, 13, 15);
+		round3_md(2, 1, 0, 3, 2, 13, 15);
+
+		round3_md(0, 0, 3, 2, 1, 3, 3);
+		round3_md(1, 0, 3, 2, 1, 3, 3);
+		round3_md(2, 0, 3, 2, 1, 3, 3);
+		round3_md(0, 3, 2, 1, 0, 11, 9);
+		round3_md(1, 3, 2, 1, 0, 11, 9);
+		round3_md(2, 3, 2, 1, 0, 11, 9);
+		round3_md(0, 2, 1, 0, 3, 7, 11);
+		round3_md(1, 2, 1, 0, 3, 7, 11);
+		round3_md(2, 2, 1, 0, 3, 7, 11);
+		round3_md(0, 1, 0, 3, 2, 15, 15);
+		round3_md(1, 1, 0, 3, 2, 15, 15);
+		round3_md(2, 1, 0, 3, 2, 15, 15);
+
+		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
 				_mm_store_si128((__m128i*)wd_md[i][j], wd[i][j]);
 	}
 
 	inline void convert_to_int128_md(int64_pair* output)
 	{
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 4; j++)
 			{
@@ -203,11 +269,11 @@ protected:
 	}
 
 	// The 'md' suffix stands for "multiple data"
-	__m128i nt_buffer[2][16];
+	__m128i nt_buffer[3][16];
 	unsigned int nt_buffer_md[16][4];
 
-	__m128i wd[2][4];
-	unsigned int wd_md[2][4][4];
+	__m128i wd[3][4];
+	unsigned int wd_md[3][4][4];
 
 	__m128i SQRT_2_md, SQRT_3_md;
 };

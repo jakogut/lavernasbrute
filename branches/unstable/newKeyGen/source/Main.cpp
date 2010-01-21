@@ -107,7 +107,6 @@ bool isValidNTLMHexDigest(const string hash)
     return true;
 }
 
-
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
@@ -250,6 +249,7 @@ int main(int argc, char** argv)
 }
 
 #if 0
+
 #include <NTLM_MD.h>
 
 int main()
@@ -257,23 +257,23 @@ int main()
 	NTLM ntlm;
 	NTLM_SSE2 ntlmmd;
 
-	std::string input[4] = {"bill", "rawr", "hello", "billy"};
-	std::string output[4];
+	unsigned long long iterations = 0;
 
-	for(int i = 0; i < 4; i++)
+	std::string input[12] = {"bill", "rawr", "hello", "billy", 
+							 "jeeers", "doggoniy", "fseetg", "efhj",
+							 "scuibw", "edvbi", "popples", "asfuih"};
+	int64_pair output[12];
+
+	time_t startTime = time(NULL);
+
+	while(time(NULL) < startTime + 10)
 	{
-		output[i] = ntlm.getNTLMHash(input[i]);
-		cout << output[i] << endl;
+		ntlmmd.getMultipleWeakHashes(input, output);
+		iterations += 12;
 	}
 
-	cout << endl;
+	cout << (iterations / 5) << endl;
 
-	ntlmmd.getMultipleHashes(input, output);
-
-	for(int i = 0; i < 4; i++)
-	{
-		cout << output[i] << endl;
-	}
 	/*
 	__declspec(align(16)) unsigned int input[4];
 	__declspec(align(16)) unsigned int output[4];
@@ -301,4 +301,5 @@ int main()
 		cout << output[i] << endl;
 		*/
 }
+
 #endif
