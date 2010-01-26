@@ -10,7 +10,6 @@ bool masterThread::success = 0;
 bool masterThread::silent = 0;
 int masterThread::numWorkers = 0;
 int masterThread::remainingTargets = 0;
-int masterThread::interval = 0;
 char* masterThread::charset = 0;
 int masterThread::charsetLength = 0;
 bool masterThread::randomizeCharset = 0;
@@ -30,10 +29,6 @@ masterThread::masterThread()
 
 	// Set the length of the character set
 	charsetLength = (int)strlen(charset);
-
-	// Check that the update interval is set within bounds
-	if(interval <= 0)
-		interval = 5;
 
 	// If specified, randomize the order of the character set
 	if(randomizeCharset)
@@ -65,27 +60,25 @@ masterThread::~masterThread()
 
 void masterThread::operator()()
 {
-	// We have two timers so that the master thread can be updated independent of the print interval.
 	boost::posix_time::seconds updateInterval(1);
 
 	std::cout.precision(3);
 
 	time_t startTime = time(NULL);
 
-	boost::this_thread::sleep(updateInterval);
-
-	while(!success)
+	do
 	{
+		boost::this_thread::sleep(updateInterval);
+
 		if(!silent)
 		{
 			boost::mutex::scoped_lock lock(stdoutMutex);
 
-			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
-				<< "\tHashes Remaining: " << remainingTargets << "\r";
+			std::cout << "\rAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+				<< "\tHashes Remaining: " << remainingTargets << "\t\t\t";
 		}
 
-		boost::this_thread::sleep(updateInterval);
-	}
+	} while(!success);
 
 	printStatistics();
 }
@@ -116,8 +109,9 @@ void masterThread::printStatistics()
 
 	time_t days = totalTime;
 
-	std::cout << "\nThe run has completed!"
-		<< "\nAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+	std::cout.precision(3);
+
+	std::cout << "\n\nThe run has completed!"
 		<< "\nAttack duration: " << getIterations() << " iterations."
 		<< "\nCompleted in: " << days << " days, " << hours << " hours, " 
 		<< minutes << " minutes, and " << seconds << " seconds. " << std::endl;
@@ -198,9 +192,4 @@ bool masterThread::getSilent()
 void masterThread::setSilent(bool input)
 {
 	silent = input;
-}
-
-void masterThread::setInterval(int input)
-{
-	interval = input;
 }

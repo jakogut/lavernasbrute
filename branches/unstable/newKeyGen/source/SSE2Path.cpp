@@ -41,11 +41,7 @@ void SSE2Path::searchKeyspace()
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
-		for(int i = 0; i < 8; i++)
-		{
-			currentKeys[i] = keygen++;			
-		}
-
+		keygen.getMultipleKeys(currentKeys, 8);
 		keyLocation += 8;
 
 		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
@@ -78,12 +74,10 @@ void SSE2Path::searchKeyspace()
 		localProgress += 8;
 	}
 
-	// If all targets have been cracked, rejoice and signal the master thread that we're done.
 	if(targets.empty())
 	{
 		masterThread::setSuccess();
 	}
-	// If not, ask the director if we can have more work. If the director finds work for us, we restart the search.
 	else if(Director::reassignKeyspace(this))
 	{
 		searchKeyspace();

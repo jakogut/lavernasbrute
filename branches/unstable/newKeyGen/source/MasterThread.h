@@ -26,7 +26,7 @@ public:
 
 	static bool getSuccess();
 	static void setSuccess();
-	static void setInterval(int input);
+
 	static bool getSilent();
 	static void setSilent(bool input);
 
@@ -55,7 +55,6 @@ protected:
 	time_t startTime;
 
 	static unsigned long long iterations;
-	static int interval;
 	static bool silent;
 
 	static int numWorkers;
