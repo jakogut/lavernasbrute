@@ -62,7 +62,7 @@ protected:
 				int k = 0;
 				//The length of input need to be <= 27
 				for(;k<length[i][j]/2;k++)	
-					nt_buffer_md[k][j] = input[j+4*i].at(2*k) | (input[j+4*i].at(2*k+1)<<16);
+					nt_buffer_md[k][j] = input[j+4*i][2*k] | (input[j+4*i][2*k+1]<<16);
 			 
 				//padding
 				if(length[i][j]%2==1)
