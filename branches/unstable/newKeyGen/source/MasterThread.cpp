@@ -18,6 +18,7 @@ bool masterThread::frequencyCharset = 0;
 unsigned long long masterThread::iterations = 0;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
 boost::mutex masterThread::stdoutMutex;
+boost::mutex masterThread::iterationsMutex;
 
 ////////////////////////////////////////////
 
@@ -101,8 +102,6 @@ unsigned long long masterThread::pow(unsigned long long base, unsigned long long
 
 void masterThread::printStatistics()
 {
-	std::cout << std::endl << std::endl;
-
 	time_t endTime = time(NULL);
 	time_t totalTime = (endTime - startTime);
 
@@ -118,6 +117,7 @@ void masterThread::printStatistics()
 	time_t days = totalTime;
 
 	std::cout << "\nThe run has completed!"
+		<< "\nAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
 		<< "\nAttack duration: " << getIterations() << " iterations."
 		<< "\nCompleted in: " << days << " days, " << hours << " hours, " 
 		<< minutes << " minutes, and " << seconds << " seconds. " << std::endl;
@@ -128,14 +128,20 @@ bool masterThread::getSuccess()
 	return success;
 }
 
+void masterThread::setSuccess()
+{
+	success = true;
+}
+
 void masterThread::incrementIterations()
 {
 	iterations++;
 }
 
-void masterThread::setSuccess(bool input)
+void masterThread::increaseIterations(unsigned int input)
 {
-	success = input;
+	boost::mutex::scoped_lock lock(iterationsMutex);
+	iterations += input;
 }
 
 int masterThread::getNumWorkers()
@@ -182,11 +188,6 @@ void masterThread::printResult(std::string hash, std::string plaintext)
 unsigned long long masterThread::getIterations()
 {
 	return iterations;
-}
-
-void masterThread::increaseIterations(long input)
-{
-	iterations += input;
 }
 
 bool masterThread::getSilent()

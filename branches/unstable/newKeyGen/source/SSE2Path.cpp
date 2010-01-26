@@ -34,25 +34,24 @@ void SSE2Path::operator()()
 
 void SSE2Path::searchKeyspace()
 {
-	NTLM_SSE2 ntlm_md;
-
 	masterThread::setRemainingTargets(getNumTargets());
+	NTLM_SSE2 ntlm_md;
 
 	keyGenerator keygen(keyspaceBegin);
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			currentKeys[i] = keygen++;			
 		}
 
-		keyLocation += 12;
+		keyLocation += 8;
 
 		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
 
 		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it.
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			targetIterator = targets.find(weakHashedKeys[i]);
 
@@ -68,7 +67,7 @@ void SSE2Path::searchKeyspace()
 				/* Increment a local counter for the number of iterations until it reaches a certain point.
 				Once that point has been reached, the local count is committed to the global count and the local
 				variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-				if(localProgress > 250000)
+				if(localProgress > 1000000)
 				{
 					masterThread::increaseIterations(localProgress);
 					localProgress = 0;
@@ -76,13 +75,13 @@ void SSE2Path::searchKeyspace()
 			}
 		}
 
-		localProgress += 12;
+		localProgress += 8;
 	}
 
 	// If all targets have been cracked, rejoice and signal the master thread that we're done.
 	if(targets.empty())
 	{
-		masterThread::setSuccess(true);
+		masterThread::setSuccess();
 	}
 	// If not, ask the director if we can have more work. If the director finds work for us, we restart the search.
 	else if(Director::reassignKeyspace(this))

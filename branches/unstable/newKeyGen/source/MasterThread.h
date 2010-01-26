@@ -25,7 +25,7 @@ public:
 	static unsigned long long pow(unsigned long long base, unsigned long long power);
 
 	static bool getSuccess();
-	static void setSuccess(bool input);
+	static void setSuccess();
 	static void setInterval(int input);
 	static bool getSilent();
 	static void setSilent(bool input);
@@ -37,7 +37,7 @@ public:
 
 	static unsigned long long getIterations();
 	static void incrementIterations();
-	static void increaseIterations(long input);
+	static void increaseIterations(unsigned int input);
 
 	static char* getCharset();
 	static int getCharsetLength();
@@ -80,6 +80,7 @@ protected:
 	static std::vector< std::pair<std::string, std::string> > results;
 
 	static boost::mutex stdoutMutex;
+	static boost::mutex iterationsMutex;
 };
 
 #endif

@@ -11,6 +11,10 @@ Thanks, Alain! */
 #define ROTL(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
 #define ROTR(NUM, PLACES, SIZE) ((NUM >> PLACES) | (NUM << (SIZE - PLACES)))
 
+#define F(X, Y, Z) ((X & Y) | (~X & Z))
+#define G(X, Y, Z) ((X & Y) | (X & Z) | (Y & Z))
+#define H(X, Y, Z) (X ^ Y ^ Z)
+
 typedef std::pair<unsigned long long, unsigned long long> int64_pair;
 
 class NTLM
@@ -94,71 +98,71 @@ protected:
 
 	inline void md4_crypt_round1()
 	{	 
-		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[0];  wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[1];  wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[2];  wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[3];  wd[1] = ROTL(wd[1], 19, 32);
+		wd[0] += F(wd[1], wd[2], wd[3])  +  nt_buffer[0],  wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += F(wd[0], wd[1], wd[2])  +  nt_buffer[1],  wd[3] = ROTL(wd[3], 7, 32);
+		wd[2] += F(wd[3], wd[0], wd[1])  +  nt_buffer[2],  wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += F(wd[2], wd[3], wd[0])  +  nt_buffer[3],  wd[1] = ROTL(wd[1], 19, 32);
 	 
-		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[4];  wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[5];  wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[6];  wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[7];  wd[1] = ROTL(wd[1], 19, 32);
+		wd[0] += F(wd[1], wd[2], wd[3])  +  nt_buffer[4],  wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += F(wd[0], wd[1], wd[2])  +  nt_buffer[5],  wd[3] = ROTL(wd[3], 7, 32);
+		wd[2] += F(wd[3], wd[0], wd[1])  +  nt_buffer[6],  wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += F(wd[2], wd[3], wd[0])  +  nt_buffer[7],  wd[1] = ROTL(wd[1], 19, 32);
 	 
-		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[8];  wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[9];  wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[10]; wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[11]; wd[1] = ROTL(wd[1], 19, 32);
+		wd[0] += F(wd[1], wd[2], wd[3])  +  nt_buffer[8],  wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += F(wd[0], wd[1], wd[2])  +  nt_buffer[9],  wd[3] = ROTL(wd[3], 7, 32);
+		wd[2] += F(wd[3], wd[0], wd[1])  +  nt_buffer[10], wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += F(wd[2], wd[3], wd[0])  +  nt_buffer[11], wd[1] = ROTL(wd[1], 19, 32);
 	 
-		wd[0] += (wd[3] ^ (wd[1] & (wd[2] ^ wd[3])))  +  nt_buffer[12]; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ (wd[0] & (wd[1] ^ wd[2])))  +  nt_buffer[13]; wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += (wd[1] ^ (wd[3] & (wd[0] ^ wd[1])))  +  nt_buffer[14]; wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ (wd[2] & (wd[3] ^ wd[0])))  +  nt_buffer[15]; wd[1] = ROTL(wd[1], 19, 32);
+		wd[0] += F(wd[1], wd[2], wd[3])  +  nt_buffer[12], wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += F(wd[0], wd[1], wd[2])  +  nt_buffer[13], wd[3] = ROTL(wd[3], 7, 32);
+		wd[2] += F(wd[3], wd[0], wd[1])  +  nt_buffer[14], wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += F(wd[2], wd[3], wd[0])  +  nt_buffer[15], wd[1] = ROTL(wd[1], 19, 32);
 	}
 	 
 	inline void md4_crypt_round2()
 	{
-		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[0] +SQRT_2; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[4] +SQRT_2; wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[8] +SQRT_2; wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[12]+SQRT_2; wd[1] = ROTL(wd[1], 13, 32);
+		wd[0] += G(wd[1], wd[2], wd[3]) + nt_buffer[0] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[0], wd[1], wd[2]) + nt_buffer[4] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
+		wd[2] += G(wd[3], wd[0], wd[1]) + nt_buffer[8] +SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
+		wd[1] += G(wd[2], wd[3], wd[0]) + nt_buffer[12]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
 	 
-		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[1] +SQRT_2; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[5] +SQRT_2; wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[9] +SQRT_2; wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[13]+SQRT_2; wd[1] = ROTL(wd[1], 13, 32);
+		wd[0] += G(wd[1], wd[2], wd[3]) + nt_buffer[1] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[0], wd[1], wd[2]) + nt_buffer[5] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
+		wd[2] += G(wd[3], wd[0], wd[1]) + nt_buffer[9] +SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
+		wd[1] += G(wd[2], wd[3], wd[0]) + nt_buffer[13]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
 	 
-		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[2] +SQRT_2; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[6] +SQRT_2; wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[10]+SQRT_2; wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[14]+SQRT_2; wd[1] = ROTL(wd[1], 13, 32);
+		wd[0] += G(wd[1], wd[2], wd[3]) + nt_buffer[2] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[0], wd[1], wd[2]) + nt_buffer[6] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
+		wd[2] += G(wd[3], wd[0], wd[1]) + nt_buffer[10]+SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
+		wd[1] += G(wd[2], wd[3], wd[0]) + nt_buffer[14]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
 	 
-		wd[0] += ((wd[1] & (wd[2] | wd[3])) | (wd[2] & wd[3])) + nt_buffer[3] +SQRT_2; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += ((wd[0] & (wd[1] | wd[2])) | (wd[1] & wd[2])) + nt_buffer[7] +SQRT_2; wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += ((wd[3] & (wd[0] | wd[1])) | (wd[0] & wd[1])) + nt_buffer[11]+SQRT_2; wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += ((wd[2] & (wd[3] | wd[0])) | (wd[3] & wd[0])) + nt_buffer[15]+SQRT_2; wd[1] = ROTL(wd[1], 13, 32);
+		wd[0] += G(wd[1], wd[2], wd[3]) + nt_buffer[3] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[0], wd[1], wd[2]) + nt_buffer[7] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
+		wd[2] += G(wd[3], wd[0], wd[1]) + nt_buffer[11]+SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
+		wd[1] += G(wd[2], wd[3], wd[0]) + nt_buffer[15]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
 	}
 	 
 	inline void md4_crypt_round3()
 	{
-		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[0]  +  SQRT_3; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[8]  +  SQRT_3; wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[4]  +  SQRT_3; wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[12] +  SQRT_3; wd[1] = ROTL(wd[1], 15, 32);
+		wd[0] += G(wd[3], wd[2], wd[1]) + nt_buffer[0]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[2], wd[1], wd[0]) + nt_buffer[8]  +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
+		wd[2] += G(wd[1], wd[0], wd[3]) + nt_buffer[4]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += G(wd[0], wd[3], wd[2]) + nt_buffer[12] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
 	 
-		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[2]  +  SQRT_3; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[10] +  SQRT_3; wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[6]  +  SQRT_3; wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[14] +  SQRT_3; wd[1] = ROTL(wd[1], 15, 32);
+		wd[0] += G(wd[3], wd[2], wd[1]) + nt_buffer[2]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[2], wd[1], wd[0]) + nt_buffer[10] +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
+		wd[2] += G(wd[1], wd[0], wd[3]) + nt_buffer[6]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += G(wd[0], wd[3], wd[2]) + nt_buffer[14] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
 	 
-		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[1]  +  SQRT_3; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[9]  +  SQRT_3; wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[5]  +  SQRT_3; wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[13] +  SQRT_3; wd[1] = ROTL(wd[1], 15, 32);
+		wd[0] += G(wd[3], wd[2], wd[1]) + nt_buffer[1]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[2], wd[1], wd[0]) + nt_buffer[9]  +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
+		wd[2] += G(wd[1], wd[0], wd[3]) + nt_buffer[5]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += G(wd[0], wd[3], wd[2]) + nt_buffer[13] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
 	 
-		wd[0] += (wd[3] ^ wd[2] ^ wd[1]) + nt_buffer[3]  +  SQRT_3; wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += (wd[2] ^ wd[1] ^ wd[0]) + nt_buffer[11] +  SQRT_3; wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += (wd[1] ^ wd[0] ^ wd[3]) + nt_buffer[7]  +  SQRT_3; wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += (wd[0] ^ wd[3] ^ wd[2]) + nt_buffer[15] +  SQRT_3; wd[1] = ROTL(wd[1], 15, 32);
+		wd[0] += G(wd[3], wd[2], wd[1]) + nt_buffer[3]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
+		wd[3] += G(wd[2], wd[1], wd[0]) + nt_buffer[11] +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
+		wd[2] += G(wd[1], wd[0], wd[3]) + nt_buffer[7]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += G(wd[0], wd[3], wd[2]) + nt_buffer[15] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
 	}
 	 
 	inline void finalize_md4()
