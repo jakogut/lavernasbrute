@@ -36,7 +36,6 @@ void CPUPath::operator()()
 void CPUPath::searchKeyspace()
 {
 	masterThread::setRemainingTargets(getNumTargets());
-
 	keyGenerator keygen(keyspaceBegin);
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
@@ -58,7 +57,7 @@ void CPUPath::searchKeyspace()
 			/* Increment a local counter for the number of iterations until it reaches a certain point.
 			Once that point has been reached, the local count is committed to the global count and the local
 			variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-			if(localProgress > 250000)
+			if(localProgress > 1000000)
 			{
 				masterThread::increaseIterations(localProgress);
 				localProgress = 0;
@@ -74,7 +73,7 @@ void CPUPath::searchKeyspace()
 	// If all targets have been cracked, rejoice and signal the master thread that we're done.
 	if(targets.empty())
 	{
-		masterThread::setSuccess(true);
+		masterThread::setSuccess();
 	}
 	// If not, ask the director if we can have more work. If the director finds work for us, we restart the search.
 	else if(Director::reassignKeyspace(this))
