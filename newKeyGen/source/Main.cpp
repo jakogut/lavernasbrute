@@ -44,10 +44,7 @@ void printHelp()
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
 	"\n\t\tMax for 32-bit is 8 chars, max for 64-bit is 14 chars."
 
-	"\n\n-i INTEGER\tInterval in seconds for iterations logged to the console."
-	"\n\t\tThe interval may be raised for a slight performance gain."
-
-	"\n\n--SSE2 (UNSTABLE)\tUse an SSE2 optimized CPU path."
+	"\n\n--SSE2\t\tUse an SSE2 optimized CPU path."
 
 	"\n\n--silent\tRun the program in silent mode."
 
@@ -187,12 +184,6 @@ int main(int argc, char** argv)
 		if(flag == "-c")
 		{
 			processingPath::setMaxChars(toInt(value));
-		}
-
-		// Interval for iteration logging
-		if(flag == "-i" || flag == "--interval")
-		{
-			masterThread::setInterval(toInt(value));
 		}		
 
 		// Enable SSE2 path

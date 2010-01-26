@@ -18,6 +18,8 @@
 #include "MasterThread.h"
 #include "NTLM.h"
 
+#include "KeyGenerator.h"
+
 class processingPath
 {
 	public:
@@ -62,36 +64,6 @@ protected:
 	int charsetLength;
 
 	int remainingTargets;
-};
-
-class keyGenerator
-{
-public:
-
-	keyGenerator(unsigned long long location);
-	keyGenerator(unsigned long long location, char* charset);
-
-	~keyGenerator();
-
-	void incrementKey();
-
-	std::string operator++();
-	std::string operator++(int);
-
-	void integerToKey();
-	unsigned long long keyToInteger();
-
-	std::string getKey();
-
-protected:
-
-	std::string charset;
-	unsigned int charsetLength;
-
-	std::string key;
-	std::vector<unsigned int> keyIndices;
-
-	unsigned long long location;
 };
 
 #endif
