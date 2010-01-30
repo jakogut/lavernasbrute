@@ -9,15 +9,8 @@ SSE2Path::SSE2Path(int id)
 	keyspaceBegin = (keyspaceSize * id);
 	keyspaceEnd = (keyspaceBegin + keyspaceSize);
 
-    // Set the key location
+    	// Set the key location
 	keyLocation = keyspaceBegin;
-
-	// Tell the director to manage this path 
-	// (If the path finishes its work and becomes idle, the director will find new work for it.)
-	Director::manageWorker(this);
-
-	// Initialize the local progress counter to zero
-	localProgress = 0;
 
 	for(int i = 0; i < 12; i++)
 		currentKeys[i].reserve(maxChars);
@@ -29,6 +22,8 @@ SSE2Path::~SSE2Path()
 
 void SSE2Path::operator()()
 {
+	Director::manageWorker(this);
+
 	searchKeyspace();
 }
 
@@ -37,7 +32,18 @@ void SSE2Path::searchKeyspace()
 	masterThread::setRemainingTargets(getNumTargets());
 	NTLM_SSE2 ntlm_md;
 
-	keyGenerator keygen(keyspaceBegin);
+	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
+
+	bool multiHash = false;
+
+	if(getNumTargets() > 1)
+	{
+		multiHash = true;
+	}
+	else
+	{
+		targetIterator = targets.begin();
+	}
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
@@ -46,32 +52,31 @@ void SSE2Path::searchKeyspace()
 
 		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
 
-		// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it.
 		for(int i = 0; i < 8; i++)
 		{
-			targetIterator = targets.find(weakHashedKeys[i]);
-
-			if(targetIterator != targets.end()) // Match was found
+			if(multiHash)
 			{
-				masterThread::printResult(targetIterator->second, currentKeys[i]);
+				targetIterator = targets.find(weakHashedKeys[i]);
 
-				removeTarget(targetIterator);
-				masterThread::setRemainingTargets(getNumTargets());
-			}
-			else // No match
-			{
-				/* Increment a local counter for the number of iterations until it reaches a certain point.
-				Once that point has been reached, the local count is committed to the global count and the local
-				variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-				if(localProgress > 1000000)
+				if(targetIterator != targets.end()) // Match was found
 				{
-					masterThread::increaseIterations(localProgress);
-					localProgress = 0;
+					masterThread::printResult(targetIterator->second, currentKeys[i]);
+
+					removeTarget(targetIterator);
+					masterThread::setRemainingTargets(getNumTargets());
+				}
+			}
+			else
+			{
+				if(weakHashedKeys[i] == targetIterator->first)
+				{
+					masterThread::printResult(targetIterator->second, currentKeys[i]);
+
+					removeTarget(targetIterator);
+					masterThread::setRemainingTargets(getNumTargets());
 				}
 			}
 		}
-
-		localProgress += 8;
 	}
 
 	if(targets.empty())
@@ -81,7 +86,6 @@ void SSE2Path::searchKeyspace()
 	else if(Director::reassignKeyspace(this))
 	{
 		searchKeyspace();
-		std::cout << "Keyspace reassigned!" << std::endl;
 	}
 }
 

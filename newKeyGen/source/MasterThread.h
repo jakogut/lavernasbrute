@@ -36,6 +36,7 @@ public:
 	static void setRemainingTargets(int input);
 
 	static unsigned long long getIterations();
+	static void setIterations(unsigned long long input);
 	static void incrementIterations();
 	static void increaseIterations(unsigned int input);
 

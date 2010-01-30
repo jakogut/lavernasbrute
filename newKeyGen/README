@@ -2,7 +2,6 @@ DIRECTORIES OVERVIEW
 
 /bin		Location for completed builds
 /lib		Directory to search for library dependencies
-/MSVC9          Visual Studio project files
 /include       	Include directory for library headers
 /source      	Source code for building Laverna's Brute
 /tools          Useful tools meant to assist developers
@@ -19,22 +18,21 @@ Boost libraries to lavernasbrute/lib/.
 
 	-- Windows --
 
-	To compile the project on Windows, open the Visual Studio solution file in
-	the /MSVC9 directory and build. 
+	Install GCC through Cygwin or MinGW and follow the UNIX instructions.
 
-	-- Linux --	
+	-- UNIX (Linux, OS X, BSD) --	
+
+	Build Boost, copy the headers to /include, and the libraries to /lib.
 	
 	Move to the directory in which you've checked out the Laverna's Brute source code, and run "make".
+	
+	To build for a different architecture, specify ARCH after the make command.
+
+	For example, to build for the 64-bit x86 archtecture, run "make ARCH=x86-64".
+
+	NOTE: your processor must support the SSE2 instruction set to use the SSE2 path.
 
 ----------
-
-Pre-built libraries are available for:
-
-[OS]			[Compiler]			[Arch]		[Build Profile]		[Library Type]
-
-Windows			Visual Studio C++ 9.0		(x86/x64)	Release & Debug		Complete
-Windows			Intel C++ Compiler 11.0		(x86/x64)	Release	& Debug		Complete
-Linux			GCC 4.x				(x64)		Release	& Debug		Complete
 
 NOTE: Windows builds of Laverna's Brute are no longer supported. Linux systems offer much better performance
 than Windows. Consequently, Windows support has been dropped.

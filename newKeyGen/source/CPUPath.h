@@ -16,7 +16,7 @@ public:
 	void operator()();
 	void searchKeyspace();
 
-	inline int getThreadID();
+	int getThreadID();
 
 	unsigned long long getKeyspaceEnd();
 	unsigned long long getKeyspaceBegin();
@@ -36,8 +36,7 @@ protected:
 
 	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
 
-	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation;
-	unsigned int localProgress;
+	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, localIterations;
 };
 
 #endif
