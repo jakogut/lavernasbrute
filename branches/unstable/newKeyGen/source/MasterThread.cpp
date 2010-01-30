@@ -132,17 +132,6 @@ void masterThread::setSuccess()
 	success = true;
 }
 
-void masterThread::incrementIterations()
-{
-	iterations++;
-}
-
-void masterThread::increaseIterations(unsigned int input)
-{
-	boost::mutex::scoped_lock lock(iterationsMutex);
-	iterations += input;
-}
-
 int masterThread::getNumWorkers()
 {
 	return numWorkers;
@@ -156,6 +145,27 @@ void masterThread::setNumWorkers(int input)
 void masterThread::setRemainingTargets(int input)
 {
 	remainingTargets = input;
+}
+
+unsigned long long masterThread::getIterations()
+{
+	return iterations;
+}
+
+void masterThread::setIterations(unsigned long long input)
+{
+	iterations = input;
+}
+
+void masterThread::incrementIterations()
+{
+	iterations++;
+}
+
+void masterThread::increaseIterations(unsigned int input)
+{
+	boost::mutex::scoped_lock lock(iterationsMutex);
+	iterations += input;
 }
 
 char* masterThread::getCharset()
@@ -185,11 +195,6 @@ void masterThread::printResult(std::string hash, std::string plaintext)
 		std::cout << hash << " == " << plaintext << "\t\t\t\n\n";
 	else
 		std::cout << "\r" << hash << " == " << plaintext << "\t\t\t\n\n";
-}
-
-unsigned long long masterThread::getIterations()
-{
-	return iterations;
 }
 
 bool masterThread::getSilent()

@@ -7,15 +7,6 @@ class keyGenerator
 {
 public:
 
-	keyGenerator(unsigned long long location)
-		: location(location)
-	{
-		charset = masterThread::getCharset();
-		charsetLength = masterThread::getCharsetLength();
-
-		integerToKey();
-	}
-
 	keyGenerator(unsigned long long location, char* charset)
 		: charset(charset), location(location)
 	{

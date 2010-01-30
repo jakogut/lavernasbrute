@@ -3,8 +3,8 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include <boost/thread/thread.hpp>
 #include "ProcessingPath.h"
+#include "MasterThread.h"
 
 class Director
 {
@@ -25,13 +25,16 @@ public:
 
 protected:
 
+	static void updateMasterThread();
+
 	static unsigned long long getRemainingKeyspace(int id);
 	static unsigned long long getRemainingKeyspace(processingPath* worker);
 
-	static std::vector<processingPath*> workers;
+	static std::map<int, processingPath*> workerPtrMap;
 
 	static bool server;
 	static int numWorkers;
+	static int workersInitialized;
 };
 
 #endif

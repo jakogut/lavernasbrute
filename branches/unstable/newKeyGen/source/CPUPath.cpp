@@ -11,15 +11,8 @@ CPUPath::CPUPath(int id)
 	keyspaceBegin = (keyspaceSize * id);
 	keyspaceEnd = (keyspaceBegin + keyspaceSize);
 
-    // Set the key location
+	// Set the key location
 	keyLocation = keyspaceBegin;
-
-	// Tell the director to manage this path 
-	// (If the path finishes its work and becomes idle, the director will find new work for it.)
-	Director::manageWorker(this);
-
-	// Initialize the local progress counter to zero
-	localProgress = 0;
 
 	currentKey.reserve(maxChars);
 }
@@ -30,22 +23,36 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
+	Director::manageWorker(this);
+
 	searchKeyspace();
 }
 
 void CPUPath::searchKeyspace()
 {
 	masterThread::setRemainingTargets(getNumTargets());
-	keyGenerator keygen(keyspaceBegin);
+	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
-	// If we have more than one target, use the hash map. Otherwise, skip it.
+	bool multiHash = false;
+
 	if(getNumTargets() > 1)
 	{
-		while((keyLocation < keyspaceEnd) && !targets.empty())
-		{
-			currentKey = keygen++;
+		multiHash = true;
+	}
+	else
+	{
+		targetIterator = targets.begin();
+	}
 
-			// NTLM hash the current key, then hash the NTLM hash of the current key, and search the hash map for it. 
+	while((keyLocation < keyspaceEnd) && !targets.empty())
+	{
+		// Get the next key
+		currentKey = keygen++;
+
+		// If attacking multiple targets, use the hash map. Otherwise, disable it.
+		if(multiHash)
+		{
+			// Look through the targets for our hash
 			targetIterator = targets.find(ntlm.getWeakHash(currentKey));
 
 			if(targetIterator != targets.end()) // Match was found
@@ -55,54 +62,15 @@ void CPUPath::searchKeyspace()
 				removeTarget(targetIterator);
 				masterThread::setRemainingTargets(getNumTargets());
 			}
-			else // No match
-			{
-				/* Increment a local counter for the number of iterations until it reaches a certain point.
-				Once that point has been reached, the local count is committed to the global count and the local
-				variable is reset. This helps keep an accurate count of the iterations without using semaphores. */
-				if(localProgress > 1000000)
-				{
-					masterThread::increaseIterations(localProgress);
-					localProgress = 0;
-				}
-				else
-				{
-					// Loop is done, increment the local iteration counter
-					localProgress++;
-				}
-			}
 		}
-	}
-	else
-	{
-		targetIterator = targets.begin();
-
-		while(keyLocation < keyspaceEnd)
+		else
 		{
-			// Get a new key
-			currentKey = keygen++;
-
-			// Match found
 			if(ntlm.getWeakHash(currentKey) == targetIterator->first)
 			{
-				masterThread::printResult(targetIterator->second, currentKey);	
+				masterThread::printResult(targetIterator->second, currentKey);
 
 				removeTarget(targetIterator);
 				masterThread::setRemainingTargets(getNumTargets());
-
-				break;
-			}
-			else // No match
-			{
-				if(localProgress > 1000000)
-				{
-					masterThread::increaseIterations(localProgress);
-					localProgress = 0;
-				}
-				else
-				{
-					localProgress++;
-				}
 			}
 		}
 	}
