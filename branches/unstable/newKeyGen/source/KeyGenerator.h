@@ -10,7 +10,7 @@ public:
 	keyGenerator(unsigned long long location, char* charset)
 		: charset(charset), location(location)
 	{
-		charsetLength = strlen(charset);
+		charsetLength = (unsigned int)strlen(charset);
 		integerToKey();
 	}
 
