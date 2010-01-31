@@ -18,6 +18,14 @@
 
 #define ROTL_md(num, places) (_mm_or_si128(_mm_slli_epi32(num, places), _mm_srli_epi32(num, (32 - places))))
 
+#ifdef __GNUG__
+#define LOAD(x) (_mm_load_si128(x))
+#define STORE(x, y) (_mm_store_si128(x, y))
+#else
+#define LOAD(x) (_mm_loadu_si128(x))
+#define STORE(x, y) (_mm_storeu_si128(x, y))
+#endif
+
 class NTLM_SSE2 : public NTLM
 {
 public:
@@ -74,7 +82,7 @@ protected:
 			}
 
 			for(int j = 0; j < 16; j++)
-				nt_buffer[i][j] = _mm_loadu_si128((__m128i*)nt_buffer_md[j]);
+				nt_buffer[i][j] = LOAD((__m128i*)nt_buffer_md[j]);
 		}
 	}
 
@@ -267,7 +275,7 @@ protected:
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
-				_mm_storeu_si128((__m128i*)wd_md[i][j], wd[i][j]);
+				STORE((__m128i*)wd_md[i][j], wd[i][j]);
 	}
 
 	inline void convert_to_int128_md(int64_pair* output)
@@ -282,6 +290,14 @@ protected:
 		}
 	}
 
+	#ifdef __GNUG__
+	__attribute((align(16))) __m128i nt_buffer[3][16];
+	__attribute((align(16))) __m128i wd[3][4];
+
+	// The 'md' suffix stands for "multiple data"
+	__attribute__ ((aligned(16))) unsigned int nt_buffer_md[16][4];
+	__attribute__ ((aligned(16))) unsigned int wd_md[3][4][4];
+	#else
 	__m128i nt_buffer[3][16];
 	__m128i wd[3][4];
 
@@ -290,6 +306,7 @@ protected:
 	unsigned int wd_md[3][4][4];
 
 	__m128i SQRT_2_md, SQRT_3_md;
+	#endif
 };
 
 #endif
