@@ -32,7 +32,7 @@ public:
 	{
 	}
 
-	void getMultipleWeakHashes(std::string input[8], int64_pair output[8])
+	void getMultipleWeakHashes(std::string input[12], int64_pair output[12])
 	{
 		prepare_key_md(input);
 
@@ -47,11 +47,11 @@ protected:
 
 	inline void prepare_key_md(std::string* input)
 	{
-		int length[2][4];
+		unsigned int length[3][4];
 
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
-				length[i][j] = input[j+4*i].length();
+				length[i][j] = (unsigned int)input[j+4*i].length();
 
 		for(int i = 0; i < 2; i++)
 		{
@@ -59,7 +59,7 @@ protected:
 
 			for(int j = 0; j < 4; j++)
 			{
-				int k = 0;
+				unsigned int k = 0;
 				//The length of input need to be <= 27
 				for(;k<length[i][j]/2;k++)	
 					nt_buffer_md[k][j] = input[j+4*i][2*k] | (input[j+4*i][2*k+1]<<16);
@@ -80,7 +80,7 @@ protected:
 
 	inline void initialize_words_md()
 	{
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 		{
 			wd[i][0] = _mm_set1_epi32(0x67452301);
 			wd[i][1] = _mm_set1_epi32(0xefcdab89);
@@ -95,136 +95,184 @@ protected:
 
 		round1_md(0, 0, 1, 2, 3, 0, 3);
 		round1_md(1, 0, 1, 2, 3, 0, 3);
+		round1_md(2, 0, 1, 2, 3, 0, 3);
 		round1_md(0, 3, 0, 1, 2, 1, 7);
 		round1_md(1, 3, 0, 1, 2, 1, 7);
+		round1_md(2, 3, 0, 1, 2, 1, 7);
 		round1_md(0, 2, 3, 0, 1, 2, 11);
 		round1_md(1, 2, 3, 0, 1, 2, 11);
+		round1_md(2, 2, 3, 0, 1, 2, 11);
 		round1_md(0, 1, 2, 3, 0, 3, 19);
 		round1_md(1, 1, 2, 3, 0, 3, 19);
+		round1_md(2, 1, 2, 3, 0, 3, 19);
 		
 
 		round1_md(0, 0, 1, 2, 3, 4, 3);
 		round1_md(1, 0, 1, 2, 3, 4, 3);
+		round1_md(2, 0, 1, 2, 3, 4, 3);
 		round1_md(0, 3, 0, 1, 2, 5, 7);
 		round1_md(1, 3, 0, 1, 2, 5, 7);
+		round1_md(2, 3, 0, 1, 2, 5, 7);
 		round1_md(0, 2, 3, 0, 1, 6, 11);
 		round1_md(1, 2, 3, 0, 1, 6, 11);
+		round1_md(2, 2, 3, 0, 1, 6, 11);
 		round1_md(0, 1, 2, 3, 0, 7, 19);
 		round1_md(1, 1, 2, 3, 0, 7, 19);
+		round1_md(2, 1, 2, 3, 0, 7, 19);
 		
 
 		round1_md(0, 0, 1, 2, 3, 8, 3);
 		round1_md(1, 0, 1, 2, 3, 8, 3);
+		round1_md(2, 0, 1, 2, 3, 8, 3);
 		round1_md(0, 3, 0, 1, 2, 9, 7);
 		round1_md(1, 3, 0, 1, 2, 9, 7);
+		round1_md(2, 3, 0, 1, 2, 9, 7);
 		round1_md(0, 2, 3, 0, 1, 10, 11);
 		round1_md(1, 2, 3, 0, 1, 10, 11);
+		round1_md(2, 2, 3, 0, 1, 10, 11);
 		round1_md(0, 1, 2, 3, 0, 11, 19);
 		round1_md(1, 1, 2, 3, 0, 11, 19);
+		round1_md(2, 1, 2, 3, 0, 11, 19);
 		
 
 		round1_md(0, 0, 1, 2, 3, 12, 3);
 		round1_md(1, 0, 1, 2, 3, 12, 3);
+		round1_md(2, 0, 1, 2, 3, 12, 3);
 		round1_md(0, 3, 0, 1, 2, 13, 7);
 		round1_md(1, 3, 0, 1, 2, 13, 7);
+		round1_md(2, 3, 0, 1, 2, 13, 7);
 		round1_md(0, 2, 3, 0, 1, 14, 11);
 		round1_md(1, 2, 3, 0, 1, 14, 11);
+		round1_md(2, 2, 3, 0, 1, 14, 11);
 		round1_md(0, 1, 2, 3, 0, 15, 19);
 		round1_md(1, 1, 2, 3, 0, 15, 19);
+		round1_md(2, 1, 2, 3, 0, 15, 19);
 		
 
 		// Round 2 // ---
 
 		round2_md(0, 0, 1, 2, 3, 0, 3);
 		round2_md(1, 0, 1, 2, 3, 0, 3);
+		round2_md(2, 0, 1, 2, 3, 0, 3);
 		round2_md(0, 3, 0, 1, 2, 4, 5);
 		round2_md(1, 3, 0, 1, 2, 4, 5);
+		round2_md(2, 3, 0, 1, 2, 4, 5);
 		round2_md(0, 2, 3, 0, 1, 8, 9);
 		round2_md(1, 2, 3, 0, 1, 8, 9);
+		round2_md(2, 2, 3, 0, 1, 8, 9);
 		round2_md(0, 1, 2, 3, 0, 12, 13);
 		round2_md(1, 1, 2, 3, 0, 12, 13);
+		round2_md(2, 1, 2, 3, 0, 12, 13);
 		
 
 		round2_md(0, 0, 1, 2, 3, 1, 3);
 		round2_md(1, 0, 1, 2, 3, 1, 3);
+		round2_md(2, 0, 1, 2, 3, 1, 3);
 		round2_md(0, 3, 0, 1, 2, 5, 5);
 		round2_md(1, 3, 0, 1, 2, 5, 5);
+		round2_md(2, 3, 0, 1, 2, 5, 5);
 		round2_md(0, 2, 3, 0, 1, 9, 9);
 		round2_md(1, 2, 3, 0, 1, 9, 9);
+		round2_md(2, 2, 3, 0, 1, 9, 9);
 		round2_md(0, 1, 2, 3, 0, 13, 13);
 		round2_md(1, 1, 2, 3, 0, 13, 13);
+		round2_md(2, 1, 2, 3, 0, 13, 13);
 		
 
 		round2_md(0, 0, 1, 2, 3, 2, 3);
 		round2_md(1, 0, 1, 2, 3, 2, 3);
+		round2_md(2, 0, 1, 2, 3, 2, 3);
 		round2_md(0, 3, 0, 1, 2, 6, 5);
 		round2_md(1, 3, 0, 1, 2, 6, 5);
+		round2_md(2, 3, 0, 1, 2, 6, 5);
 		round2_md(0, 2, 3, 0, 1, 10, 9);
 		round2_md(1, 2, 3, 0, 1, 10, 9);
+		round2_md(2, 2, 3, 0, 1, 10, 9);
 		round2_md(0, 1, 2, 3, 0, 14, 13);
 		round2_md(1, 1, 2, 3, 0, 14, 13);
+		round2_md(2, 1, 2, 3, 0, 14, 13);
 		
 
 		round2_md(0, 0, 1, 2, 3, 3, 3);
 		round2_md(1, 0, 1, 2, 3, 3, 3);
+		round2_md(2, 0, 1, 2, 3, 3, 3);
 		round2_md(0, 3, 0, 1, 2, 7, 5);
 		round2_md(1, 3, 0, 1, 2, 7, 5);
+		round2_md(2, 3, 0, 1, 2, 7, 5);
 		round2_md(0, 2, 3, 0, 1, 11, 9);
 		round2_md(1, 2, 3, 0, 1, 11, 9);
+		round2_md(2, 2, 3, 0, 1, 11, 9);
 		round2_md(0, 1, 2, 3, 0, 15, 13);
 		round2_md(1, 1, 2, 3, 0, 15, 13);
+		round2_md(2, 1, 2, 3, 0, 15, 13);
 		
 
 		// Round 3 // --
 
 		round3_md(0, 0, 3, 2, 1, 0, 3);
 		round3_md(1, 0, 3, 2, 1, 0, 3);
+		round3_md(2, 0, 3, 2, 1, 0, 3);
 		round3_md(0, 3, 2, 1, 0, 8, 9);
 		round3_md(1, 3, 2, 1, 0, 8, 9);
+		round3_md(2, 3, 2, 1, 0, 8, 9);
 		round3_md(0, 2, 1, 0, 3, 4, 11);
 		round3_md(1, 2, 1, 0, 3, 4, 11);
+		round3_md(2, 2, 1, 0, 3, 4, 11);
 		round3_md(0, 1, 0, 3, 2, 12, 15);
 		round3_md(1, 1, 0, 3, 2, 12, 15);
+		round3_md(2, 1, 0, 3, 2, 12, 15);
 		
 
 		round3_md(0, 0, 3, 2, 1, 2, 3);
 		round3_md(1, 0, 3, 2, 1, 2, 3);
+		round3_md(2, 0, 3, 2, 1, 2, 3);
 		round3_md(0, 3, 2, 1, 0, 10, 9);
 		round3_md(1, 3, 2, 1, 0, 10, 9);
+		round3_md(2, 3, 2, 1, 0, 10, 9);
 		round3_md(0, 2, 1, 0, 3, 6, 11);
 		round3_md(1, 2, 1, 0, 3, 6, 11);
+		round3_md(2, 2, 1, 0, 3, 6, 11);
 		round3_md(0, 1, 0, 3, 2, 14, 15);
 		round3_md(1, 1, 0, 3, 2, 14, 15);
+		round3_md(2, 1, 0, 3, 2, 14, 15);
 		
 
 		round3_md(0, 0, 3, 2, 1, 1, 3);
 		round3_md(1, 0, 3, 2, 1, 1, 3);
+		round3_md(2, 0, 3, 2, 1, 1, 3);
 		round3_md(0, 3, 2, 1, 0, 9, 9);
 		round3_md(1, 3, 2, 1, 0, 9, 9);
+		round3_md(2, 3, 2, 1, 0, 9, 9);
 		round3_md(0, 2, 1, 0, 3, 5, 11);
 		round3_md(1, 2, 1, 0, 3, 5, 11);
+		round3_md(2, 2, 1, 0, 3, 5, 11);
 		round3_md(0, 1, 0, 3, 2, 13, 15);
 		round3_md(1, 1, 0, 3, 2, 13, 15);
+		round3_md(2, 1, 0, 3, 2, 13, 15);
 		
 
 		round3_md(0, 0, 3, 2, 1, 3, 3);
 		round3_md(1, 0, 3, 2, 1, 3, 3);
+		round3_md(2, 0, 3, 2, 1, 3, 3);
 		round3_md(0, 3, 2, 1, 0, 11, 9);
 		round3_md(1, 3, 2, 1, 0, 11, 9);
+		round3_md(2, 3, 2, 1, 0, 11, 9);
 		round3_md(0, 2, 1, 0, 3, 7, 11);
 		round3_md(1, 2, 1, 0, 3, 7, 11);
+		round3_md(2, 2, 1, 0, 3, 7, 11);
 		round3_md(0, 1, 0, 3, 2, 15, 15);
 		round3_md(1, 1, 0, 3, 2, 15, 15);
+		round3_md(2, 1, 0, 3, 2, 15, 15);
 		
 
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
 				_mm_storeu_si128((__m128i*)wd_md[i][j], wd[i][j]);
 	}
 
 	inline void convert_to_int128_md(int64_pair* output)
 	{
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 4; j++)
 			{
@@ -234,12 +282,12 @@ protected:
 		}
 	}
 
-	__m128i nt_buffer[2][16];
-	__m128i wd[2][4];
+	__m128i nt_buffer[3][16];
+	__m128i wd[3][4];
 
 	// The 'md' suffix stands for "multiple data"
 	unsigned int nt_buffer_md[16][4];
-	unsigned int wd_md[2][4][4];
+	unsigned int wd_md[3][4][4];
 
 	__m128i SQRT_2_md, SQRT_3_md;
 };

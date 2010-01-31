@@ -47,12 +47,12 @@ void SSE2Path::searchKeyspace()
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
-		keygen.getMultipleKeys(currentKeys, 8);
-		keyLocation += 8;
+		keygen.getMultipleKeys(currentKeys, 12);
+		keyLocation += 12;
 
 		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
 
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 12; i++)
 		{
 			if(multiHash)
 			{
