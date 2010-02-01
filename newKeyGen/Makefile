@@ -14,7 +14,7 @@ MKDIR = mkdir -p
 RM = rm -f
 
 ifneq ($(ARCH), x86-64)
-	CXXFLAGS += -m32
+	CXXFLAGS += -m32 -msse -msse2 -mfpmath=sse
 else
 	CXXFLAGS += -m64
 endif
