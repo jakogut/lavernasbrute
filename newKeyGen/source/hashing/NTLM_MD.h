@@ -291,12 +291,14 @@ protected:
 	}
 
 	#ifdef __GNUG__
-	__attribute((align(16))) __m128i nt_buffer[3][16];
-	__attribute((align(16))) __m128i wd[3][4];
+	__attribute__((aligned(16))) __m128i nt_buffer[3][16];
+	__attribute__((aligned(16))) __m128i wd[3][4];
 
 	// The 'md' suffix stands for "multiple data"
-	__attribute__ ((aligned(16))) unsigned int nt_buffer_md[16][4];
-	__attribute__ ((aligned(16))) unsigned int wd_md[3][4][4];
+	__attribute__((aligned(16))) unsigned int nt_buffer_md[16][4];
+	__attribute__((aligned(16))) unsigned int wd_md[3][4][4];
+
+	__attribute__((aligned(16))) __m128i SQRT_2_md, SQRT_3_md;
 	#else
 	__m128i nt_buffer[3][16];
 	__m128i wd[3][4];

@@ -30,7 +30,7 @@ void Director::operator()()
 	numWorkers = masterThread::getNumWorkers();
 
 	// Wait for all workers to be initialized.
-	while(workerPtrMap.size() != numWorkers)
+	while(workerPtrMap.size() != (unsigned int)numWorkers)
 
 	// Start updating the masterThread.
 	updateMasterThread();
