@@ -1,1 +1,1 @@
-make ARCH=i686
+make ARCH=i686 -j2
