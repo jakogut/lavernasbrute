@@ -8,8 +8,6 @@ Thanks, Alain! */
 #include <cstring>
 #include <iostream>
 
-#include <boost/type_traits.hpp>
-
 #define ROTL(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
 #define ROTR(NUM, PLACES, SIZE) ((NUM >> PLACES) | (NUM << (SIZE - PLACES)))
 
