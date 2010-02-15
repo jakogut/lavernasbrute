@@ -122,30 +122,30 @@ int main(int argc, char** argv)
 			value = argv[i + 1];
 
 		if(flag == "@TEST_MULTI")
+        {
+                string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                int charsetLength = (int)charset.length();
+
+                int count = toInt(value);
+
+                NTLM ntlm;
+
+                for(int i = 0; i < count; i++)
                 {
-                        string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                        int charsetLength = charset.length();
+                        unsigned long long num = 500000000 + i;
+                        string target = "";
 
-                        int count = toInt(value);
-
-                        NTLM ntlm;
-
-                        for(int i = 0; i < count; i++)
+                        while(num)
                         {
-                                unsigned long long num = 500000000 + i;
-                                string target = "";
-
-                                while(num)
-                                {
-                                        target += charset[num % charsetLength];
-                                        num /= charsetLength;
-                                }
-
-                                processingPath::pushTarget(ntlm.getNTLMHash(target));
+                                target += charset[num % charsetLength];
+                                num /= charsetLength;
                         }
 
-                        targetPresent = true;
+                        processingPath::pushTarget(ntlm.getNTLMHash(target));
                 }
+
+                targetPresent = true;
+        }
 
 		// Print the help page
 		if(flag == "-h" || flag == "--help")
@@ -227,7 +227,16 @@ int main(int argc, char** argv)
 	if(targetPresent)
 	{
 		cout << "\nRunning " << numWorkers << " (+1) cooperative threads," << endl
-			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).\n\n";
+			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).";
+
+		if(enableSSE2)
+		{
+			cout << "\n\nSSE2 processing path enabled." << endl << endl;
+		}
+		else
+		{
+			cout << endl << endl;
+		}
 	}
 	else
 	{
