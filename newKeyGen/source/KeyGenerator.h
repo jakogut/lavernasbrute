@@ -18,7 +18,7 @@ public:
 	{
 	}
 
-	void incrementKey()
+	inline void incrementKey()
 	{
 		for(unsigned int place = 0; place < key.length(); place++)
 		{
@@ -97,7 +97,6 @@ public:
 		for(int i = 0; i < num; i++)
 		{
 			output[i] = key;
-
 			incrementKey();
 		}
 	}

@@ -33,7 +33,7 @@ void CPUPath::searchKeyspace()
 	masterThread::setRemainingTargets(getNumTargets());
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
-	bool multiHash = false;
+	bool multiHash;
 
 	if(getNumTargets() > 1)
 	{
@@ -41,6 +41,7 @@ void CPUPath::searchKeyspace()
 	}
 	else
 	{
+		multiHash = false;
 		targetIterator = targets.begin();
 	}
 
@@ -48,6 +49,8 @@ void CPUPath::searchKeyspace()
 	{
 		// Get the next key
 		currentKey = keygen++;
+
+		keyLocation++;
 
 		// If attacking multiple targets, use the hash map. Otherwise, disable it.
 		if(multiHash)
@@ -80,7 +83,7 @@ void CPUPath::searchKeyspace()
 	{
 		masterThread::setSuccess();
 	}
-	// If not, ask the director if we can have more work. If the director finds work for us, we restart the search.
+	// If not, have the Director look for more work. If the director finds work for the thread, we restart the search.
 	else if(Director::reassignKeyspace(this))
 	{
 		searchKeyspace();
@@ -104,6 +107,7 @@ unsigned long long CPUPath::getKeyspaceBegin()
 
 unsigned long long CPUPath::getKeyLocation()
 {
+	// Replace this with 'return keygen.keyToInteger()' later.
 	return keyLocation;
 }
 

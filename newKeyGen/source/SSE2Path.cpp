@@ -1,3 +1,5 @@
+// Part of Laverna's Brute
+
 #include "SSE2Path.h"
 
 SSE2Path::SSE2Path(int id)
@@ -11,9 +13,6 @@ SSE2Path::SSE2Path(int id)
 
     	// Set the key location
 	keyLocation = keyspaceBegin;
-
-	for(int i = 0; i < 12; i++)
-		currentKeys[i].reserve(maxChars);
 }
 
 SSE2Path::~SSE2Path()
@@ -34,7 +33,7 @@ void SSE2Path::searchKeyspace()
 
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
-	bool multiHash = false;
+	bool multiHash;
 
 	if(getNumTargets() > 1)
 	{
@@ -42,11 +41,16 @@ void SSE2Path::searchKeyspace()
 	}
 	else
 	{
+		multiHash = false;
 		targetIterator = targets.begin();
 	}
 
+	std::cout << "Thread " << id << " started..." << std::endl << std::endl;
+
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
+		// Twelve keys are processed per round in this path
+
 		keygen.getMultipleKeys(currentKeys, 12);
 		keyLocation += 12;
 
@@ -58,7 +62,7 @@ void SSE2Path::searchKeyspace()
 			{
 				targetIterator = targets.find(weakHashedKeys[i]);
 
-				if(targetIterator != targets.end()) // Match was found
+				if(targetIterator != targets.end())
 				{
 					masterThread::printResult(targetIterator->second, currentKeys[i]);
 

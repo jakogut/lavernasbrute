@@ -36,7 +36,7 @@ protected:
 
 	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
 
-	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation, localIterations;
+	unsigned long long keyspaceSize, keyspaceEnd, keyspaceBegin, keyLocation;
 };
 
 #endif
