@@ -5,14 +5,6 @@
 SSE2Path::SSE2Path(int id)
 : id(id)
 {
-	// Assign a unique portion of the keyspace to the thread (Based on id)
-	keyspaceSize = (masterThread::pow(charsetLength, maxChars) / numWorkers);
-
-	keyspaceBegin = (keyspaceSize * id);
-	keyspaceEnd = (keyspaceBegin + keyspaceSize);
-
-    	// Set the key location
-	keyLocation = keyspaceBegin;
 }
 
 SSE2Path::~SSE2Path()
@@ -22,8 +14,6 @@ SSE2Path::~SSE2Path()
 void SSE2Path::operator()()
 {
 	Director::manageWorker(this);
-
-	searchKeyspace();
 }
 
 void SSE2Path::searchKeyspace()
