@@ -27,8 +27,11 @@ class processingPath
 	processingPath();
 	~processingPath();
 
-	// The loop that is run to crack a given target hash
-	 virtual void operator()() = 0;
+	// The entry into the thread
+	virtual void operator()() = 0;
+
+	// The loop used to search the keyspace
+	virtual void searchKeyspace() = 0;
     
     // Functions necessary for the Director to do its job
 	virtual int getThreadID() = 0;

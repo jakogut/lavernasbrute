@@ -5,15 +5,6 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	// Assign a unique portion of the keyspace to the thread (Based on id)
-	keyspaceSize = (masterThread::pow(charsetLength, maxChars) / numWorkers);
-
-	keyspaceBegin = (keyspaceSize * id);
-	keyspaceEnd = (keyspaceBegin + keyspaceSize);
-
-	// Set the key location
-	keyLocation = keyspaceBegin;
-
 	currentKey.reserve(maxChars);
 }
 
@@ -24,8 +15,6 @@ CPUPath::~CPUPath()
 void CPUPath::operator()()
 {
 	Director::manageWorker(this);
-
-	searchKeyspace();
 }
 
 void CPUPath::searchKeyspace()

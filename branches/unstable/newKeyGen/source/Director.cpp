@@ -61,6 +61,18 @@ processingPath* Director::getWorkerPtr(int id)
 void Director::manageWorker(processingPath* worker)
 {
 	workerPtrMap[worker->getThreadID()] = worker;
+
+	// Assign a unique portion of the keyspace to the thread (Based on id)
+	unsigned long long keyspaceSize = (masterThread::pow(masterThread::getCharsetLength(), processingPath::getMaxChars()) / numWorkers);
+
+	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
+	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);
+
+	// Set the key location
+	worker->moveKeylocation(worker->getKeyspaceBegin());
+
+	// Start the search
+	worker->searchKeyspace();
 }
 
 bool Director::reassignKeyspace(processingPath* worker)
