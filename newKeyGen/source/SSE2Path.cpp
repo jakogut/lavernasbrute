@@ -35,8 +35,6 @@ void SSE2Path::searchKeyspace()
 		targetIterator = targets.begin();
 	}
 
-	std::cout << "Thread " << id << " started..." << std::endl << std::endl;
-
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Twelve keys are processed per round in this path
