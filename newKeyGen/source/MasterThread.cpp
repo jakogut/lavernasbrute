@@ -64,7 +64,7 @@ void masterThread::operator()()
 
 	std::cout.precision(3);
 
-	time_t startTime = time(NULL);
+	std::cout.width(100);
 
 	do
 	{
@@ -76,10 +76,10 @@ void masterThread::operator()()
 
 			// Clear last line
 			for(int i = 0; i < 100; i++)
-				printf("\b");
+				printf(" \b\b");
 
 			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
-				<< "\tHashes Remaining: " << remainingTargets << "\t\t";
+				<< "\tHashes Remaining: " << remainingTargets;
 		}
 
 	} while(!success);
@@ -204,7 +204,7 @@ void masterThread::printResult(std::string hash, std::string plaintext)
 			printf("\b");
 	}
 
-	std::cout << hash << " == " << plaintext << "\t\t\n\n";
+	std::cout << hash << " == " << plaintext << "\n\n";
 }
 
 bool masterThread::getSilent()
