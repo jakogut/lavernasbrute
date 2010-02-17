@@ -74,8 +74,12 @@ void masterThread::operator()()
 		{
 			boost::mutex::scoped_lock lock(stdoutMutex);
 
-			std::cout << "\rAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
-				<< "\tHashes Remaining: " << remainingTargets << "\t\t\t";
+			// Clear last line
+			for(int i = 0; i < 100; i++)
+				printf("\b");
+
+			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+				<< "\tHashes Remaining: " << remainingTargets << "\t\t";
 		}
 
 	} while(!success);
@@ -190,11 +194,17 @@ void masterThread::setFrequencyCharset(bool input)
 
 void masterThread::printResult(std::string hash, std::string plaintext)
 {
+
 	boost::mutex::scoped_lock lock(stdoutMutex);
-	if(silent)
-		std::cout << hash << " == " << plaintext << "\t\t\t\n\n";
-	else
-		std::cout << "\r" << hash << " == " << plaintext << "\t\t\t\n\n";
+
+	if(!silent)
+	{
+		// Clear the last line
+		for(int i = 0; i < 100; i++)
+			printf("\b");
+	}
+
+	std::cout << hash << " == " << plaintext << "\t\t\n\n";
 }
 
 bool masterThread::getSilent()
