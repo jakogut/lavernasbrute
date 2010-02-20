@@ -111,6 +111,9 @@ int main(int argc, char** argv)
 	int CPUThreads = 2;
 	int numWorkers = 0;
 
+	// Initialize sparsehash
+	processingPath::initializeTargetMap();
+
 	// Parse command-line arguments
 	string flag, value;
 

@@ -12,13 +12,17 @@
 #include <sstream>
 #include <string>
 
-#include <boost/unordered_map.hpp>
+#include <google/dense_hash_map>
+
+#include <boost/functional/hash.hpp>
 #include <boost/thread/thread.hpp>
 
 #include "MasterThread.h"
 #include "NTLM.h"
 
 #include "KeyGenerator.h"
+
+typedef google::dense_hash_map< int64_pair, std::string, boost::hash<int64_pair> > target_map;
 
 class processingPath
 {
@@ -44,6 +48,9 @@ class processingPath
 	virtual void moveKeyspaceBegin(unsigned long long input) = 0;
 	virtual void moveKeylocation(unsigned long long input) = 0;
 
+	// The target map MUST be initialized before targets are added
+	static void initializeTargetMap();
+
     // Processing path options
 	static void pushTarget(std::string input);
 	static void setMaxChars(int input);
@@ -53,9 +60,9 @@ class processingPath
 
 protected:
 
-	static void removeTarget(boost::unordered_map<int64_pair, std::string>::iterator it);
+	static void removeTarget(target_map::iterator it);
 
-	static boost::unordered_map<int64_pair, std::string> targets;
+	static target_map targets;
 	static boost::mutex targetsMutex;
 
 	static int maxChars;

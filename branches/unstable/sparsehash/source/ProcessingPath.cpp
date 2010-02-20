@@ -6,7 +6,7 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-boost::unordered_map<int64_pair, std::string> processingPath::targets;
+target_map processingPath::targets;
 boost::mutex processingPath::targetsMutex;
 int processingPath::maxChars = 0;
 int processingPath::numWorkers = 0;
@@ -31,6 +31,17 @@ processingPath::~processingPath()
 {
 }
 
+void processingPath::initializeTargetMap()
+{
+	int64_pair empty, deleted;
+
+	empty.first = 0, empty.second = 0;
+	targets.set_empty_key(empty);
+
+	deleted.first = 1, deleted.second = 1;
+	targets.set_deleted_key(deleted);
+}
+
 void processingPath::pushTarget(std::string input)
 {
 	NTLM ntlm;
@@ -52,7 +63,7 @@ int processingPath::getNumTargets()
 	return (int)targets.size();
 }
 
-void processingPath::removeTarget(boost::unordered_map<int64_pair, std::string>::iterator it)
+void processingPath::removeTarget(target_map::iterator it)
 {
 	boost::mutex::scoped_lock lock(targetsMutex);
 	targets.erase(it);

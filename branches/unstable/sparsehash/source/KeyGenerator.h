@@ -85,7 +85,7 @@ public:
                         while(num)
                         {
                                 num--;
-                                unsigned long long remainder = num % charsetLength;
+                                unsigned int remainder = num % charsetLength;
                                 num /= charsetLength;
 
                                 key.insert(key.end(), charset[remainder]);
