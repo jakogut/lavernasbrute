@@ -3,113 +3,127 @@
 #ifndef KEYGENERATOR_H_
 #define KEYGENERATOR_H_
 
+#include <vector>
+#include <cstring>
+#include <cmath>
+#include <limits.h>
+
 class keyGenerator
 {
 public:
 
-	keyGenerator(unsigned long long location, char* charset)
-		: charset(charset), location(location)
-	{
-		charsetLength = (unsigned int)strlen(charset);
-		integerToKey();
-	}
+        keyGenerator(unsigned long long location, char* charset)
+                : charset(charset), location(location)
+        {
+                charsetLength = (unsigned int)strlen(charset);
+                integerToKey();
+        }
 
-	~keyGenerator()
-	{
-	}
+        ~keyGenerator()
+        {
+        }
 
-	inline void incrementKey()
-	{
-		for(unsigned int place = 0; place < key.length(); place++)
-		{
-			if(key[place] == charset[charsetLength - 1])
-			{
-				// Overflow, reset char at place
-				key[place] = charset[0];
-				keyIndices[place] = 0;
+        void incrementKey()
+        {
+                for(unsigned int place = 0; place < key.length(); place++)
+                {
+                        if(key[place] == charset[charsetLength - 1])
+                        {
+                                // Overflow, reset char at place
+                                key[place] = charset[0];
+                                keyIndices[place] = 0;
 
-				if((key.length() - 1) < (place + 1))
-				{
-					// Carry, no space, insert char
-					key.insert(key.begin(), charset[0]);
-					keyIndices.insert(keyIndices.begin(), 0);
-					break;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			else
-			{
-				// Space available, increment char at place
-				key[place] = charset[keyIndices[place] + 1];
-				keyIndices[place] = keyIndices[place] + 1;
-				break;
-			}
-		}
-	}
+                                if((key.length() - 1) < (place + 1))
+                                {
+                                        // Carry, no space, insert char
+                                        key.insert(key.begin(), charset[0]);
+                                        keyIndices.insert(keyIndices.begin(), 0);
+                                        break;
+                                }
+                                else
+                                {
+                                        continue;
+                                }
+                        }
+                        else
+                        {
+                                // Space available, increment char at place
+                                key[place] = charset[keyIndices[place] + 1];
+                                keyIndices[place] = keyIndices[place] + 1;
+                                break;
+                        }
+                }
+        }
 
-	inline std::string operator++()
-	{
-		incrementKey();
-		return getKey();
-	}
+        inline std::string operator++()
+        {
+                incrementKey();
+                return getKey();
+        }
 
-	inline std::string operator++(int)
-	{
-		std::string retval = key;
-		incrementKey();
+        inline std::string operator++(int)
+        {
+                std::string retval = key;
+                incrementKey();
 
-		return retval;
-	}
+                return retval;
+        }
 
-	void integerToKey()
-	{
-		unsigned long long num = location;
-		unsigned int remainder;
+        void integerToKey()
+        {
+                unsigned long long num = location;
 
-		key.clear();
+                if(!num)
+                {
+                        key.insert(key.begin(), charset[0]);
+                        keyIndices.insert(keyIndices.begin(), 0);
+                }
+                else
+                {
+                        num++;
 
-		do
-		{
-			remainder = num % charsetLength;
+                        while(num)
+                        {
+                                num--;
+                                unsigned long long remainder = num % charsetLength;
+                                num /= charsetLength;
 
-			key.insert(key.begin(), charset[remainder]);
-			keyIndices.insert(keyIndices.begin(), remainder);
+                                key.insert(key.end(), charset[remainder]);
+                                keyIndices.insert(keyIndices.end(), remainder);
+                        }
+                }
+        }
 
-		} while(num /= charsetLength);
-	}
+        inline unsigned long long keyToInteger()
+        {
+                // TODO
+                return 0;
+        }
 
-	inline unsigned long long keyToInteger()
-	{
-		// TODO
-		return 0;
-	}
+        inline std::string getKey()
+        {
+                return key;
+        }
 
-	inline std::string getKey()
-	{
-		return key;
-	}
-
-	inline void getMultipleKeys(std::string* output, int num)
-	{
-		for(int i = 0; i < num; i++)
-		{
-			output[i] = key;
-			incrementKey();
-		}
-	}
+        inline void getMultipleKeys(std::string* output, int num)
+        {
+                for(int i = 0; i < num; i++)
+                {
+                        output[i] = key;
+                        incrementKey();
+                }
+        }
 
 protected:
 
-	char* charset;
-	unsigned int charsetLength;
+        char* charset;
 
-	std::string key;
-	std::vector<unsigned int> keyIndices;
+        unsigned int charsetLength;
 
-	unsigned long long location;
+        std::string key;
+        std::vector<unsigned int> keyIndices;
+
+        unsigned long long location;
 };
 
 #endif
