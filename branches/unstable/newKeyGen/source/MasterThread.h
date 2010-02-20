@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sstream>
 #include <vector>
+#include <iomanip>
 
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>
