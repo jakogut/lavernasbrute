@@ -19,9 +19,10 @@ std::vector< std::pair<std::string, std::string> > masterThread::results;
 boost::mutex masterThread::stdoutMutex;
 boost::mutex masterThread::iterationsMutex;
 
+
 ////////////////////////////////////////////
 
-masterThread::masterThread() 
+masterThread::masterThread()
 {
 	// If specified, use the letter frequency character set
 	frequencyCharset ? 	charset = (char*)"eariotnscudpmhgbfywvkxzjqEARIOTNSlLCUDPMHGBFYWKVXZJQ0123456789" :
@@ -61,10 +62,7 @@ masterThread::~masterThread()
 void masterThread::operator()()
 {
 	boost::posix_time::seconds updateInterval(1);
-
 	std::cout.precision(3);
-
-	std::cout.width(100);
 
 	do
 	{
@@ -74,12 +72,12 @@ void masterThread::operator()()
 		{
 			boost::mutex::scoped_lock lock(stdoutMutex);
 
-			// Clear last line
-			for(int i = 0; i < 100; i++)
-				printf(" \b\b");
+			std::cout.flush();
 
-			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
-				<< "\tHashes Remaining: " << remainingTargets;
+			std::cout << "\rAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+			   << "\tHashes Remaining: " << remainingTargets;
+
+			std::cout.flush();
 		}
 
 	} while(!success);
@@ -117,13 +115,18 @@ void masterThread::printStatistics()
 
 	std::cout << "\n\nThe run has completed!"
 		<< "\nAttack duration: " << getIterations() << " iterations."
-		<< "\nCompleted in: " << days << " days, " << hours << " hours, " 
+		<< "\nCompleted in: " << days << " days, " << hours << " hours, "
 		<< minutes << " minutes, and " << seconds << " seconds. ";
 
 		if(silent)
+		{
 			std::cout << "\n\nAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s" << std::endl;
+			std::cout.flush();
+		}
 		else
+		{
 			std::cout << std::endl;
+		}
 }
 
 bool masterThread::getSuccess()
@@ -200,11 +203,17 @@ void masterThread::printResult(std::string hash, std::string plaintext)
 	if(!silent)
 	{
 		// Clear the last line
-		for(int i = 0; i < 100; i++)
-			printf("\b");
+		std::cout << "\r";
+		std::cout.flush();
 	}
 
-	std::cout << hash << " == " << plaintext << "\n\n";
+	std::cout << hash << " == ";
+
+	std::cout.width(80);
+
+	std::cout << std::left << plaintext << std::endl << std::endl;
+
+	std::cout.flush();
 }
 
 bool masterThread::getSilent()
