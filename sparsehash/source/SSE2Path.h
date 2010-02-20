@@ -35,7 +35,7 @@ protected:
 	std::string currentKeys[12];
 	int64_pair weakHashedKeys[12];
 
-	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
+	target_map::iterator targetIterator;
 
 	unsigned long long keyspaceBegin, keyspaceEnd, keyLocation;
 };
