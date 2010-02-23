@@ -23,8 +23,6 @@ public:
 
 	void operator()();
 
-	static unsigned long long pow(unsigned long long base, unsigned long long power);
-
 	static bool getSuccess();
 	static void setSuccess();
 

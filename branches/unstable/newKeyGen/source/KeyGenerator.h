@@ -5,8 +5,9 @@
 
 #include <vector>
 #include <cstring>
-#include <cmath>
 #include <limits.h>
+
+#include "Pow.h"
 
 class keyGenerator
 {
@@ -25,35 +26,37 @@ public:
 
         void incrementKey()
         {
-                for(unsigned int place = 0; place < key.length(); place++)
-                {
-                        if(key[place] == charset[charsetLength - 1])
-                        {
-                                // Overflow, reset char at place
-                                key[place] = charset[0];
-                                keyIndices[place] = 0;
+			register size_t keyLength = key.length();
 
-                                if((key.length() - 1) < (place + 1))
-                                {
-                                        // Carry, no space, insert char
-                                        key.insert(key.begin(), charset[0]);
-                                        keyIndices.insert(keyIndices.begin(), 0);
-                                        break;
-                                }
-                                else
-                                {
-                                        continue;
-                                }
-                        }
-                        else
-                        {
-                                // Space available, increment char at place
-                                key[place] = charset[keyIndices[place] + 1];
-                                keyIndices[place] = keyIndices[place] + 1;
-                                break;
-                        }
-                }
-        }
+			for(register unsigned int place = 0; place < keyLength; place++)
+			{
+				if(key[place] == charset[charsetLength - 1])
+				{
+					// Overflow, reset char at place
+					key[place] = charset[0];
+					keyIndices[place] = 0;
+
+					if((key.length() - 1) < (place + 1))
+					{
+						// Carry, no space, insert char
+						key.insert(key.begin(), charset[0]);
+						keyIndices.insert(keyIndices.begin(), 0);
+						break;
+					}
+					else
+					{
+						continue;
+					}
+				}
+				else
+				{
+					// Space available, increment char at place
+					key[place] = charset[keyIndices[place] + 1];
+					keyIndices[place] = keyIndices[place] + 1;
+					break;
+				}
+			}
+		}
 
         inline std::string operator++()
         {
@@ -71,7 +74,7 @@ public:
 
         void integerToKey()
         {
-                unsigned long long num = location;
+                register unsigned long long num = location;
 
                 if(!num)
                 {
@@ -85,7 +88,7 @@ public:
                         while(num)
                         {
                                 num--;
-                                unsigned long long remainder = num % charsetLength;
+                                unsigned int remainder = num % charsetLength;
                                 num /= charsetLength;
 
                                 key.insert(key.end(), charset[remainder]);
@@ -105,7 +108,7 @@ public:
                 return key;
         }
 
-        inline void getMultipleKeys(std::string* output, int num)
+        inline void getMultipleKeys(register std::string* output, int num)
         {
                 for(int i = 0; i < num; i++)
                 {
@@ -117,13 +120,12 @@ public:
 protected:
 
         char* charset;
-
         unsigned int charsetLength;
 
         std::string key;
         std::vector<unsigned int> keyIndices;
 
-        unsigned long long location;
+		unsigned long long location;
 };
 
 #endif
