@@ -34,7 +34,7 @@ protected:
 
 	NTLM ntlm;
 
-	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
+	targetMap::iterator targetIterator;
 
 	unsigned long long keyspaceEnd, keyspaceBegin, keyLocation;
 };

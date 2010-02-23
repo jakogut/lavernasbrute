@@ -6,6 +6,8 @@
 #include "ProcessingPath.h"
 #include "MasterThread.h"
 
+#include "Pow.h"
+
 class Director
 {
 public:

@@ -20,6 +20,8 @@
 
 #include "KeyGenerator.h"
 
+typedef boost::unordered_map<int64_pair, std::string> targetMap;
+
 class processingPath
 {
 	public:
@@ -53,9 +55,9 @@ class processingPath
 
 protected:
 
-	static void removeTarget(boost::unordered_map<int64_pair, std::string>::iterator it);
+	static void removeTarget(targetMap::iterator it);
 
-	static boost::unordered_map<int64_pair, std::string> targets;
+	static targetMap targets;
 	static boost::mutex targetsMutex;
 
 	static int maxChars;

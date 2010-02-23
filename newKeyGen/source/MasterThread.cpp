@@ -85,16 +85,6 @@ void masterThread::operator()()
 	printStatistics();
 }
 
-unsigned long long masterThread::pow(unsigned long long base, unsigned long long power)
-{
-	unsigned long long result = 1;
-
-	for(unsigned long long i = 0; i < power; i++)
-		result *= base;
-
-	return result;
-}
-
 void masterThread::printStatistics()
 {
 	time_t endTime = time(NULL);
