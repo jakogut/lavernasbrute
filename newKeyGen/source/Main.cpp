@@ -10,7 +10,7 @@
 
 #include <boost/thread/thread.hpp>
 
-// Director class 
+// Director class
 #include "Director.h"
 
 //Base class for processing paths
@@ -45,7 +45,8 @@ void printHelp()
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
 	"\n\t\tThis should match the core count of your CPU."
 
-	"\n\n--charset STRING\tAvailable options are:"
+	"\n\n--charset STRING"
+	"\n\t\tAvailable options are:"
 	"\n\t\tloweralpha"
 	"\n\t\tupperalpha"
 	"\n\t\tmixalpha"
