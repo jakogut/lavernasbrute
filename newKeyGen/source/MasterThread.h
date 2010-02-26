@@ -14,6 +14,8 @@
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>
 
+#include "KeyGenerator.h"
+
 class masterThread
 {
 public:
@@ -31,6 +33,7 @@ public:
 
 	static int getNumWorkers();
 	static void setNumWorkers(int input);
+	static void increaseNumWorkers(int input);
 
 	static void setRemainingTargets(int input);
 
@@ -39,11 +42,10 @@ public:
 	static void incrementIterations();
 	static void increaseIterations(unsigned int input);
 
-	static char* getCharset();
-	static int getCharsetLength();
+	static void initCharset(unsigned int len, int min, int max, 
+							int charsec0, int charsec1, int charsec2, int charsec3);
 
-	static void setRandomizeCharset(bool input);
-	static void setFrequencyCharset(bool input);
+	static characterSet* getCharset();
 
 	static void printResult(std::string hash, std::string plaintext);
 
@@ -63,18 +65,9 @@ protected:
 	//That the job is done.
 	static bool success;
 
-	// Randomize the character set in order to prevent prediction of keyspace searches
-	static bool randomizeCharset;
-
-	// Use a character set organized by letter frequency.
-	static bool frequencyCharset;
-
-	static char* charset;
-	static int charsetLength;
+	static characterSet charset;
 
 	static int remainingTargets;
-
-	std::string randomizedCharset;
 
 	static std::vector< std::pair<std::string, std::string> > results;
 

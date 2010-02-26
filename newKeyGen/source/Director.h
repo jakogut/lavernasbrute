@@ -33,10 +33,6 @@ protected:
 	static unsigned long long getRemainingKeyspace(processingPath* worker);
 
 	static std::map<int, processingPath*> workerPtrMap;
-
-	static bool server;
-	static int numWorkers;
-	static int workersInitialized;
 };
 
 #endif

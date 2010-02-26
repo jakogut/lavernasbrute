@@ -7,8 +7,6 @@
 ////////////////////////////////////////////
 
 std::map<int, processingPath*> Director::workerPtrMap;
-int Director::numWorkers = 0;
-int Director::workersInitialized = 0;
 
 ////////////////////////////////////////////
 
@@ -27,10 +25,8 @@ Director::~Director()
 
 void Director::operator()()
 {
-	numWorkers = masterThread::getNumWorkers();
-
 	// Wait for all workers to be initialized.
-	while(workerPtrMap.size() != (unsigned int)numWorkers)
+	while(workerPtrMap.size() != masterThread::getNumWorkers())
 
 	// Start updating the masterThread.
 	updateMasterThread();
@@ -46,7 +42,8 @@ void Director::updateMasterThread()
 		boost::this_thread::sleep(updateInterval);
 		totalIterations = 0;
 
-		for(int i = 0; i < numWorkers; i++)
+		for(int i = 0; i < masterThread::getNumWorkers()
+			; i++)
 			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
 
 		masterThread::setIterations(totalIterations);
@@ -63,7 +60,7 @@ void Director::manageWorker(processingPath* worker)
 	workerPtrMap[worker->getThreadID()] = worker;
 
 	// Assign a unique portion of the keyspace to the thread (Based on id)
-	unsigned long long keyspaceSize = (pow<unsigned long long>(masterThread::getCharsetLength(), processingPath::getMaxChars()) / numWorkers);
+	unsigned long long keyspaceSize = (pow<unsigned long long>(masterThread::getCharset()->length, processingPath::getMaxChars()) / masterThread::getNumWorkers());
 
 	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
 	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);
@@ -80,7 +77,7 @@ bool Director::reassignKeyspace(processingPath* worker)
 	int id = 0;
 
 	// Find the worker with the largest remaining section of the keyspace
-	for(int i = 0; i < numWorkers; i++)
+	for(int i = 0; i < masterThread::getNumWorkers(); i++)
 	{
 		if(getRemainingKeyspace(i) > getRemainingKeyspace(id))
 		{
@@ -96,8 +93,6 @@ bool Director::reassignKeyspace(processingPath* worker)
 
 		worker->moveKeyspaceBegin(workerPtrMap[id]->getKeyspaceEnd() + 1);
 		worker->moveKeylocation(worker->getKeyLocation());
-
-		std::cout << workerPtrMap[id]->getKeyLocation() << " -- " << workerPtrMap[id]->getKeyspaceEnd() << std::endl;
 
 		return true;
 	}

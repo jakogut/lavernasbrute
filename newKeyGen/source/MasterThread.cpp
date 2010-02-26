@@ -10,47 +10,17 @@ bool masterThread::success = 0;
 bool masterThread::silent = 0;
 int masterThread::numWorkers = 0;
 int masterThread::remainingTargets = 0;
-char* masterThread::charset = 0;
-int masterThread::charsetLength = 0;
-bool masterThread::randomizeCharset = 0;
-bool masterThread::frequencyCharset = 0;
 unsigned long long masterThread::iterations = 0;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
 boost::mutex masterThread::stdoutMutex;
 boost::mutex masterThread::iterationsMutex;
+characterSet masterThread::charset;
 
 
 ////////////////////////////////////////////
 
 masterThread::masterThread()
 {
-	// If specified, use the letter frequency character set
-	frequencyCharset ? 	charset = (char*)"eariotnscudpmhgbfywvkxzjqEARIOTNSlLCUDPMHGBFYWKVXZJQ0123456789" :
-		charset = (char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-	// Set the length of the character set
-	charsetLength = (int)strlen(charset);
-
-	// If specified, randomize the order of the character set
-	if(randomizeCharset)
-	{
-		srand((unsigned int)time(NULL));
-
-		std::string::iterator charsetIterator;
-		std::string originalCharset = charset;
-
-		while(originalCharset.length() > 0)
-		{
-			int randomChar = (rand() % originalCharset.length());
-			randomizedCharset.append(originalCharset.substr(randomChar, 1));
-
-			charsetIterator = originalCharset.begin() + randomChar;
-			originalCharset.erase(charsetIterator);
-		}
-
-		charset = (char*)randomizedCharset.c_str();
-	}
-
 	// Start the clock
 	startTime = time(NULL);
 }
@@ -139,6 +109,11 @@ void masterThread::setNumWorkers(int input)
 	numWorkers = input;
 }
 
+void masterThread::increaseNumWorkers(int input)
+{
+	numWorkers += input;
+}
+
 void masterThread::setRemainingTargets(int input)
 {
 	remainingTargets = input;
@@ -165,24 +140,15 @@ void masterThread::increaseIterations(unsigned int input)
 	iterations += input;
 }
 
-char* masterThread::getCharset()
+void masterThread::initCharset(unsigned int len, int min, int max, 
+							   int charsec0, int charsec1, int charsec2, int charsec3)
 {
-	return charset;
+	charset.init(len, min, max, charsec0, charsec1, charsec2, charsec3);
 }
 
-int masterThread::getCharsetLength()
+characterSet* masterThread::getCharset()
 {
-	return charsetLength;
-}
-
-void masterThread::setRandomizeCharset(bool input)
-{
-	randomizeCharset = input;
-}
-
-void masterThread::setFrequencyCharset(bool input)
-{
-	frequencyCharset = input;
+	return &charset;
 }
 
 void masterThread::printResult(std::string hash, std::string plaintext)
