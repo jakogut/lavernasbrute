@@ -9,22 +9,16 @@
 targetMap processingPath::targets;
 boost::mutex processingPath::targetsMutex;
 int processingPath::maxChars = 0;
-int processingPath::numWorkers = 0;
 
 ////////////////////////////////////////////
 
 processingPath::processingPath() 
 {
-	charset = masterThread::getCharset();
-	charsetLength = masterThread::getCharsetLength();
-
 	//Make sure the keyspace size is within the supported limits
-	if(maxChars < 1 || maxChars > 14)
+	if(maxChars < 1 || maxChars > 10)
 	{
-		maxChars = 8;
+		maxChars = 10;
 	}
-
-	numWorkers = masterThread::getNumWorkers();
 }
 
 processingPath::~processingPath()

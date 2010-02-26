@@ -61,10 +61,6 @@ protected:
 	static boost::mutex targetsMutex;
 
 	static int maxChars;
-	static int numWorkers;
-
-	char* charset;
-	int charsetLength;
 
 	int remainingTargets;
 };
