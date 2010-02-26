@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(DEBUG) $(PROFILE)
+CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE)
 ARCH = i386
 DEBUG = -g
 PROFILE = -pg
