@@ -117,6 +117,7 @@ bool isValidNTLMHexDigest(const string hash)
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
+	bool charsetSpecified = false;
 	bool enableSSE2 = false;
 	int CPUThreads = 2;
 
@@ -195,6 +196,8 @@ int main(int argc, char** argv)
 
 		if(flag == "--charset")
 		{
+			charsetSpecified = true;
+
 			if(value == "loweralpha")
 				masterThread::initCharset(26, 'a', 'z', 0, 0, 0, 0);
 			else if(value == "upperalpha")
@@ -209,7 +212,7 @@ int main(int argc, char** argv)
 				masterThread::initCharset(36, '0', 'Z', '9'+1, 'A', 0, 0);
 			else if(value == "mixalpha-numeric")
 				masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
-			else // All chars
+			else if(value == "all")
 				masterThread::initCharset(95, ' ', '~', 0, 0, 0, 0);
 		}
 
@@ -237,6 +240,9 @@ int main(int argc, char** argv)
 			CPUThreads = 1;
 		}
 	}
+
+	if(!charsetSpecified)
+		masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
 
 	// Set the total number of worker threads in use for this run
 	masterThread::setNumWorkers(CPUThreads);
