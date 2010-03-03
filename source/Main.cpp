@@ -1,12 +1,16 @@
 //Part of Laverna's Brute
 
+// Enable functions which aid in developing and debugging for Laverna's Brute.
+// Comment this out for release builds.
+//#define DEBUG
+
 #include <iostream>
 #include <time.h>
 #include <string>
 
 #include <boost/thread/thread.hpp>
 
-// Director class 
+// Director class
 #include "Director.h"
 
 //Base class for processing paths
@@ -35,35 +39,29 @@ void printHelp()
 
 	"\n\n-h\t\tDisplay this help message. "
 
-	"\n\nntlm:HASH\tPush an NTLM hash onto the target list."
+	"\n\nntlm:HASH\tAdd an NTLM hash to the target list."
 	"\n\t\tMultiple hashes can be attacked at once."
 
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
 	"\n\t\tThis should match the core count of your CPU."
 
+	"\n\n--charset STRING"
+	"\n\t\tAvailable options are:"
+	"\n\t\tloweralpha"
+	"\n\t\tupperalpha"
+	"\n\t\tmixalpha"
+	"\n\t\tnumeric"
+	"\n\t\tloweralpha-numeric"
+	"\n\t\tupperalpha-numeric"
+	"\n\t\tmixalpha-numeric"
+	"\n\t\tall-chars"
+
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
-	"\n\t\tMax for 32-bit is 8 chars, max for 64-bit is 14 chars."
+	"\n\t\tMax is 10 chars."
 
-	"\n\n-i INTEGER\tInterval in seconds for iterations logged to the console."
-	"\n\t\tThe interval may be raised for a slight performance gain."
-
-	"\n\n--SSE2 (UNSTABLE)\tUse an SSE2 optimized CPU path."
+	"\n\n--SSE2\t\tUse an SSE2 optimized CPU path."
 
 	"\n\n--silent\tRun the program in silent mode."
-
-	"\n\n--frequency-charset\n\t\tUse a character set sorted by letter frequency."
-
-	"\n\n--randomize-charset\n\t\tRandomizes the character set in order to prevent"
-	"\n\t\tprediction of the keyspace search order."
-
-	"\n\n--large-lookup\tUses a larger lookup table to improve speed."
-	"\n\t\tIt is recommended that you have at least 1 GB memory"
-	"\n\t\tin order to use this option."
-
-	"\n\n--disable-lookup\n\t\tDisable the character lookup table."
-	"\n\t\tThis may improve performance depending on the specifications" 
-	"\n\t\tof your computer. This option also drastically decreases the"
-	"\n\t\tamount of memory needed to run Laverna's Brute."
 
 	"\n\n--disable-threading\n\t\tDisables threading -- This is not recommended.\n\n";
 }
@@ -116,13 +114,12 @@ bool isValidNTLMHexDigest(const string hash)
     return true;
 }
 
-
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
+	bool charsetSpecified = false;
 	bool enableSSE2 = false;
 	int CPUThreads = 2;
-	int numWorkers = 0;
 
 	// Parse command-line arguments
 	string flag, value;
@@ -134,15 +131,45 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
+		#ifdef DEBUG
+		if(toLower(flag) == "--test_multi")
+        {
+                string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                int charsetLength = (int)charset.length();
+
+                int count = toInt(value);
+
+                NTLM ntlm;
+
+                for(int i = 0; i < count; i++)
+                {
+                        unsigned long long num = 500000000 + i;
+                        string target = "";
+
+						num++;
+                        while(num)
+                        {
+								num--;
+                                target += charset[num % charsetLength];
+                                num /= charsetLength;
+                        }
+
+                        processingPath::pushTarget(ntlm.getNTLMHash(target));
+                }
+
+                targetPresent = true;
+        }
+		#endif
+
 		// Print the help page
-		if(flag == "-h" || flag == "--help")
+		if(toLower(flag) == "-h" || flag == "--help")
 		{
 			printHelp();
 			return 0;
 		}
 
 		// Add an NTLM hash to the targets hash map
-		if(flag.substr(0, 5) == "ntlm:")
+		if(toLower(flag.substr(0, 5)) == "ntlm:")
 		{
 			string newHash = toLower(flag.substr(5));
  
@@ -167,71 +194,73 @@ int main(int argc, char** argv)
 			(toInt(value) >= 2) ? CPUThreads = toInt(value) : CPUThreads = 2;
 		}
 
+		if(flag == "--charset")
+		{
+			charsetSpecified = true;
+
+			if(value == "loweralpha")
+				masterThread::initCharset(26, 'a', 'z', 0, 0, 0, 0);
+			else if(value == "upperalpha")
+				masterThread::initCharset(26, 'A', 'Z', 0, 0, 0, 0);
+			else if(value == "mixalpha")
+				masterThread::initCharset(52, 'A', 'z', 'Z'+1, 'a', 0, 0);
+			else if(value == "numeric")
+				masterThread::initCharset(10, '0', '9', 0, 0, 0, 0);
+			else if(value == "loweralpha-numeric")
+				masterThread::initCharset(36, '0', 'z', '9'+1, 'a', 0, 0);
+			else if(value == "upperalpha-numeric")
+				masterThread::initCharset(36, '0', 'Z', '9'+1, 'A', 0, 0);
+			else if(value == "mixalpha-numeric")
+				masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
+			else if(value == "all")
+				masterThread::initCharset(95, ' ', '~', 0, 0, 0, 0);
+		}
+
 		// Set the maximum size of the keyspace in characters. The number of permutations is pow(charsetLength, maxChars).
 		if(flag == "-c")
 		{
 			processingPath::setMaxChars(toInt(value));
-		}
-
-		// Interval for iteration logging
-		if(flag == "-i" || flag == "--interval")
-		{
-			masterThread::setInterval(toInt(value));
 		}		
 
 		// Enable SSE2 path
-		if(flag == "--SSE2" || flag == "--sse2")
+		if(toLower(flag) == "--sse2")
 		{
 			enableSSE2 = true;
 		}
 
 		// Disable iteration logging
-		if(flag == "--silent")
+		if(toLower(flag) == "--silent")
 		{
 			masterThread::setSilent(true);
 		}
 
-		// Use a character set sorted by letter frequency
-		if(flag == "--frequency-charset")
-		{
-			masterThread::setFrequencyCharset(true);
-		}
-
-		/* Randomizing the order of the charset makes it impossible to predict the order in which the keyspace will be searched,
-		This means that no string is better protected from cracking than any other string by its contents alone.
-		With this option enabled, length is the only sure way to increase cracking times. */
-		if(flag == "--randomize-charset")
-		{
-			masterThread::setRandomizeCharset(true);
-		}
-
-		if(flag == "--large-lookup")
-		{
-			masterThread::setLargeLookup(true);
-		}
-
-		// Disable the precomputed lookup table used in the creation of keys
-		if(flag == "--disable-lookup")
-		{
-			masterThread::disableLookup(true);
-		}
-
 		// Disable threading
-		if(flag == "--disable-threading")
+		if(toLower(flag) == "--disable-threading")
 		{
 			CPUThreads = 1;
 		}
 	}
 
+	if(!charsetSpecified)
+		masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
+
 	// Set the total number of worker threads in use for this run
-	numWorkers += CPUThreads;
-	masterThread::setNumWorkers(numWorkers);
+	masterThread::setNumWorkers(CPUThreads);
 
 	// Check to see that we have a valid target
 	if(targetPresent)
 	{
-		cout << "\nRunning " << numWorkers << " (+1) cooperative threads," << endl
-			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).\n\n";
+		cout << "\nRunning " << CPUThreads << " cooperative threads," << endl
+			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).";
+
+		if(enableSSE2)
+		{
+			cout << "\n\nSSE2 processing path enabled." << endl << endl;
+		}
+		else
+		{
+			cout << endl << endl;
+		}
 	}
 	else
 	{
@@ -244,11 +273,11 @@ int main(int argc, char** argv)
 	// Create a thread group
 	boost::thread_group threadGroup;
 
-	// Create the director thread
-	threadGroup.create_thread(Director());
-
 	// Create the master thread
 	threadGroup.create_thread(masterThread());
+
+	// Create the director thread
+	threadGroup.create_thread(Director());
 
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
@@ -268,57 +297,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-
-#if 0
-#include <NTLM_MD.h>
-
-int main()
-{
-	NTLM ntlm;
-	NTLM_SSE2 ntlmmd;
-
-	std::string input[4] = {"bill", "rawr", "hello", "billy"};
-	std::string output[4];
-
-	for(int i = 0; i < 4; i++)
-	{
-		output[i] = ntlm.getNTLMHash(input[i]);
-		cout << output[i] << endl;
-	}
-
-	cout << endl;
-
-	ntlmmd.getMultipleHashes(input, output);
-
-	for(int i = 0; i < 4; i++)
-	{
-		cout << output[i] << endl;
-	}
-	/*
-	__declspec(align(16)) unsigned int input[4];
-	__declspec(align(16)) unsigned int output[4];
-
-	input[0] = 16;
-	input[1] = 256;
-	input[2] = 1024;
-	input[3] = 4096;
-
-	for(int i = 0; i < 4; i++)
-		cout << (input[i] << 12) << endl;
-
-	for(int i = 0; i < 4; i++)
-		output[i] = 0;
-
-	cout << endl;
-
-	__m128i a, b;
-	a = _mm_load_si128((__m128i*)input);
-	a = _mm_slli_epi32(a, 12);
-	a += _mm_set1_epi32(2);
-	_mm_store_si128((__m128i*)output, a);
-
-	for(int i = 0; i < 4; i++)
-		cout << output[i] << endl;
-		*/
-}
-#endif

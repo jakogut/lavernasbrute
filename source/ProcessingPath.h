@@ -18,6 +18,10 @@
 #include "MasterThread.h"
 #include "NTLM.h"
 
+#include "KeyGenerator.h"
+
+typedef boost::unordered_map<int64_pair, std::string> targetMap;
+
 class processingPath
 {
 	public:
@@ -25,42 +29,38 @@ class processingPath
 	processingPath();
 	~processingPath();
 
-	// The loop that is run to crack a given target hash
+	// The entry into the thread
 	virtual void operator()() = 0;
+
+	// The loop used to search the keyspace
+	virtual void searchKeyspace() = 0;
     
     // Functions necessary for the Director to do its job
-	virtual int getThreadID();
+	virtual int getThreadID() = 0;
 
-	virtual unsigned long long getKeyspaceEnd();
-	virtual unsigned long long getKeyspaceBegin();
-	virtual unsigned long long getKeyLocation();
+	virtual unsigned long long getKeyspaceEnd() = 0;
+	virtual unsigned long long getKeyspaceBegin() = 0;
+	virtual unsigned long long getKeyLocation() = 0;
 
-	virtual void moveKeyspaceEnd(unsigned long long input);
-	virtual void moveKeyspaceBegin(unsigned long long input);
-	virtual void moveKeylocation(unsigned long long input);
+	virtual void moveKeyspaceEnd(unsigned long long input) = 0;
+	virtual void moveKeyspaceBegin(unsigned long long input) = 0;
+	virtual void moveKeylocation(unsigned long long input) = 0;
 
     // Processing path options
 	static void pushTarget(std::string input);
 	static void setMaxChars(int input);
+	static int getMaxChars();
 
 	static int getNumTargets();
 
 protected:
 
-	static void removeTarget(boost::unordered_map<int64_pair, std::string>::iterator it);
+	static void removeTarget(targetMap::iterator it);
 
-	static boost::unordered_map<int64_pair, std::string> targets;
+	static targetMap targets;
 	static boost::mutex targetsMutex;
 
-	std::vector< std::pair<std::string, std::string> > results;
-
 	static int maxChars;
-	static int numWorkers;
-
-	char* charset;
-	int charsetLength;
-
-	char** integerToKeyLookup;
 
 	int remainingTargets;
 };

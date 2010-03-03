@@ -10,83 +10,17 @@ bool masterThread::success = 0;
 bool masterThread::silent = 0;
 int masterThread::numWorkers = 0;
 int masterThread::remainingTargets = 0;
-int masterThread::interval = 0;
-char* masterThread::charset = 0;
-int masterThread::charsetLength = 0;
-bool masterThread::randomizeCharset = 0;
-bool masterThread::frequencyCharset = 0;
-char** masterThread::integerToKeyLookup = 0;
-unsigned int masterThread::lookupSize = 0;
 unsigned long long masterThread::iterations = 0;
-bool masterThread::largeLookup = false;
-bool masterThread::lookupDisabled = false;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
+boost::mutex masterThread::stdoutMutex;
+boost::mutex masterThread::iterationsMutex;
+characterSet masterThread::charset;
+
 
 ////////////////////////////////////////////
 
-masterThread::masterThread() 
+masterThread::masterThread()
 {
-	// If specified, use the letter frequency character set
-	frequencyCharset ? 	charset = (char*)" eariotnscudpmhgbfywvkxzjqEARIOTNSlLCUDPMHGBFYWKVXZJQ0123456789" :
-		charset = (char*)" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-	// Set the length of the character set
-	charsetLength = (int)strlen(charset);
-
-	// Check that the update interval is set within bounds
-	if(interval <= 0)
-		interval = 5;
-
-	// If specified, randomize the order of the character set
-	if(randomizeCharset)
-	{
-		srand((unsigned int)time(NULL));
-
-		std::string::iterator charsetIterator;
-		std::string originalCharset = charset;
-
-		while(originalCharset.length() > 0)
-		{
-			int randomChar = (rand() % originalCharset.length());
-			randomizedCharset.append(originalCharset.substr(randomChar, 1));
-
-			charsetIterator = originalCharset.begin() + randomChar;
-			originalCharset.erase(charsetIterator);
-		}
-
-		charset = (char*)randomizedCharset.c_str();
-	}
-
-	// Create the integer to key conversion lookup array
-	int lookupChars;
-
-	if(lookupDisabled)
-		lookupChars = 1;
-	else
-		largeLookup ? lookupChars = 4 : lookupChars = 2;
-
-	lookupSize = (unsigned int)(pow(charsetLength, lookupChars));
-	integerToKeyLookup = new char*[lookupSize];
-
-	for(unsigned int i = 0; i < lookupSize; i++)
-	{
-		unsigned int num = i;
-		int j = 0;
-
-		integerToKeyLookup[i] = new char[lookupChars];
-
-		while(num > 0)
-		{
-			integerToKeyLookup[i][j] = charset[num % charsetLength];
-			num /= charsetLength;
-
-			j++;
-		}
-
-		// Null terminate the string
-		integerToKeyLookup[i][j] = '\0';
-	}
-
 	// Start the clock
 	startTime = time(NULL);
 }
@@ -97,53 +31,32 @@ masterThread::~masterThread()
 
 void masterThread::operator()()
 {
-	// We have two timers so that the master thread can be updated independent of the print interval.
 	boost::posix_time::seconds updateInterval(1);
-	time_t printInterval = interval;
+	std::cout.precision(3);
 
-	time_t startTime = time(NULL);
-	time_t printTimer = time(NULL);
-
-	while(!success)
+	do
 	{
-		if(!silent && (int)((time(NULL) - printTimer) >= printInterval))
+		boost::this_thread::sleep(updateInterval);
+
+		if(!silent)
 		{
-			std::cout.precision(3);
+			boost::mutex::scoped_lock lock(stdoutMutex);
 
-			std::cout << "Average speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
-				<< "\tHashes Remaining: " << remainingTargets << "\r";
+			std::cout.flush();
 
-			printTimer = time(NULL);
+			std::cout << "\rAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+			   << "\tHashes Remaining: " << remainingTargets;
+
+			std::cout.flush();
 		}
 
-		boost::this_thread::sleep(updateInterval);
-	}
+	} while(!success);
 
-	printResult();
-
-	delete [] *integerToKeyLookup;
-	delete [] integerToKeyLookup;
+	printStatistics();
 }
 
-unsigned long long masterThread::pow(unsigned long long base, unsigned long long power)
+void masterThread::printStatistics()
 {
-	unsigned long long result = 1;
-
-	for(unsigned long long i = 0; i < power; i++)
-		result *= base;
-
-	return result;
-}
-
-void masterThread::printResult()
-{
-	std::cout << std::endl << std::endl;
-
-	for(int i = 0; i < results.size(); i++)
-	{
-		std::cout << results[i].first << " == " << results[i].second << std::endl;
-	}
-
 	time_t endTime = time(NULL);
 	time_t totalTime = (endTime - startTime);
 
@@ -158,10 +71,22 @@ void masterThread::printResult()
 
 	time_t days = totalTime;
 
-	std::cout << "\nThe run has completed!"
+	std::cout.precision(3);
+
+	std::cout << "\n\nThe run has completed!"
 		<< "\nAttack duration: " << getIterations() << " iterations."
-		<< "\nCompleted in: " << days << " days, " << hours << " hours, " 
-		<< minutes << " minutes, and " << seconds << " seconds. " << std::endl;
+		<< "\nCompleted in: " << days << " days, " << hours << " hours, "
+		<< minutes << " minutes, and " << seconds << " seconds. ";
+
+		if(silent)
+		{
+			std::cout << "\n\nAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s" << std::endl;
+			std::cout.flush();
+		}
+		else
+		{
+			std::cout << std::endl;
+		}
 }
 
 bool masterThread::getSuccess()
@@ -169,14 +94,9 @@ bool masterThread::getSuccess()
 	return success;
 }
 
-void masterThread::incrementIterations()
+void masterThread::setSuccess()
 {
-	++iterations;
-}
-
-void masterThread::setSuccess(bool input)
-{
-	success = input;
+	success = true;
 }
 
 int masterThread::getNumWorkers()
@@ -189,59 +109,14 @@ void masterThread::setNumWorkers(int input)
 	numWorkers = input;
 }
 
+void masterThread::increaseNumWorkers(int input)
+{
+	numWorkers += input;
+}
+
 void masterThread::setRemainingTargets(int input)
 {
 	remainingTargets = input;
-}
-
-char* masterThread::getCharset()
-{
-	return charset;
-}
-
-int masterThread::getCharsetLength()
-{
-	return charsetLength;
-}
-
-void masterThread::setLargeLookup(bool input)
-{
-	largeLookup = input;
-}
-
-void masterThread::disableLookup(bool input)
-{
-	lookupDisabled = input;
-}
-
-char** masterThread::getLookup()
-{
-	return integerToKeyLookup;
-}
-
-unsigned long long masterThread::getLookupSize()
-{
-	return lookupSize;
-}
-
-void masterThread::setRandomizeCharset(bool input)
-{
-	randomizeCharset = input;
-}
-
-void masterThread::setFrequencyCharset(bool input)
-{
-	frequencyCharset = input;
-}
-
-void masterThread::addResult(std::string hash, std::string plaintext)
-{
-	std::pair<std::string, std::string> newResult;
-
-	newResult.first = hash;
-	newResult.second = plaintext;
-
-	results.push_back(newResult);
 }
 
 unsigned long long masterThread::getIterations()
@@ -249,9 +124,52 @@ unsigned long long masterThread::getIterations()
 	return iterations;
 }
 
-void masterThread::increaseIterations(long input)
+void masterThread::setIterations(unsigned long long input)
 {
+	iterations = input;
+}
+
+void masterThread::incrementIterations()
+{
+	iterations++;
+}
+
+void masterThread::increaseIterations(unsigned int input)
+{
+	boost::mutex::scoped_lock lock(iterationsMutex);
 	iterations += input;
+}
+
+void masterThread::initCharset(unsigned int len, int min, int max, 
+							   int charsec0, int charsec1, int charsec2, int charsec3)
+{
+	charset.init(len, min, max, charsec0, charsec1, charsec2, charsec3);
+}
+
+characterSet* masterThread::getCharset()
+{
+	return &charset;
+}
+
+void masterThread::printResult(std::string hash, std::string plaintext)
+{
+
+	boost::mutex::scoped_lock lock(stdoutMutex);
+
+	if(!silent)
+	{
+		// Clear the last line
+		std::cout << "\r";
+		std::cout.flush();
+	}
+
+	std::cout << hash << " == ";
+
+	std::cout.width(80);
+
+	std::cout << std::left << plaintext << std::endl << std::endl;
+
+	std::cout.flush();
 }
 
 bool masterThread::getSilent()
@@ -262,9 +180,4 @@ bool masterThread::getSilent()
 void masterThread::setSilent(bool input)
 {
 	silent = input;
-}
-
-void masterThread::setInterval(int input)
-{
-	interval = input;
 }

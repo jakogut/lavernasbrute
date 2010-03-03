@@ -9,9 +9,12 @@
 #include <string.h>
 #include <sstream>
 #include <vector>
+#include <iomanip>
 
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>
+
+#include "KeyGenerator.h"
 
 class masterThread
 {
@@ -22,38 +25,31 @@ public:
 
 	void operator()();
 
-	static unsigned long long pow(unsigned long long base, unsigned long long power);
-
 	static bool getSuccess();
-	static void setSuccess(bool input);
-	static void setInterval(int input);
+	static void setSuccess();
+
 	static bool getSilent();
 	static void setSilent(bool input);
 
 	static int getNumWorkers();
 	static void setNumWorkers(int input);
+	static void increaseNumWorkers(int input);
 
 	static void setRemainingTargets(int input);
 
 	static unsigned long long getIterations();
+	static void setIterations(unsigned long long input);
 	static void incrementIterations();
-	static void increaseIterations(long input);
+	static void increaseIterations(unsigned int input);
 
-	static char* getCharset();
-	static int getCharsetLength();
+	static void initCharset(unsigned int len, int min, int max, 
+							int charsec0, int charsec1, int charsec2, int charsec3);
 
-	static void setLargeLookup(bool input);
-	static void disableLookup(bool input);
+	static characterSet* getCharset();
 
-	static char** getLookup();
-	static unsigned long long getLookupSize();
+	static void printResult(std::string hash, std::string plaintext);
 
-	static void setRandomizeCharset(bool input);
-	static void setFrequencyCharset(bool input);
-
-	static void addResult(std::string hash, std::string plaintext);
-
-	void printResult();
+	void printStatistics();
 
 protected:
 
@@ -61,7 +57,6 @@ protected:
 	time_t startTime;
 
 	static unsigned long long iterations;
-	static int interval;
 	static bool silent;
 
 	static int numWorkers;
@@ -70,29 +65,14 @@ protected:
 	//That the job is done.
 	static bool success;
 
-	// Use a larger than normal lookup
-	static bool largeLookup; 
-	
-	// Disable the lookup
-	static bool lookupDisabled;
-
-	// Randomize the character set in order to prevent prediction of keyspace searches
-	static bool randomizeCharset;
-
-	// Use a character set organized by letter frequency.
-	static bool frequencyCharset;
-
-	static char* charset;
-	static int charsetLength;
-
-	static char** integerToKeyLookup;
-	static unsigned int lookupSize;
+	static characterSet charset;
 
 	static int remainingTargets;
 
-	std::string randomizedCharset;
-
 	static std::vector< std::pair<std::string, std::string> > results;
+
+	static boost::mutex stdoutMutex;
+	static boost::mutex iterationsMutex;
 };
 
 #endif

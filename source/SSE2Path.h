@@ -6,7 +6,7 @@
 #include "Director.h"
 #include "ProcessingPath.h"
 
-#include "NTLM_MD.h"
+#include "NTLM_SSE2.h"
 
 class SSE2Path : protected processingPath
 {
@@ -18,7 +18,7 @@ public:
 	void operator()();
 	void searchKeyspace();
 
-	inline int getThreadID();
+	int getThreadID();
 
 	unsigned long long getKeyspaceEnd();
 	unsigned long long getKeyspaceBegin();
@@ -32,16 +32,12 @@ protected:
 
 	int id;
 
-	// Function for converting the keyspace location to a key
-	inline void integerToKey();
+	std::string currentKeys[12];
+	int64_pair weakHashedKeys[12];
 
-	std::string currentKeys[4];
-	int64_pair weakHashedKeys[4];
+	targetMap::iterator targetIterator;
 
-	boost::unordered_map<int64_pair, std::string>::iterator targetIterator;
-
-	unsigned long long keyspaceSize, keyspaceBegin, keyspaceEnd, keyLocation, lookupSize;
-	unsigned int localProgress;
+	unsigned long long keyspaceBegin, keyspaceEnd, keyLocation;
 };
 
 #endif
