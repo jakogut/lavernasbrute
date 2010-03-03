@@ -4,7 +4,7 @@ ARCH = i386
 DEBUG = -g
 PROFILE = -pg
 
-INCLUDE = -I/usr/include -Iinclude -Isource/hashing
+INCLUDE = -I/usr/include -Iinclude -Isource -Isource/hashing
 LIB = -L/usr/lib -Llib -lboost_date_time-mt -lboost_thread-mt
 DEST = bin/gcc/$(ARCH)
 
@@ -14,7 +14,7 @@ MKDIR = mkdir -p
 RM = rm -f
 
 ifneq ($(ARCH), x86-64)
-	CXXFLAGS += -m32 -msse2
+	CXXFLAGS += -m32 -msse -msse2 -mfpmath=sse
 else
 	CXXFLAGS += -m64
 endif

@@ -6,18 +6,17 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-std::vector<processingPath*> Director::workers;
-int Director::numWorkers = 0;
+std::map<int, processingPath*> Director::workerPtrMap;
 
 ////////////////////////////////////////////
 
 Director::Director()
 {
-	numWorkers = masterThread::getNumWorkers();
 }
 
 Director::Director(unsigned long long beginKeyspace, unsigned long long keyspaceEnd)
 {
+	// Search a given section of the keyspace, rather than the entire thing.
 }
 
 Director::~Director()
@@ -26,26 +25,59 @@ Director::~Director()
 
 void Director::operator()()
 {
-	/* We can use this thread in the future to gather data from threads, 
-	and write it to an XML file to create persistent runs. */
+	// Wait for all workers to be initialized.
+	while(workerPtrMap.size() != masterThread::getNumWorkers())
+
+	// Start updating the masterThread.
+	updateMasterThread();
+}
+
+void Director::updateMasterThread()
+{
+	boost::posix_time::seconds updateInterval(1);
+	unsigned long long totalIterations;
+
+	while(!masterThread::getSuccess())
+	{
+		boost::this_thread::sleep(updateInterval);
+		totalIterations = 0;
+
+		for(int i = 0; i < masterThread::getNumWorkers()
+			; i++)
+			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
+
+		masterThread::setIterations(totalIterations);
+	}
 }
 
 processingPath* Director::getWorkerPtr(int id)
 {
-	return workers[id];
+	return workerPtrMap[id];
 }
 
 void Director::manageWorker(processingPath* worker)
 {
-	workers.insert(workers.begin() + worker->getThreadID(), worker);
+	workerPtrMap[worker->getThreadID()] = worker;
+
+	// Assign a unique portion of the keyspace to the thread (Based on id)
+	unsigned long long keyspaceSize = (pow<unsigned long long>(masterThread::getCharset()->length, processingPath::getMaxChars()) / masterThread::getNumWorkers());
+
+	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
+	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);
+
+	// Set the key location
+	worker->moveKeylocation(worker->getKeyspaceBegin());
+
+	// Start the search
+	worker->searchKeyspace();
 }
 
-bool Director::reassignKeyspace(processingPath *worker)
+bool Director::reassignKeyspace(processingPath* worker)
 {
 	int id = 0;
 
 	// Find the worker with the largest remaining section of the keyspace
-	for(int i = 0; i < numWorkers; i++)
+	for(int i = 0; i < masterThread::getNumWorkers(); i++)
 	{
 		if(getRemainingKeyspace(i) > getRemainingKeyspace(id))
 		{
@@ -56,23 +88,27 @@ bool Director::reassignKeyspace(processingPath *worker)
 	if(getRemainingKeyspace(id) > 0)
 	{
 		// Split the remaining section of the keyspace, and give it to the idle worker
-		worker->moveKeyspaceEnd(workers[id]->getKeyspaceEnd());
-		workers[id]->moveKeyspaceEnd((workers[id]->getKeyspaceEnd() - workers[id]->getKeyLocation()) / 2);
+		worker->moveKeyspaceEnd(workerPtrMap[id]->getKeyspaceEnd());
+		workerPtrMap[id]->moveKeyspaceEnd((workerPtrMap[id]->getKeyspaceEnd() - workerPtrMap[id]->getKeyLocation()) / 2);
 
-		worker->moveKeyspaceBegin(workers[id]->getKeyspaceEnd() + 1);
+		worker->moveKeyspaceBegin(workerPtrMap[id]->getKeyspaceEnd() + 1);
 		worker->moveKeylocation(worker->getKeyLocation());
-
-		std::cout << workers[id]->getKeyLocation() << " -- " << workers[id]->getKeyspaceEnd() << std::endl;
 
 		return true;
 	}
 	else
+	{
 		return false;
+	}
+}
+
+void updateIterations()
+{
 }
 
 unsigned long long Director::getRemainingKeyspace(int id)
 {
-	processingPath* worker = workers[id];
+	processingPath* worker = workerPtrMap[id];
 	return worker->getKeyLocation() - worker->getKeyspaceBegin();
 }
 
