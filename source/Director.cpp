@@ -1,6 +1,7 @@
 //Part of Laverna's Brute
 
 #include "Director.h"
+#include <math.h>
 
 ////////////////////////////////////////////
 // Initialize our static variables /////////
@@ -42,8 +43,7 @@ void Director::updateMasterThread()
 		boost::this_thread::sleep(updateInterval);
 		totalIterations = 0;
 
-		for(int i = 0; i < masterThread::getNumWorkers()
-			; i++)
+		for(int i = 0; i < masterThread::getNumWorkers(); i++)
 			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
 
 		masterThread::setIterations(totalIterations);
@@ -60,7 +60,9 @@ void Director::manageWorker(processingPath* worker)
 	workerPtrMap[worker->getThreadID()] = worker;
 
 	// Assign a unique portion of the keyspace to the thread (Based on id)
-	unsigned long long keyspaceSize = (pow<unsigned long long>(masterThread::getCharset()->length, processingPath::getMaxChars()) / masterThread::getNumWorkers());
+	unsigned long long keyspaceSize;
+	pow<unsigned long long>(masterThread::getCharset()->length, processingPath::getMaxChars(), keyspaceSize);
+	keyspaceSize /= masterThread::getNumWorkers();
 
 	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
 	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);

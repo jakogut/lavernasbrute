@@ -2,14 +2,12 @@
 #define POW_H_
 
 template <typename T>
-T& pow(const T& base, const T& power)
+void pow(const T& base, const T& power, T& output)
 {
-	T result = 1;
+	output = 1;
 
 	for(T i = 0; i < power; i++)
-		result *= base;
-
-	return result;
+		output *= base;
 }
 
 #endif
