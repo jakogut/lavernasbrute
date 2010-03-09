@@ -32,7 +32,7 @@ protected:
 
 	std::string currentKey;
 
-	NTLM ntlm;
+	MD4 md4;
 
 	targetMap::iterator targetIterator;
 
