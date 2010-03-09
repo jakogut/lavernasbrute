@@ -19,7 +19,7 @@ void SSE2Path::operator()()
 void SSE2Path::searchKeyspace()
 {
 	masterThread::setRemainingTargets(getNumTargets());
-	NTLM_SSE2 ntlm_md;
+	MD4_SSE2 md4_sse2;
 
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
@@ -42,7 +42,7 @@ void SSE2Path::searchKeyspace()
 		keygen.getMultipleKeys(currentKeys, 12);
 		keyLocation += 12;
 
-		ntlm_md.getMultipleWeakHashes(currentKeys, weakHashedKeys);
+		md4_sse2.getMultipleWeakHashes(currentKeys, weakHashedKeys);
 
 		for(int i = 0; i < 12; i++)
 		{

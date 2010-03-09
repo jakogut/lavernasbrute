@@ -45,7 +45,7 @@ void CPUPath::searchKeyspace()
 		if(multiHash)
 		{
 			// Look through the targets for our hash
-			targetIterator = targets.find(ntlm.getWeakHash(currentKey));
+			targetIterator = targets.find(md4.getWeakNTLMHash(currentKey));
 
 			if(targetIterator != targets.end()) // Match was found
 			{
@@ -57,7 +57,7 @@ void CPUPath::searchKeyspace()
 		}
 		else
 		{
-			if(ntlm.getWeakHash(currentKey) == targetIterator->first)
+			if(md4.getWeakNTLMHash(currentKey) == targetIterator->first)
 			{
 				masterThread::printResult(targetIterator->second, currentKey);
 

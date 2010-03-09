@@ -6,7 +6,7 @@
 #include "Director.h"
 #include "ProcessingPath.h"
 
-#include "NTLM_SSE2.h"
+#include "MD4_SSE2.h"
 
 class SSE2Path : protected processingPath
 {

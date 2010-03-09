@@ -27,8 +27,8 @@ processingPath::~processingPath()
 
 void processingPath::pushTarget(std::string input)
 {
-	NTLM ntlm;
-	targets[ntlm.weakenHash(input)] = input;
+	MD4 md4;
+	targets[md4.weakenHash(input)] = input;
 }
 
 void processingPath::setMaxChars(int input)

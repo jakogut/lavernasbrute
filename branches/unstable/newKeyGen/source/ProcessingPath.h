@@ -16,7 +16,7 @@
 #include <boost/thread/thread.hpp>
 
 #include "MasterThread.h"
-#include "NTLM.h"
+#include "MD4.h"
 
 #include "KeyGenerator.h"
 
