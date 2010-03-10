@@ -42,7 +42,7 @@ void SSE2Path::searchKeyspace()
 		keygen.getMultipleKeys(currentKeys, 12);
 		keyLocation += 12;
 
-		md4_sse2.getMultipleWeakHashes(currentKeys, weakHashedKeys);
+		md4_sse2.getMultipleWeakNTLMHashes(currentKeys, weakHashedKeys);
 
 		for(int i = 0; i < 12; i++)
 		{
