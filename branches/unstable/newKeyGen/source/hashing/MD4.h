@@ -86,9 +86,6 @@ public:
 	inline int64_pair weakenHash(const std::string& input)
 	{
 		convert_from_hex((char*)input.c_str());
-
-		md4_reverse();
-
 		return convert_to_int128();
 	}
 
@@ -96,6 +93,32 @@ protected:
 
 	inline void prepare_key_md4(const char* input)
 	{
+		int i=0;
+		int length = (int)strlen(input);
+		memset(md4_buffer,0,16*4);
+		//The length of input need to be <= 27
+		for(;i<length/4;i++)	
+			md4_buffer[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
+	 
+		//padding
+		switch(length%4)
+		{
+		case 0:
+			md4_buffer[i] = 0x80;
+			break;
+		case 1:
+			md4_buffer[i] = input[length - 1] | 0x8000;
+			break;
+		case 2:
+			md4_buffer[i] = input[length - 1] | 0x800000;
+			break;
+		case 3:
+			md4_buffer[i] = input[length - 1] | 0x80000000;
+			break;
+		}
+
+		//put the length
+		md4_buffer[14] = length << 3;
 	}
 
 	inline void prepare_key_ntlm(const char* input)
@@ -188,16 +211,9 @@ protected:
 		wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[13] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
 	 
 		wd[0] += H(wd[3], wd[2], wd[1]) + md4_buffer[3]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
-		//wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[11] +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
-		//wd[2] += H(wd[1], wd[0], wd[3]) + md4_buffer[7]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
-		//wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[15] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
-	}
-
-	void md4_reverse()
-	{
-		wd[1] = ROTR(wd[1], 15, 32), wd[1] -= (H(wd[0], wd[3], wd[2]) +  SQRT_3); 
-		wd[2] = ROTR(wd[2], 11, 32), wd[2] -= (H(wd[1], wd[0], wd[3]) +  SQRT_3); 
-		wd[3] = ROTR(wd[3], 9,  32), wd[3] -= (H(wd[2], wd[1], wd[0]) +  SQRT_3); 		
+		wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[11] +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
+		wd[2] += H(wd[1], wd[0], wd[3]) + md4_buffer[7]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
+		wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[15] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
 	}
 	 
 	inline void finalize_md4()
