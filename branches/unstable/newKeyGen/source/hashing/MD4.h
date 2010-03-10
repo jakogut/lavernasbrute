@@ -91,35 +91,35 @@ public:
 
 protected:
 
-	inline void prepare_key_md4(const char* input)
+inline void prepare_key_md4(const char* input)
+{
+	int i=0;
+	int length = (int)strlen(input);
+	memset(md4_buffer,0,16*4);
+	//The length of input need to be <= 27
+	for(;i<length/4;i++)	
+		md4_buffer[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
+ 
+	//padding
+	switch(length%4)
 	{
-		int i=0;
-		int length = (int)strlen(input);
-		memset(md4_buffer,0,16*4);
-		//The length of input need to be <= 27
-		for(;i<length/4;i++)	
-			md4_buffer[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
-	 
-		//padding
-		switch(length%4)
-		{
-		case 0:
-			md4_buffer[i] = 0x80;
-			break;
-		case 1:
-			md4_buffer[i] = input[length - 1] | 0x8000;
-			break;
-		case 2:
-			md4_buffer[i] = input[length - 1] | 0x800000;
-			break;
-		case 3:
-			md4_buffer[i] = input[length - 1] | 0x80000000;
-			break;
-		}
-
-		//put the length
-		md4_buffer[14] = length << 3;
+	case 0:
+		md4_buffer[i] = 0x80;
+		break;
+	case 1:
+		md4_buffer[i] = input[length - 1] | 0x8000;
+		break;
+	case 2:
+		md4_buffer[i] = input[length-2] | (input[length-1]<<8) | 0x800000;
+		break;
+	case 3:
+		md4_buffer[i] = input[length-3] | (input[length-2]<<8) | (input[length-1]<<16) | 0x80000000;
+		break;
 	}
+
+	//put the length
+	md4_buffer[14] = length << 3;
+}
 
 	inline void prepare_key_ntlm(const char* input)
 	{

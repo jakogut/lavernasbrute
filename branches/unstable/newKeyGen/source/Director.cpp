@@ -42,8 +42,7 @@ void Director::updateMasterThread()
 		boost::this_thread::sleep(updateInterval);
 		totalIterations = 0;
 
-		for(int i = 0; i < masterThread::getNumWorkers()
-			; i++)
+		for(int i = 0; i < masterThread::getNumWorkers(); i++)
 			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
 
 		masterThread::setIterations(totalIterations);
@@ -80,12 +79,8 @@ bool Director::reassignKeyspace(processingPath* worker)
 
 	// Find the worker with the largest remaining section of the keyspace
 	for(int i = 0; i < masterThread::getNumWorkers(); i++)
-	{
 		if(getRemainingKeyspace(i) > getRemainingKeyspace(id))
-		{
 			id = i;
-		}
-	}
 
 	if(getRemainingKeyspace(id) > 0)
 	{
