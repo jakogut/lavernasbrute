@@ -34,7 +34,8 @@ public:
 	{
 	}
 
-	void getMultipleWeakMD4Hashes(std::string input[12], int64_pair output[12])
+	// Not quite done yet
+	/*void getMultipleWeakMD4Hashes(std::string input[12], int64_pair output[12])
 	{
 		prepare_key_md4_sse2(input);
 
@@ -43,7 +44,7 @@ public:
 		md4_crypt_sse2();
 
 		convert_to_int128_sse2(output);
-	}
+	}*/
 
 	void getMultipleWeakNTLMHashes(std::string input[12], int64_pair output[12])
 	{
@@ -58,7 +59,7 @@ public:
 
 protected:
 
-	inline void prepare_key_md4_sse2(std::string* input)
+	/*inline void prepare_key_md4_sse2(std::string* input)
 	{
 		unsigned int length[3][4];
 
@@ -101,7 +102,7 @@ protected:
 			for(int j = 0; j < 3; j++)
 				md4_buffer[i][j] = _mm_load_si128((__m128i*)md4_buffer_sse2[j]);
 		}
-	}
+	}*/
 
 	inline void prepare_key_ntlm_sse2(std::string* input)
 	{

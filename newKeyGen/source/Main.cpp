@@ -139,7 +139,7 @@ int main(int argc, char** argv)
 
                 int count = toInt(value);
 
-                NTLM ntlm;
+                MD4 md4;
 
                 for(int i = 0; i < count; i++)
                 {
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
                                 num /= charsetLength;
                         }
 
-                        processingPath::pushTarget(ntlm.getNTLMHash(target));
+                        processingPath::pushTarget(md4.getNTLMHash(target));
                 }
 
                 targetPresent = true;
