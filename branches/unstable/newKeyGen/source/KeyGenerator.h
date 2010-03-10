@@ -83,10 +83,11 @@ public:
 					// Overflow, reset char at place
 					key[place] = charset->minChar;
 
-					if((key.length() - 1) < (place + 1))
+					if((keyLength - 1) < (place + 1))
 					{
 						// Carry, no space, insert char
 						key.insert(key.begin(), charset->minChar);
+						++keyLength;
 						break;
 					}
 					else
@@ -97,16 +98,10 @@ public:
 				else
 				{
 					// Space available, increment char at place
-					for(int i = 0; i < 2; i++) 
-					{
-						if(key[place] == charset->charSecEnd[i]) 
-						{
-							key[place] = charset->charSecBegin[i];
-							break;
-						}
-					}
+					if(key[place] == charset->charSecEnd[0]) key[place] = charset->charSecBegin[0];
+					else if(key[place] == charset->charSecEnd[1]) key[place] = charset->charSecBegin[1];
 
-					key[place]++;
+					++key[place];
 
 					break;
 				}
