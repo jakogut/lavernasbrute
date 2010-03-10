@@ -61,7 +61,8 @@ void Director::manageWorker(processingPath* worker)
 
 	// Assign a unique portion of the keyspace to the thread (Based on id)
 	unsigned long long keyspaceSize;
-	(pow<unsigned long long>(masterThread::getCharset()->length, processingPath::getMaxChars()) / masterThread::getNumWorkers(), keyspaceSize);
+	pow<unsigned long long>(masterThread::getCharset()->length, processingPath::getMaxChars(), keyspaceSize);
+	keyspaceSize /= masterThread::getNumWorkers();
 
 	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
 	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);
