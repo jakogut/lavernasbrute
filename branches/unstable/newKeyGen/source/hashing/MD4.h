@@ -36,18 +36,20 @@ public:
 	{
 	}
 
+	// Full MD4
 	inline char* getMD4Hash(const std::string& input)
 	{
+		// Take an ASCII string, and convert it to an MD4 message
 		prepare_key_md4((char*)input.c_str());
 
 		initialize_words();
 		md4_crypt();
 		finalize_md4();
 		
-		// Convert the result to hexadecimal
 		return convert_to_hex();
 	}
 
+	// Weak MD4
 	inline int64_pair getWeakMD4Hash(const std::string& input)
 	{
 		prepare_key_md4((char*)input.c_str());
@@ -58,7 +60,7 @@ public:
 		return convert_to_int128();
 	}
 
-	// Full NTLM hashing algorithm
+	// Full NTLM
 	inline char* getNTLMHash(const std::string& input)
 	{
 		prepare_key_ntlm((char*)input.c_str());
@@ -71,7 +73,7 @@ public:
 		return convert_to_hex();
 	}
 
-	// Return a weakened hash as a 128-bit integer, rather than a full hex digest
+	// Weak NTLM
 	int64_pair getWeakNTLMHash(const std::string& input)
 	{
 		prepare_key_ntlm((char*)input.c_str());
@@ -95,12 +97,14 @@ protected:
 	{
 		int i=0;
 		int length = (int)strlen(input);
+
+		// Zero out the message buffer
 		memset(md4_buffer,0,16*4);
-		//The length of input need to be <= 27
+		
 		for(;i<length/4;i++)	
 			md4_buffer[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
 	 
-		//padding
+		// Pad with one 1 bit, followed by zeros until the message is 64 bits shy of 512 bits in length.
 		switch(length%4)
 		{
 		case 0:
@@ -117,7 +121,7 @@ protected:
 			break;
 		}
 
-		//put the length
+		// Add the length
 		md4_buffer[14] = length << 3;
 	}
 
@@ -125,17 +129,18 @@ protected:
 	{
 		int i=0;
 		int length=(int)(strlen(input));
+
 		memset(md4_buffer,0,16*4);
-		//The length of input need to be <= 27
+		
 		for(;i<length/2;i++)	
 			md4_buffer[i] = input[2*i] | (input[2*i+1]<<16);
 	 
-		//padding
+		// Pad
 		if(length%2==1)
 			md4_buffer[i] = input[length-1] | 0x800000;
 		else
 			md4_buffer[i]=0x80;
-		//put the length
+		// Length
 		md4_buffer[14] = length << 4;
 	}
 
@@ -194,6 +199,15 @@ protected:
 		wd[1] += G(wd[2], wd[3], wd[0]) + md4_buffer[15]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
 	
 		// Round 3 // ---
+
+		/* Since all elements past length/2 for NTLM and length/4 for MD4 are zero, 
+		we can assume that a few of the elements in the message are zero. By taking a hash, and
+		reversing it back to four 32-bit words, we can reverse certain sections of the hashing 
+		process by substituting zero for the message section. Also, we might even be able to get
+		a rough estimate of the length of the string that generated the hash by substituting zero
+		for the message section, reversing, then redoing the line. If the same hash results, that
+		element had to have been zero. We can do this until we find an element of the message that
+		_wasn't_ zero, in which case we would have found the end of the message.*/
 
 		wd[0] += H(wd[3], wd[2], wd[1]) + md4_buffer[0]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
 		wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[8]  +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
