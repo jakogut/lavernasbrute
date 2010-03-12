@@ -46,6 +46,7 @@ void SSE2Path::searchKeyspace()
 
 		for(int i = 0; i < 12; i++)
 		{
+			
 			if(multiHash)
 			{
 				targetIterator = targets.find(weakHashedKeys[i]);
@@ -58,7 +59,7 @@ void SSE2Path::searchKeyspace()
 					masterThread::setRemainingTargets(getNumTargets());
 				}
 			}
-			else
+			else // If there's only a single hash, disable searching the hash map to improve speed.
 			{
 				if(weakHashedKeys[i] == targetIterator->first)
 				{

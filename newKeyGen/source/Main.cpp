@@ -198,21 +198,21 @@ int main(int argc, char** argv)
 		{
 			charsetSpecified = true;
 
-			if(value == "loweralpha")
+			if(value == "loweralpha")				// a-z
 				masterThread::initCharset(26, 'a', 'z', 0, 0, 0, 0);
-			else if(value == "upperalpha")
+			else if(value == "upperalpha")			// A-Z
 				masterThread::initCharset(26, 'A', 'Z', 0, 0, 0, 0);
-			else if(value == "mixalpha")
+			else if(value == "mixalpha")			// a-z, A-Z
 				masterThread::initCharset(52, 'A', 'z', 'Z'+1, 'a', 0, 0);
-			else if(value == "numeric")
+			else if(value == "numeric")				// 0-9
 				masterThread::initCharset(10, '0', '9', 0, 0, 0, 0);
-			else if(value == "loweralpha-numeric")
+			else if(value == "loweralpha-numeric")	// a-z, 0-9
 				masterThread::initCharset(36, '0', 'z', '9'+1, 'a', 0, 0);
-			else if(value == "upperalpha-numeric")
+			else if(value == "upperalpha-numeric")	// A-Z, 0-9
 				masterThread::initCharset(36, '0', 'Z', '9'+1, 'A', 0, 0);
-			else if(value == "mixalpha-numeric")
+			else if(value == "mixalpha-numeric")	// A-Z, a-z, 0-9
 				masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
-			else if(value == "all")
+			else if(value == "all")					// All ascii symbols and characters
 				masterThread::initCharset(95, ' ', '~', 0, 0, 0, 0);
 		}
 
