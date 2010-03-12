@@ -5,7 +5,7 @@
 
 === Where can I get the latest version of Laverna's Brute? ===
 
-There are no stable releases yet. For Alpha (the current release status) checkout the code from the [http://code.google.com/p/lavernasbrute/source/checkout Source Checkout] page or check the [http://code.google.com/p/lavernasbrute/downloads/list Downloads] page to see if there are builds for your OS/Arch.
+There are no stable releases yet. For Alpha (the current release status) The [http://code.google.com/p/lavernasbrute/downloads/list downloads] page.
 
 === How does the versioning system of Laverna's Brute work? ===
 
