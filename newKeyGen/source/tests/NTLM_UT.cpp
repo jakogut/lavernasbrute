@@ -1,21 +1,21 @@
 #include <iostream>
 #include <vector>
 
-#include "NTLM.h"
+#include "MD4.h"
 
 using namespace std;
 
 int main()
 {
-    NTLM ntlm;
+    MD4 md4;
     
     std::string input = "testString";
     
     std::string correctFullHash = "7c404e7a355530e496d6f5612a1ed54e";
-    int64_pair correctWeakHash = ntlm.weakenHash(correctFullHash);
+    int64_pair correctWeakHash = md4.weakenHash(correctFullHash);
     
     // Test for vanilla C full NTLM algorithm
-    if(ntlm.getNTLMHash(input) == correctFullHash)
+    if(md4.getNTLMHash(input) == correctFullHash)
     {
         cout << "Vanilla NTLM algorithm passed full hashing test." << endl;
     }
@@ -25,7 +25,7 @@ int main()
     }
     
     // Test for vanilla C partial NTLM algorithm
-    if(ntlm.getWeakHash(input) == correctWeakHash)
+    if(md4.getWeakNTLMHash(input) == correctWeakHash)
     {
         cout << "Vanilla NTLM algorithm passed partial hashing test." << endl;
     }
@@ -34,3 +34,4 @@ int main()
         cout << "Vanilla NTLM algorithm FAILED partial hashing test." << endl;
     }
 }
+

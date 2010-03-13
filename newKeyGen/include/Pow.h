@@ -11,3 +11,4 @@ void pow(const T& base, const T& power, T& output)
 }
 
 #endif
+
