@@ -26,10 +26,15 @@ $(DEST)/%.o:
 	$(MKDIR) $(DEST)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c source/$*.cpp -o $@
 	
-tests: NTLM_UT NTLM_SSE2_UT
+tests: MD4_UT NTLM_UT NTLM_SSE2_UT
 	@echo -e "\nRunning tests:"
+	@$(DEST)/tests/MD4_UT
 	@$(DEST)/tests/NTLM_UT
 	@$(DEST)/tests/NTLM_SSE2_UT
+	
+MD4_UT: 
+	$(MKDIR) $(DEST)/tests/
+	$(CXX) $(CXXFLAGS) $(INCLUDE) source/tests/MD4_UT.cpp -o $(DEST)/tests/MD4_UT
 
 NTLM_UT: 
 	$(MKDIR) $(DEST)/tests/
