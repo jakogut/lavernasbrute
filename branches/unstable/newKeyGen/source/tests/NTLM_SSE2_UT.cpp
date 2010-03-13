@@ -1,14 +1,14 @@
 #include <iostream>
 #include <vector>
 
-#include "NTLM_MD.h"
+#include "MD4_SSE2.h"
 
 using namespace std;
 
 int main()
 {
-    NTLM_SSE2 ntlmmd;
-    NTLM ntlm;
+    MD4_SSE2 md4_md;
+    MD4 md4;
     
     std::string test = "testString";
     
@@ -18,9 +18,9 @@ int main()
     for(int i = 0; i < 12; i++)
         input[i] = test;
     
-    ntlmmd.getMultipleWeakHashes(input, output);
+    md4_md.getMultipleWeakNTLMHashes(input, output);
     
-    int64_pair vanillaResult = ntlm.getWeakHash(test);
+    int64_pair vanillaResult = md4.getWeakNTLMHash(test);
     
     bool passed = true;
     vector<int> failedHashes;
@@ -42,9 +42,10 @@ int main()
     {
         cout << "SSE2 accelerated NTLM algorithm FAILED the test." << endl;
         
-        for(int i = 0; i < failedHashes.size(); i++)
+        for(unsigned int i = 0; i < failedHashes.size(); i++)
             cout << "\nString " << failedHashes[i] << " was not hashed properly." << endl;
     }
     
     return 0;
 }
+
