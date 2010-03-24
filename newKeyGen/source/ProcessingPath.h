@@ -1,8 +1,6 @@
 //Part of Laverna's Brute
 //Base processing path which path implementations inherit from.
 
-//This class declaration is dedicated to Tori :)
-
 #ifndef PROCESSINGPATH_H_
 #define PROCESSINGPATH_H_
 
