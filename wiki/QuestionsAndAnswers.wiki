@@ -5,11 +5,15 @@
 
 === Where can I get the latest version of Laverna's Brute? ===
 
-There are no stable releases yet. For Alpha (the current release status) The [http://code.google.com/p/lavernasbrute/downloads/list downloads] page.
+The [http://code.google.com/p/lavernasbrute/downloads/list downloads] page.
+
+<wiki:comment> 
+We haven't been using this versioning system, so I'm commenting it out from the wiki.
 
 === How does the versioning system of Laverna's Brute work? ===
 
 Version numbers are given based on when the material was created. Version numbering is in the format YY.MM.DD, with no leading zeroes. (A binary built on the 3rd of January, 2010 would be version 10.1.3.) This makes it easy to distinguish which builds are newer than others, while making versioning a more automatic process for us, as builds don't have to meet certain criteria to be versioned, they simply _are._
+<wiki:comment>
 
 === I found a bug. Where can I report it? ===
 
