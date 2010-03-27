@@ -62,32 +62,38 @@ public:
         keyGenerator(unsigned long long location, characterSet* charset)
                 : charset(charset), location(location)
         {
-			key.reserve(10);
+			// Fourteen characters is just about the limit of what is feasible to crack.
+			key = new char[15];
+			
+			for(int i = 0; i < 15; i++)
+				key[i] = 0;
 
-			charsetStr = (char*)charset->getCharsetStr().c_str();
+			charsetStr = charset->getCharsetStr();
 			integerToKey();
         }
 
         ~keyGenerator()
         {
+			delete [] key;
         }
 
-        void incrementKey()
+        inline void incrementKey()
         {
-			register size_t keyLength = key.length();
-
-			for(register unsigned int place = 0; place < keyLength; place++)
+			register size_t keyLength = strlen(key);
+			
+			for(register char* place = key; place; place++)
 			{
-				if(key[place] == charset->maxChar)
+				if(*place == charset->maxChar)
 				{
 					// Overflow, reset char at place
-					key[place] = charset->minChar;
+					*place = charset->minChar;
 
-					if((keyLength - 1) < (place + 1))
+					if(*(place+1) == 0)
 					{
 						// Carry, no space, insert char
-						key.insert(key.begin(), charset->minChar);
+						*(place+1) = charset->minChar;
 						++keyLength;
+
 						break;
 					}
 					else
@@ -98,10 +104,10 @@ public:
 				else
 				{
 					// Space available, increment char at place
-					if(key[place] == charset->charSecEnd[0]) key[place] = charset->charSecBegin[0];
-					else if(key[place] == charset->charSecEnd[1]) key[place] = charset->charSecBegin[1];
+					if(*place == charset->charSecEnd[0]) *place = charset->charSecBegin[0];
+					else if(*place == charset->charSecEnd[1]) *place = charset->charSecBegin[1];
 
-					++key[place];
+					(*place)++;
 
 					break;
 				}
@@ -128,7 +134,7 @@ public:
 
 		if(!num)
 		{
-			key.insert(key.begin(), charsetStr[0]);
+			key[0] = charsetStr[0];
 		}
 		else
 		{
@@ -140,7 +146,7 @@ public:
 				unsigned int remainder = num % charset->length;
 				num /= charset->length;
 
-				key.insert(key.end(), charsetStr[remainder]);
+				key[strlen(key)] = charsetStr[remainder];
 			}
 		}
 	}
@@ -170,7 +176,7 @@ protected:
 	characterSet* charset;
 	std::string charsetStr;
 
-    std::string key;
+    char* key;
 
 	unsigned long long location;
 };
