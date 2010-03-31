@@ -36,7 +36,7 @@ void CPUPath::searchKeyspace()
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Get the next key
-		((char*)currentKey) = keygen++;
+		currentKey = keygen++;
 
 		keyLocation++;
 

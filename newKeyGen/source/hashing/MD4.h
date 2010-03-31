@@ -5,6 +5,7 @@
  
 #include <cstring>
 #include <iostream>
+#include <cstdlib>
 
 #define ROTL(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
 #define ROTR(NUM, PLACES, SIZE) ((NUM >> PLACES) | (NUM << (SIZE - PLACES)))
