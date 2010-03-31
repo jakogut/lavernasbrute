@@ -36,10 +36,10 @@ void processingPath::initializeTargetMap()
 	targets.set_deleted_key(deleted);
 }
 
-void processingPath::pushTarget(char* input)
+void processingPath::pushTarget(std::string& input)
 {
 	MD4 md4;
-	targets[md4.weakenHash(input)] = input;
+	targets[md4.weakenHash(input.c_str())] = input;
 }
 
 void processingPath::setMaxChars(int input)

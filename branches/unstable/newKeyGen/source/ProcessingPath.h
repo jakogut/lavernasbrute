@@ -20,7 +20,7 @@
 
 #include "KeyGenerator.h"
 
-typedef google::dense_hash_map< int64_pair, char*, boost::hash<int64_pair> > targetMap;
+typedef google::dense_hash_map< int64_pair, std::string, boost::hash<int64_pair> > targetMap;
 
 class processingPath
 {
@@ -50,7 +50,7 @@ class processingPath
 	static void initializeTargetMap();
 
     // Processing path options
-	static void pushTarget(char* input);
+	static void pushTarget(std::string& input);
 	static void setMaxChars(int input);
 	static int getMaxChars();
 
@@ -61,6 +61,7 @@ protected:
 	static void removeTarget(targetMap::iterator it);
 
 	static targetMap targets;
+
 	static boost::mutex targetsMutex;
 
 	static int maxChars;
