@@ -181,7 +181,7 @@ int main(int argc, char** argv)
 			// The length of a proper NTLM hash is always 32 characters
 			if (isValidNTLMHexDigest(newHash))
 			{
-				processingPath::pushTarget((char*)newHash.c_str());
+				processingPath::pushTarget(newHash);
 				targetPresent = true;
 			}
 			else
