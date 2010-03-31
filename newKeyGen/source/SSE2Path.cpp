@@ -40,14 +40,18 @@ void SSE2Path::searchKeyspace()
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Twelve keys are processed per round in this path
-		for(int i = 0; i < 12; i++) currentKeys[i] = keygen++;
-		keyLocation += 12;
+		for(int i = 0; i < 12; i++, keyLocation++)
+		{
+			memcpy(currentKeys[i], keygen.getKey(), 16);
+			keygen.incrementKey();
+		}
 
+		// Hash the keys
 		md4_sse2.getWeakHashes_NTLM(currentKeys, weakHashedKeys);
 
-		for(int i = 0; i < 16; i++)
+		// Check our target hash map for matches
+		for(int i = 0; i < 12; i++)
 		{
-			
 			if(multiHash)
 			{
 				targetIterator = targets.find(weakHashedKeys[i]);

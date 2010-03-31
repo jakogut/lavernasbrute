@@ -73,13 +73,13 @@ public:
 		}
 	}
 
-    inline char* operator++()
+    inline char* operator++() // Pre-increment
     {
             incrementKey();
             return key;
     }
 
-    inline char* operator++(int)
+    inline char* operator++(int) // Post-increment
     {
             memcpy(postIncrementRetval, key, 16);
             incrementKey();
@@ -121,15 +121,6 @@ public:
 		return key;
 	}
 
-	inline void getMultipleKeys(register std::string* output, int num)
-	{
-		for(int i = 0; i < num; i++)
-		{
-			output[i] = key;
-			incrementKey();
-		}
-	}
-
 private:
 
 	unsigned long long location;
@@ -137,8 +128,7 @@ private:
 	characterSet* charset;
 	std::string charsetStr;
 
-	// Fifteen characters is more than enough for now.
-    char key[16];
+	char key[16];
 
 	// We need a place to store the key for the post increment operation.
 	char postIncrementRetval[16];
