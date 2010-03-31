@@ -24,7 +24,7 @@ public:
 
 	keyGenerator(unsigned long long location, characterSet* charset)
 			: location(location), charset(charset)
-	{			
+	{
 		for(int i = 0; i < 16; i++)
 			key[i] = 0;
 
@@ -39,7 +39,7 @@ public:
 	inline void incrementKey()
 	{
 		register size_t keyLength = strlen(key);
-		
+
 		for(register char* place = key; place; place++)
 		{
 			if(*place == charset->maxChar)
@@ -142,53 +142,6 @@ private:
 
 	// We need a place to store the key for the post increment operation.
 	char postIncrementRetval[16];
-};
-
-class keyGenerator_NTLM : public keyGenerator
-{
-public:
-
-	keyGenerator_NTLM(unsigned long long location, characterSet* charset)
-		: location(location), charset(charset)
-	{
-		memcpy(key, 0, 16*4);
-	}
-
-	~keyGenerator_NTLM()
-	{
-	}
-
-	void integerToKey()
-	{
-	/*	register unsigned long long num = location;
-
-		if(!num)
-		{
-			key[0] = charsetStr[0];
-		}
-		else
-		{
-			num++;
-
-			while(num)
-			{
-				num--;
-				unsigned int remainder = num % charset->length;
-				num /= charset->length;
-
-				key[strlen(key)] = charsetStr[remainder];
-			}
-		}*/
-	}
-
-protected:
-
-	unsigned long long location;
-
-	characterSet* charset;
-	std::string charsetStr;
-
-    unsigned int key[16];
 };
 
 #endif

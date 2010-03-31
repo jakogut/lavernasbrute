@@ -26,7 +26,7 @@ Director::~Director()
 void Director::operator()()
 {
 	// Wait for all workers to be initialized.
-	while(workerPtrMap.size() != masterThread::getNumWorkers())
+	while(workerPtrMap.size() != (unsigned int)masterThread::getNumWorkers())
 
 	// Start updating the masterThread.
 	updateMasterThread();
