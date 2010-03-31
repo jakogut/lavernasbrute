@@ -37,10 +37,10 @@ public:
 	}
 
 	// Full MD4
-	inline char* getMD4Hash(const std::string& input)
+	inline char* getHash_MD4(const char* input)
 	{
 		// Take an ASCII string, and convert it to an MD4 message
-		prepare_key_md4((char*)input.c_str());
+		prepare_key_md4(input);
 
 		initialize_words();
 		md4_crypt();
@@ -50,9 +50,9 @@ public:
 	}
 
 	// Weak MD4
-	inline int64_pair getWeakMD4Hash(const std::string& input)
+	inline int64_pair getWeakHash_MD4(const char* input)
 	{
-		prepare_key_md4((char*)input.c_str());
+		prepare_key_md4(input);
 
 		initialize_words();
 		md4_crypt();
@@ -61,9 +61,9 @@ public:
 	}
 
 	// Full NTLM
-	inline char* getNTLMHash(const std::string& input)
+	inline char* getHash_NTLM(const char* input)
 	{
-		prepare_key_ntlm((char*)input.c_str());
+		prepare_key_ntlm(input);
 
 		initialize_words();
 		md4_crypt();
@@ -74,9 +74,9 @@ public:
 	}
 
 	// Weak NTLM
-	int64_pair getWeakNTLMHash(const std::string& input)
+	int64_pair getWeakHash_NTLM(const char* input)
 	{
-		prepare_key_ntlm((char*)input.c_str());
+		prepare_key_ntlm(input);
 
 		initialize_words();
 		md4_crypt();
@@ -85,9 +85,9 @@ public:
 	}
 
 	// Take an MD4 hash as input, and reverse the hex encoding, returning a 128-bit integer
-	inline int64_pair weakenHash(const std::string& input)
+	inline int64_pair weakenHash(const char* input)
 	{
-		convert_from_hex((char*)input.c_str());
+		convert_from_hex(input);
 		return convert_to_int128();
 	}
 
@@ -261,7 +261,7 @@ protected:
 	}
 
 	// Convert a hex digest back to four 32-bit words
-	void convert_from_hex(char* hash)
+	void convert_from_hex(const char* hash)
 	{
 		char big_endian_hash[4][9];
 

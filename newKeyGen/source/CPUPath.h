@@ -30,7 +30,7 @@ protected:
 
 	int id;
 
-	std::string currentKey;
+	char* currentKey;
 
 	MD4 md4;
 

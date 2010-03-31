@@ -25,7 +25,18 @@ processingPath::~processingPath()
 {
 }
 
-void processingPath::pushTarget(std::string input)
+void processingPath::initializeTargetMap()
+{
+	int64_pair empty, deleted;
+
+	empty.first = 0, empty.second = 0;
+	targets.set_empty_key(empty);
+
+	deleted.first = 1, deleted.second = 1;
+	targets.set_deleted_key(deleted);
+}
+
+void processingPath::pushTarget(char* input)
 {
 	MD4 md4;
 	targets[md4.weakenHash(input)] = input;

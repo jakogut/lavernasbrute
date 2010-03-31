@@ -67,7 +67,7 @@ public:
 		convert_to_int128_sse2(output);
 	}*/
 
-	void getMultipleWeakNTLMHashes(std::string input[12], int64_pair output[12])
+	void getWeakHashes_NTLM(char** input, int64_pair output[12])
 	{
 		prepare_key_ntlm_sse2(input);
 
@@ -125,13 +125,13 @@ protected:
 		}
 	}*/
 
-	inline void prepare_key_ntlm_sse2(std::string* input)
+	inline void prepare_key_ntlm_sse2(char** input)
 	{
 		unsigned int length[3][4];
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
-				length[i][j] = (unsigned int)input[j+4*i].length();
+				length[i][j] = (unsigned int)strlen(input[j+4*i]);
 
 		for(int i = 0; i < 3; i++)
 		{
