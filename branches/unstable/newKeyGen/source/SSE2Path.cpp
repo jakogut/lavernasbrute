@@ -35,16 +35,17 @@ void SSE2Path::searchKeyspace()
 		targetIterator = targets.begin();
 	}
 
+	for(int i = 0; i < 12; i++) currentKeys[i] = new char[16];
+
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Twelve keys are processed per round in this path
-
-		keygen.getMultipleKeys(currentKeys, 12);
+		for(int i = 0; i < 12; i++) currentKeys[i] = keygen++;
 		keyLocation += 12;
 
-		md4_sse2.getMultipleWeakNTLMHashes(currentKeys, weakHashedKeys);
+		md4_sse2.getWeakHashes_NTLM(currentKeys, weakHashedKeys);
 
-		for(int i = 0; i < 12; i++)
+		for(int i = 0; i < 16; i++)
 		{
 			
 			if(multiHash)

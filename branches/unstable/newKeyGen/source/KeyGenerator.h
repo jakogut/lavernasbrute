@@ -8,125 +8,84 @@
 #include <limits.h>
 
 #include "Pow.h"
-
-// This code was inspired by Daniel Niggebrugge's method of handling character sets in EnTibr
-// His blog can be found here: http://blog.distracted.nl/
-struct characterSet
-{
-	characterSet()
-	{
-	}
-
-	characterSet(unsigned int len, int min, int max, int charsec0, int charsec1, int charsec2, int charsec3)
-	{
-		init(length, min, max, charsec0, charsec1, charsec2, charsec3);
-	}
-
-	void init(unsigned int len, int min, int max, int charsec0, int charsec1, int charsec2, int charsec3)
-	{
-		length = len;
-		minChar = min;
-		maxChar = max;
-
-		charSecEnd[0] = charsec0;
-		charSecBegin[0] = charsec1;
-		charSecEnd[1] = charsec2;
-		charSecBegin[1] = charsec3;
-	}
-
-	std::string getCharsetStr()
-	{
-		std::string retval;
-
-		for(int chr = minChar; chr != maxChar; chr++)
-		{
-			for(int i = 0; i < 2; i++) if(chr == charSecEnd[i]) chr = charSecBegin[i];
-			retval += chr;
-		}
-
-		return retval;
-	}
-
-	int minChar, maxChar;
-
-	// charSec = character set section
-	int charSecEnd[2], charSecBegin[2];
-
-	unsigned int length;
-};
+#include "CharacterSet.h"
 
 class keyGenerator
 {
+
+protected:
+
+	// Allow classes inheriting from the keygen to use their own constructor.
+	keyGenerator()
+	{
+	}
+
 public:
 
-        keyGenerator(unsigned long long location, characterSet* charset)
-                : charset(charset), location(location)
-        {
-			// Fourteen characters is just about the limit of what is feasible to crack.
-			key = new char[15];
-			
-			for(int i = 0; i < 15; i++)
-				key[i] = 0;
+	keyGenerator(unsigned long long location, characterSet* charset)
+			: location(location), charset(charset)
+	{			
+		for(int i = 0; i < 16; i++)
+			key[i] = 0;
 
-			charsetStr = charset->getCharsetStr();
-			integerToKey();
-        }
+		charsetStr = charset->getCharsetStr();
+		integerToKey();
+	}
 
-        ~keyGenerator()
-        {
-			delete [] key;
-        }
+	~keyGenerator()
+	{
+	}
 
-        inline void incrementKey()
-        {
-			register size_t keyLength = strlen(key);
-			
-			for(register char* place = key; place; place++)
+	inline void incrementKey()
+	{
+		register size_t keyLength = strlen(key);
+		
+		for(register char* place = key; place; place++)
+		{
+			if(*place == charset->maxChar)
 			{
-				if(*place == charset->maxChar)
+				// Overflow, reset char at place
+				*place = charset->minChar;
+
+				if(!*(place+1))
 				{
-					// Overflow, reset char at place
-					*place = charset->minChar;
-
-					if(*(place+1) == 0)
-					{
-						// Carry, no space, insert char
-						*(place+1) = charset->minChar;
-						++keyLength;
-
-						break;
-					}
-					else
-					{
-						continue;
-					}
-				}
-				else
-				{
-					// Space available, increment char at place
-					if(*place == charset->charSecEnd[0]) *place = charset->charSecBegin[0];
-					else if(*place == charset->charSecEnd[1]) *place = charset->charSecBegin[1];
-
-					(*place)++;
+					// Carry, no space, insert char
+					*(place+1) = charset->minChar;
+					++keyLength;
 
 					break;
 				}
+				else
+				{
+					continue;
+				}
+			}
+			else
+			{
+				// Space available, increment char at place
+				if(*place == charset->charSecEnd[0]) *place = charset->charSecBegin[0];
+				else if(*place == charset->charSecEnd[1]) *place = charset->charSecBegin[1];
+
+				(*place)++;
+
+				break;
 			}
 		}
+	}
 
-        inline std::string operator++()
-        {
-                incrementKey();
-                return getKey();
-        }
+    inline char* operator++()
+    {
+            incrementKey();
+            return key;
+    }
 
-        inline std::string operator++(int)
-        {
-                std::string retval = key;
-                incrementKey();
+    inline char* operator++(int)
+    {
+            memcpy(postIncrementRetval, key, 16);
+            incrementKey();
 
-                return retval;
-        }
+            return postIncrementRetval;
+    }
 
 	void integerToKey()
 	{
@@ -157,7 +116,7 @@ public:
 		return 0;
 	}
 
-	inline std::string getKey()
+	inline char* getKey()
 	{
 		return key;
 	}
@@ -171,14 +130,65 @@ public:
 		}
 	}
 
-protected:
+private:
+
+	unsigned long long location;
 
 	characterSet* charset;
 	std::string charsetStr;
 
-    char* key;
+	// Fifteen characters is more than enough for now.
+    char key[16];
+
+	// We need a place to store the key for the post increment operation.
+	char postIncrementRetval[16];
+};
+
+class keyGenerator_NTLM : public keyGenerator
+{
+public:
+
+	keyGenerator_NTLM(unsigned long long location, characterSet* charset)
+		: location(location), charset(charset)
+	{
+		memcpy(key, 0, 16*4);
+	}
+
+	~keyGenerator_NTLM()
+	{
+	}
+
+	void integerToKey()
+	{
+	/*	register unsigned long long num = location;
+
+		if(!num)
+		{
+			key[0] = charsetStr[0];
+		}
+		else
+		{
+			num++;
+
+			while(num)
+			{
+				num--;
+				unsigned int remainder = num % charset->length;
+				num /= charset->length;
+
+				key[strlen(key)] = charsetStr[remainder];
+			}
+		}*/
+	}
+
+protected:
 
 	unsigned long long location;
+
+	characterSet* charset;
+	std::string charsetStr;
+
+    unsigned int key[16];
 };
 
 #endif

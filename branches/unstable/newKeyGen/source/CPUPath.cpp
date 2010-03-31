@@ -5,7 +5,6 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	currentKey.reserve(maxChars);
 }
 
 CPUPath::~CPUPath()
@@ -37,7 +36,7 @@ void CPUPath::searchKeyspace()
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Get the next key
-		currentKey = keygen++;
+		((char*)currentKey) = keygen++;
 
 		keyLocation++;
 
@@ -45,7 +44,7 @@ void CPUPath::searchKeyspace()
 		if(multiHash)
 		{
 			// Look through the targets for our hash
-			targetIterator = targets.find(md4.getWeakNTLMHash(currentKey));
+			targetIterator = targets.find(md4.getWeakHash_NTLM(currentKey));
 
 			if(targetIterator != targets.end()) // Match was found
 			{
@@ -57,7 +56,7 @@ void CPUPath::searchKeyspace()
 		}
 		else
 		{
-			if(md4.getWeakNTLMHash(currentKey) == targetIterator->first)
+			if(md4.getWeakHash_NTLM(currentKey) == targetIterator->first)
 			{
 				masterThread::printResult(targetIterator->second, currentKey);
 

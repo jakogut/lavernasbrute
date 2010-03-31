@@ -32,7 +32,7 @@ protected:
 
 	int id;
 
-	std::string currentKeys[12];
+	char* currentKeys[12];
 	int64_pair weakHashedKeys[12];
 
 	targetMap::iterator targetIterator;

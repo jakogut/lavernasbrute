@@ -114,12 +114,16 @@ bool isValidNTLMHexDigest(const string hash)
     return true;
 }
 
+#ifndef DEBUG
 int main(int argc, char** argv)
 {
 	bool targetPresent = false;
 	bool charsetSpecified = false;
 	bool enableSSE2 = false;
 	int CPUThreads = 2;
+
+	// Initialize sparsehash
+	processingPath::initializeTargetMap();
 
 	// Parse command-line arguments
 	string flag, value;
@@ -212,7 +216,7 @@ int main(int argc, char** argv)
 				masterThread::initCharset(36, '0', 'Z', '9'+1, 'A', 0, 0);
 			else if(value == "mixalpha-numeric")	// A-Z, a-z, 0-9
 				masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
-			else if(value == "all")					// All ascii symbols and characters
+			else									// All ascii symbols and characters
 				masterThread::initCharset(95, ' ', '~', 0, 0, 0, 0);
 		}
 
@@ -297,3 +301,51 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+#endif
+
+#ifdef DEBUG
+#include "KeyGenerator.h"
+
+int main()
+{
+	characterSet charset(26, 'a', 'z', 0, 0, 0, 0);
+	keyGenerator keygen(0, &charset);
+
+	time_t startTime = time(NULL);
+
+	char* input[12];
+	for(int i = 0; i < 12; i++) input[i] = new char[16];
+
+	input[0] = "bill";
+	input[1] = "billy";
+	input[2] = "insight";
+	input[3] = "rawr";
+	input[4] = "pass";
+	input[5] = "";
+	input[6] = "0";
+	input[7] = "1";
+	input[8] = "2";
+	input[9] = "3";
+	input[10] = "4";
+	input[11] = "5";
+
+	int64_pair output[12];
+
+	MD4_SSE2 md4;
+
+	for(int i = 0; i < 12; i++)
+		md4.getWeakHashes_NTLM((char**)input, output);
+
+	//for(int i = 0; i < 1000000000; i += 12)
+	/*	for(int i = 0; i < 12; i++) 
+		{
+			output[i] = keygen++; 
+			cout << output[i] << endl;
+		}*/
+
+	//cout << time(NULL) - startTime << endl;
+
+	for(int i = 0; i < 12; i++)
+		cout << output[i].first << endl;
+}
+#endif
