@@ -37,6 +37,8 @@ public:
 	{
 	}
 
+	typedef int64_pair (MD4::*scalarHashPtr)(const char*);
+
 	// Full MD4
 	inline char* getHash_MD4(const char* input)
 	{

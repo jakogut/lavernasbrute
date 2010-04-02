@@ -33,6 +33,7 @@ protected:
 	char* currentKey;
 
 	MD4 md4;
+	MD4::scalarHashPtr hashFunc;
 
 	targetMap::iterator targetIterator;
 
