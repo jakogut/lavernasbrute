@@ -5,6 +5,10 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
+	if(hashType == "ntlm")
+		hashFunc = &MD4::getWeakHash_NTLM;
+	else if(hashType == "md4")
+		hashFunc = &MD4::getWeakHash_MD4;;
 }
 
 CPUPath::~CPUPath()
@@ -44,7 +48,7 @@ void CPUPath::searchKeyspace()
 		if(multiHash)
 		{
 			// Look through the targets for our hash
-			targetIterator = targets.find(md4.getWeakHash_NTLM(currentKey));
+			targetIterator = targets.find((md4.*hashFunc)(currentKey));
 
 			if(targetIterator != targets.end()) // Match was found
 			{
@@ -56,7 +60,7 @@ void CPUPath::searchKeyspace()
 		}
 		else
 		{
-			if(md4.getWeakHash_NTLM(currentKey) == targetIterator->first)
+			if((md4.*hashFunc)(currentKey) == targetIterator->first)
 			{
 				masterThread::printResult(targetIterator->second, currentKey);
 

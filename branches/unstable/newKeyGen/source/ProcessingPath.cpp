@@ -9,6 +9,7 @@
 targetMap processingPath::targets;
 boost::mutex processingPath::targetsMutex;
 int processingPath::maxChars = 0;
+std::string processingPath::hashType;
 
 ////////////////////////////////////////////
 
@@ -61,4 +62,9 @@ void processingPath::removeTarget(targetMap::iterator it)
 {
 	boost::mutex::scoped_lock lock(targetsMutex);
 	targets.erase(it);
+}
+
+void processingPath::setHashType(std::string type)
+{
+	hashType = type;
 }

@@ -56,17 +56,20 @@ class processingPath
 
 	static int getNumTargets();
 
+	// Set the hash type for the run
+	static void setHashType(std::string type);
+
 protected:
 
+	int remainingTargets;
+
 	static void removeTarget(targetMap::iterator it);
-
 	static targetMap targets;
-
 	static boost::mutex targetsMutex;
 
 	static int maxChars;
 
-	int remainingTargets;
+	static std::string hashType;
 };
 
 #endif

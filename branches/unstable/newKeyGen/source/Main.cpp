@@ -39,8 +39,11 @@ void printHelp()
 
 	"\n\n-h\t\tDisplay this help message. "
 
-	"\n\nntlm:HASH\tAdd an NTLM hash to the target list."
+	"\n\ntarget:HASH\tAdd an NTLM hash to the target list."
 	"\n\t\tMultiple hashes can be attacked at once."
+
+	"\n\n--hash-type\tSpecify the hashing algorithm to use."
+	"\n\t\tAvailable options are: NTLM, MD4"
 
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
 	"\n\t\tThis should match the core count of your CPU."
@@ -95,7 +98,7 @@ string toLower(const string input)
 }
 
 // Validates a string input as a lowercase hex digest of an NTLM hash
-bool isValidNTLMHexDigest(const string hash)
+bool isValidHexDigest(const string hash)
 {
     // Require a length of 32
     if (32 != hash.length()) return false;
@@ -114,9 +117,9 @@ bool isValidNTLMHexDigest(const string hash)
     return true;
 }
 
-#ifndef DEBUG
 int main(int argc, char** argv)
 {
+	bool hashTypeSpecified = true;
 	bool targetPresent = false;
 	bool charsetSpecified = false;
 	bool enableSSE2 = false;
@@ -135,36 +138,6 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
-		#ifdef DEBUG
-		if(toLower(flag) == "--test_multi")
-        {
-                string charset = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                int charsetLength = (int)charset.length();
-
-                int count = toInt(value);
-
-                MD4 md4;
-
-                for(int i = 0; i < count; i++)
-                {
-                        unsigned long long num = 500000000 + i;
-                        string target = "";
-
-						num++;
-                        while(num)
-                        {
-								num--;
-                                target += charset[num % charsetLength];
-                                num /= charsetLength;
-                        }
-
-                        processingPath::pushTarget(md4.getNTLMHash(target));
-                }
-
-                targetPresent = true;
-        }
-		#endif
-
 		// Print the help page
 		if(toLower(flag) == "-h" || flag == "--help")
 		{
@@ -172,14 +145,24 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		// Add an NTLM hash to the targets hash map
-		if(toLower(flag.substr(0, 5)) == "ntlm:")
+		if(toLower(flag) == "--hash-type")
 		{
-			string newHash = toLower(flag.substr(5));
+			std::string hashType = toLower(value);
+
+			if(hashType == "ntlm" || hashType == "md4")
+				processingPath::setHashType(hashType);
+			else
+				hashTypeSpecified = false;
+		}
+
+		// Add a hash to the target hash map
+		if(toLower(flag.substr(0, 7)) == "target:")
+		{
+			string newHash = toLower(flag.substr(7));
  
 			// Check to see whether the hash has been entered correctly
 			// The length of a proper NTLM hash is always 32 characters
-			if (isValidNTLMHexDigest(newHash))
+			if (isValidHexDigest(newHash))
 			{
 				processingPath::pushTarget(newHash);
 				targetPresent = true;
@@ -252,7 +235,7 @@ int main(int argc, char** argv)
 	masterThread::setNumWorkers(CPUThreads);
 
 	// Check to see that we have a valid target
-	if(targetPresent)
+	if(targetPresent && hashTypeSpecified)
 	{
 		cout << "\nRunning " << CPUThreads << " cooperative threads," << endl
 			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).";
@@ -268,8 +251,13 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		cerr << "\nERROR: Invalid input. Please choose a valid action." << endl
-			 << "Use flag '-h' to see the possible options." << endl;
+		if(!targetPresent)
+			cerr << "\nERROR: Invalid input. Please choose a valid action." << endl;
+
+		if(!hashTypeSpecified)
+			cerr << "\nERROR: No hash type specified. Please specify a valid hash type." << endl;
+
+		cout << "\nUse flag '-h' to see the possible options." << endl;
 
 		return 1;
 	}
@@ -301,51 +289,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-#endif
-
-#ifdef DEBUG
-#include "KeyGenerator.h"
-
-int main()
-{
-	characterSet charset(26, 'a', 'z', 0, 0, 0, 0);
-	keyGenerator keygen(0, &charset);
-
-	time_t startTime = time(NULL);
-
-	char* input[12];
-	for(int i = 0; i < 12; i++) input[i] = new char[16];
-
-	input[0] = "bill";
-	input[1] = "billy";
-	input[2] = "insight";
-	input[3] = "rawr";
-	input[4] = "pass";
-	input[5] = "";
-	input[6] = "0";
-	input[7] = "1";
-	input[8] = "2";
-	input[9] = "3";
-	input[10] = "4";
-	input[11] = "5";
-
-	int64_pair output[12];
-
-	MD4_SSE2 md4;
-
-	for(int i = 0; i < 12; i++)
-		md4.getWeakHashes_NTLM((char**)input, output);
-
-	//for(int i = 0; i < 1000000000; i += 12)
-	/*	for(int i = 0; i < 12; i++) 
-		{
-			output[i] = keygen++; 
-			cout << output[i] << endl;
-		}*/
-
-	//cout << time(NULL) - startTime << endl;
-
-	for(int i = 0; i < 12; i++)
-		cout << output[i].first << endl;
-}
-#endif

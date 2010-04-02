@@ -55,6 +55,8 @@ public:
 	{
 	}
 
+	typedef char* (MD4::*vectorHashPtr)(const char*);
+
 	// Not quite done yet
 	/*void getMultipleWeakMD4Hashes(std::string input[12], int64_pair output[12])
 	{
