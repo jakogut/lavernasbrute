@@ -1,8 +1,12 @@
 //Part of Laverna's Brute
 
-// Enable functions which aid in developing and debugging for Laverna's Brute.
-// Comment this out for release builds.
+/* Enable functions which aid in developing and debugging for Laverna's Brute.
+Comment this out for release builds. */
 //#define DEBUG
+
+/* Include support for SSE2. 
+If the processor doesn't support SSE2, this can be disabled for compatibility. */
+#define SSE2
 
 #include <iostream>
 #include <time.h>
@@ -21,8 +25,10 @@
 
 // Processing paths
 #include "CPUPath.h"
+
+#ifdef SSE2
 #include "SSE2Path.h"
-//#include "64BitPath.h"
+#endif
 
 using namespace std;
 
@@ -62,7 +68,9 @@ void printHelp()
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
 	"\n\t\tMax is 10 chars."
 
+#ifdef SSE2
 	"\n\n--SSE2\t\tUse an SSE2 optimized CPU path."
+#endif
 
 	"\n\n--silent\tRun the program in silent mode."
 
@@ -97,7 +105,7 @@ string toLower(const string input)
 	return result;
 }
 
-// Validates a string input as a lowercase hex digest of an NTLM hash
+// Validates a string input as a lowercase hex digest
 bool isValidHexDigest(const string hash)
 {
     // Require a length of 32
@@ -122,7 +130,11 @@ int main(int argc, char** argv)
 	bool hashTypeSpecified = true;
 	bool targetPresent = false;
 	bool charsetSpecified = false;
+
+	#ifdef SSE2
 	bool enableSSE2 = false;
+	#endif
+
 	int CPUThreads = 2;
 
 	// Initialize sparsehash
@@ -212,7 +224,11 @@ int main(int argc, char** argv)
 		// Enable SSE2 path
 		if(toLower(flag) == "--sse2")
 		{
+			#ifdef SSE2
 			enableSSE2 = true;
+			#else
+			cerr << "Warning: SSE2 not supported in this build." << endl;
+			#endif
 		}
 
 		// Disable iteration logging
@@ -240,14 +256,14 @@ int main(int argc, char** argv)
 		cout << "\nRunning " << CPUThreads << " cooperative threads," << endl
 			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).";
 
+		#ifdef SSE2
 		if(enableSSE2)
 		{
 			cout << "\n\nSSE2 processing path enabled." << endl << endl;
 		}
 		else
-		{
+		#endif
 			cout << endl << endl;
-		}
 	}
 	else
 	{
@@ -274,14 +290,14 @@ int main(int argc, char** argv)
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
+		#ifdef SSE2
 		if(enableSSE2)
 		{
 			threadGroup.create_thread(SSE2Path(i));
 		}
 		else
-		{
+		#endif
 			threadGroup.create_thread(CPUPath(i));
-		}
 	}
 
 	// Wait for the threads to complete their work
