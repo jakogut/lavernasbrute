@@ -8,13 +8,8 @@ DIRECTORIES OVERVIEW
 
 BUILDING:
 
-Currently, the only dependency for building Laverna's Brute is Boost 1.38 or later. The required header files can be
-found at http://boost.org/. Pre-built Boost libraries are available at http://dottru.net/~joseph/BoostLibs/
-
-If using pre-built libraries, you must include the Boost headers matching the version of your built libraries.
-
-Extract the /boost directory of your Boost archive to lavernasbrute/include/. Extract the archive of pre-built
-Boost libraries to lavernasbrute/lib/.
+Install the dependencies specified in [lavernasbrute_root]/DEPENDENCIES either with your system's package manager,
+or manually. (If compiling on Windows, the dependencies will need to be installed manually.)
 
 	-- Windows --
 
@@ -31,8 +26,3 @@ Boost libraries to lavernasbrute/lib/.
 	For example, to build for the 64-bit x86 archtecture, run "make ARCH=x86-64".
 
 	NOTE: your processor must support the SSE2 instruction set to use the SSE2 path.
-
-----------
-
-NOTE: Windows builds of Laverna's Brute are no longer supported. Linux systems offer much better performance
-than Windows. Consequently, Windows support has been dropped.
