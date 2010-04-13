@@ -1,19 +1,19 @@
 // Part of Laverna's Brute
 
-#ifndef SSE2PATH_H_
-#define SSE2PATH_H_
+#ifndef SSEPath_H_
+#define SSEPath_H_
 
 #include "Director.h"
 #include "ProcessingPath.h"
 
-#include "MD4_SSE2.h"
+#include "MD4_SSE.h"
 
-class SSE2Path : protected processingPath
+class SSEPath : protected processingPath
 {
 public:
 
-	SSE2Path(int id);
-	~SSE2Path();
+	SSEPath(int id);
+	~SSEPath();
 
 	void operator()();
 	void searchKeyspace();
