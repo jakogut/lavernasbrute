@@ -1,25 +1,25 @@
 // Part of Laverna's Brute
 
-#include "SSE2Path.h"
+#include "SSEPath.h"
 
-SSE2Path::SSE2Path(int id)
+SSEPath::SSEPath(int id)
 : id(id)
 {
 }
 
-SSE2Path::~SSE2Path()
+SSEPath::~SSEPath()
 {
 }
 
-void SSE2Path::operator()()
+void SSEPath::operator()()
 {
 	Director::manageWorker(this);
 }
 
-void SSE2Path::searchKeyspace()
+void SSEPath::searchKeyspace()
 {
 	masterThread::setRemainingTargets(getNumTargets());
-	MD4_SSE2 md4_sse2;
+	MD4_SSE md4_SSE;
 
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
@@ -47,7 +47,7 @@ void SSE2Path::searchKeyspace()
 		}
 
 		// Hash the keys
-		md4_sse2.getWeakHashes_NTLM(currentKeys, weakHashedKeys);
+		md4_SSE.getWeakHashes_NTLM(currentKeys, weakHashedKeys);
 
 		// Check our target hash map for matches
 		for(int i = 0; i < 12; i++)
@@ -87,37 +87,37 @@ void SSE2Path::searchKeyspace()
 	}
 }
 
-int SSE2Path::getThreadID()
+int SSEPath::getThreadID()
 {
 	return id;
 }
 
-unsigned long long SSE2Path::getKeyspaceEnd()
+unsigned long long SSEPath::getKeyspaceEnd()
 {
 	return keyspaceEnd;
 }
 
-unsigned long long SSE2Path::getKeyspaceBegin()
+unsigned long long SSEPath::getKeyspaceBegin()
 {
 	return keyspaceBegin;
 }
 
-unsigned long long SSE2Path::getKeyLocation()
+unsigned long long SSEPath::getKeyLocation()
 {
 	return keyLocation;
 }
 
-void SSE2Path::moveKeyspaceEnd(unsigned long long input)
+void SSEPath::moveKeyspaceEnd(unsigned long long input)
 {
 	keyspaceEnd = input;
 }
 
-void SSE2Path::moveKeyspaceBegin(unsigned long long input)
+void SSEPath::moveKeyspaceBegin(unsigned long long input)
 {
 	keyspaceBegin = input;
 }
 
-void SSE2Path::moveKeylocation(unsigned long long input)
+void SSEPath::moveKeylocation(unsigned long long input)
 {
 	keyLocation = input;
 }

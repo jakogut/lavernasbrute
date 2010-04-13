@@ -4,9 +4,11 @@
 Comment this out for release builds. */
 //#define DEBUG
 
-/* Include support for SSE2. 
-If the processor doesn't support SSE2, this can be disabled for compatibility. */
-#define SSE2
+/* Include support for SSE. 
+If the processor doesn't support SSE, this can be disabled for compatibility.
+This should not be necessary, as any processor not supporting SSE is not worth much 
+to the Laverna project, in terms of processing power. */
+#define SSE
 
 #include <iostream>
 #include <time.h>
@@ -26,8 +28,8 @@ If the processor doesn't support SSE2, this can be disabled for compatibility. *
 // Processing paths
 #include "CPUPath.h"
 
-#ifdef SSE2
-#include "SSE2Path.h"
+#ifdef SSE
+#include "SSEPath.h"
 #endif
 
 using namespace std;
@@ -68,8 +70,8 @@ void printHelp()
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
 	"\n\t\tMax is 10 chars."
 
-#ifdef SSE2
-	"\n\n--SSE2\t\tUse an SSE2 optimized CPU path."
+#ifdef SSE
+	"\n\n--SSE\t\tUse an SSE optimized CPU path."
 #endif
 
 	"\n\n--silent\tRun the program in silent mode."
@@ -131,8 +133,8 @@ int main(int argc, char** argv)
 	bool targetPresent = false;
 	bool charsetSpecified = false;
 
-	#ifdef SSE2
-	bool enableSSE2 = false;
+	#ifdef SSE
+	bool enableSSE = false;
 	#endif
 
 	int CPUThreads = 2;
@@ -221,13 +223,13 @@ int main(int argc, char** argv)
 			processingPath::setMaxChars(toInt(value));
 		}		
 
-		// Enable SSE2 path
-		if(toLower(flag) == "--sse2")
+		// Enable SSE path
+		if(toLower(flag) == "--sse" || toLower(flag) == "--sse2")
 		{
-			#ifdef SSE2
-			enableSSE2 = true;
+			#ifdef SSE
+			enableSSE = true;
 			#else
-			cerr << "Warning: SSE2 not supported in this build." << endl;
+			cerr << "Warning: SSE not supported in this build." << endl;
 			#endif
 		}
 
@@ -256,10 +258,10 @@ int main(int argc, char** argv)
 		cout << "\nRunning " << CPUThreads << " cooperative threads," << endl
 			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).";
 
-		#ifdef SSE2
-		if(enableSSE2)
+		#ifdef SSE
+		if(enableSSE)
 		{
-			cout << "\n\nSSE2 processing path enabled." << endl << endl;
+			cout << "\n\nSSE processing path enabled." << endl << endl;
 		}
 		else
 		#endif
@@ -290,10 +292,10 @@ int main(int argc, char** argv)
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
-		#ifdef SSE2
-		if(enableSSE2)
+		#ifdef SSE
+		if(enableSSE)
 		{
-			threadGroup.create_thread(SSE2Path(i));
+			threadGroup.create_thread(SSEPath(i));
 		}
 		else
 		#endif
