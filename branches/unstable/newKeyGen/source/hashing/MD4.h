@@ -7,12 +7,21 @@
 #include <iostream>
 #include <cstdlib>
 
-#define ROTL(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
-#define ROTR(NUM, PLACES, SIZE) ((NUM >> PLACES) | (NUM << (SIZE - PLACES)))
+#define ROTL(NUM, PLACES) ((NUM << PLACES) | (NUM >> (32 - PLACES)))
+#define ROTR(NUM, PLACES) ((NUM >> PLACES) | (NUM << (32 - PLACES)))
 
 #define F(X, Y, Z) ((X & Y) | (~X & Z))
 #define G(X, Y, Z) ((X & Y) | (X & Z) | (Y & Z))
 #define H(X, Y, Z) (X ^ Y ^ Z)
+
+#define FF(A, B, C, D, X, ROT) \
+	A += F(B, C, D) + X, A = ROTL(A, ROT)
+
+#define GG(A, B, C, D, X, SQRT2, ROT) \
+	A += G(B, C, D) + X + SQRT2, A = ROTL(A, ROT)
+
+#define HH(A, B, C, D, X, SQRT3, ROT) \
+	A += H(B, C, D) + X + SQRT3, A = ROTL(A, ROT)
 
 typedef std::pair<unsigned long long, unsigned long long> int64_pair;
 
@@ -159,47 +168,47 @@ protected:
 	{	 
 		// Round 1 // ---
 
-		wd[0] += F(wd[1], wd[2], wd[3])  +  md4_buffer[0],  wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += F(wd[0], wd[1], wd[2])  +  md4_buffer[1],  wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += F(wd[3], wd[0], wd[1])  +  md4_buffer[2],  wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += F(wd[2], wd[3], wd[0])  +  md4_buffer[3],  wd[1] = ROTL(wd[1], 19, 32);
+		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[0], 3);
+		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[1], 7);
+		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[2], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[3], 19);
 	 
-		wd[0] += F(wd[1], wd[2], wd[3])  +  md4_buffer[4],  wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += F(wd[0], wd[1], wd[2])  +  md4_buffer[5],  wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += F(wd[3], wd[0], wd[1])  +  md4_buffer[6],  wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += F(wd[2], wd[3], wd[0])  +  md4_buffer[7],  wd[1] = ROTL(wd[1], 19, 32);
+		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[4], 3);
+		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[5], 7);
+		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[6], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[7], 19);
 	 
-		wd[0] += F(wd[1], wd[2], wd[3])  +  md4_buffer[8],  wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += F(wd[0], wd[1], wd[2])  +  md4_buffer[9],  wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += F(wd[3], wd[0], wd[1])  +  md4_buffer[10], wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += F(wd[2], wd[3], wd[0])  +  md4_buffer[11], wd[1] = ROTL(wd[1], 19, 32);
+		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[8],  3);
+		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[9],  7);
+		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[10], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[11], 19);
 	 
-		wd[0] += F(wd[1], wd[2], wd[3])  +  md4_buffer[12], wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += F(wd[0], wd[1], wd[2])  +  md4_buffer[13], wd[3] = ROTL(wd[3], 7, 32);
-		wd[2] += F(wd[3], wd[0], wd[1])  +  md4_buffer[14], wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += F(wd[2], wd[3], wd[0])  +  md4_buffer[15], wd[1] = ROTL(wd[1], 19, 32);
+		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[12], 3);
+		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[13], 7);
+		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[14], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[15], 19);
 
 		// Round 2 // ---
 
-		wd[0] += G(wd[1], wd[2], wd[3]) + md4_buffer[0] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += G(wd[0], wd[1], wd[2]) + md4_buffer[4] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += G(wd[3], wd[0], wd[1]) + md4_buffer[8] +SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += G(wd[2], wd[3], wd[0]) + md4_buffer[12]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
+		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[0],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[4],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[8],  SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[12], SQRT_2, 13);
 	 
-		wd[0] += G(wd[1], wd[2], wd[3]) + md4_buffer[1] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += G(wd[0], wd[1], wd[2]) + md4_buffer[5] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += G(wd[3], wd[0], wd[1]) + md4_buffer[9] +SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += G(wd[2], wd[3], wd[0]) + md4_buffer[13]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
+		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[1],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[5],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[9],  SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[13], SQRT_2, 13);
 	 
-		wd[0] += G(wd[1], wd[2], wd[3]) + md4_buffer[2] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += G(wd[0], wd[1], wd[2]) + md4_buffer[6] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += G(wd[3], wd[0], wd[1]) + md4_buffer[10]+SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += G(wd[2], wd[3], wd[0]) + md4_buffer[14]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
+		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[2],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[6],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[10], SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[14], SQRT_2, 13);
 	 
-		wd[0] += G(wd[1], wd[2], wd[3]) + md4_buffer[3] +SQRT_2, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += G(wd[0], wd[1], wd[2]) + md4_buffer[7] +SQRT_2, wd[3] = ROTL(wd[3], 5, 32);
-		wd[2] += G(wd[3], wd[0], wd[1]) + md4_buffer[11]+SQRT_2, wd[2] = ROTL(wd[2], 9, 32);
-		wd[1] += G(wd[2], wd[3], wd[0]) + md4_buffer[15]+SQRT_2, wd[1] = ROTL(wd[1], 13, 32);
+		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[3],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[7],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[11], SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[15], SQRT_2, 13);
 	
 		// Round 3 // ---
 
@@ -212,25 +221,25 @@ protected:
 		element had to have been zero. We can do this until we find an element of the message that
 		_wasn't_ zero, in which case we would have found the end of the message.*/
 
-		wd[0] += H(wd[3], wd[2], wd[1]) + md4_buffer[0]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[8]  +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += H(wd[1], wd[0], wd[3]) + md4_buffer[4]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[12] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
+		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[0],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[8],  SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[4],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[12], SQRT_3, 15);
 	 
-		wd[0] += H(wd[3], wd[2], wd[1]) + md4_buffer[2]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[10] +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += H(wd[1], wd[0], wd[3]) + md4_buffer[6]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[14] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
+		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[2],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[10], SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[6],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[14], SQRT_3, 15);
 	 
-		wd[0] += H(wd[3], wd[2], wd[1]) + md4_buffer[1]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[9]  +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += H(wd[1], wd[0], wd[3]) + md4_buffer[5]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[13] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
+		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[1],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[9],  SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[5],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[13], SQRT_3, 15);
 	 
-		wd[0] += H(wd[3], wd[2], wd[1]) + md4_buffer[3]  +  SQRT_3, wd[0] = ROTL(wd[0], 3, 32);
-		wd[3] += H(wd[2], wd[1], wd[0]) + md4_buffer[11] +  SQRT_3, wd[3] = ROTL(wd[3], 9, 32);
-		wd[2] += H(wd[1], wd[0], wd[3]) + md4_buffer[7]  +  SQRT_3, wd[2] = ROTL(wd[2], 11, 32);
-		wd[1] += H(wd[0], wd[3], wd[2]) + md4_buffer[15] +  SQRT_3, wd[1] = ROTL(wd[1], 15, 32);
+		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[3],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[11], SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[7],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[15], SQRT_3, 15);
 	}
 	 
 	inline void finalize_md4()

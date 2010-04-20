@@ -78,15 +78,15 @@ void masterThread::printStatistics()
 		<< "\nCompleted in: " << days << " days, " << hours << " hours, "
 		<< minutes << " minutes, and " << seconds << " seconds. ";
 
-		if(silent)
-		{
-			std::cout << "\n\nAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s" << std::endl;
-			std::cout.flush();
-		}
-		else
-		{
-			std::cout << std::endl;
-		}
+	if(silent)
+	{
+		std::cout << "\n\nAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s" << std::endl;
+		std::cout.flush();
+	}
+	else
+	{
+		std::cout << std::endl;
+	}
 }
 
 bool masterThread::getSuccess()
