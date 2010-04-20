@@ -1,6 +1,7 @@
 CXX = g++
 CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE)
-ARCH = i386
+ARCH = generic
+BITNESS = 32
 DEBUG = -g
 PROFILE = -pg
 
@@ -8,13 +9,17 @@ INCLUDE = -I/usr/include -Iinclude -Isource -Isource/hashing
 LIB = -L/usr/lib -Llib -lboost_date_time-mt -lboost_thread-mt
 DEST = bin/gcc/$(ARCH)
 
-OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/SSE2Path.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/Director.o
+OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/SSEPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/Director.o
 MKDIR = mkdir -p
 RM = rm -f
 
-ifneq ($(ARCH), x86-64)
-	CXXFLAGS += -m32 -msse -msse2 -mfpmath=sse
-else
+ifeq ($(ARCH), x86-64)
+	BITNESS = 64
+endif
+
+ifeq ($(BITNESS), 32)
+	CXXFLAGS += -m32 -msse
+else ifeq ($(BITNESS), 64) 
 	CXXFLAGS += -m64
 endif
 
