@@ -35,15 +35,23 @@ void Director::operator()()
 void Director::updateMasterThread()
 {
 	boost::posix_time::seconds updateInterval(1);
-	unsigned long long totalIterations;
+	unsigned long long totalIterations = 0;
+
+	int numWorkers = masterThread::getNumWorkers();
 
 	while(!masterThread::getSuccess())
 	{
 		boost::this_thread::sleep(updateInterval);
 		totalIterations = 0;
 
-		for(int i = 0; i < masterThread::getNumWorkers(); i++)
-			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
+		for(int i = 0; i < numWorkers; i++)
+		{
+			/* Sometimes one of the scheduled threads fails to be created and initialized properly.
+			Until the larger issue is fixed, this little check stops the program from segfaulting. */
+
+			if(i <= numWorkers && workerPtrMap[i] != NULL)
+				totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
+		}
 
 		masterThread::setIterations(totalIterations);
 	}
