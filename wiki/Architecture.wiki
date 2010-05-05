@@ -1,5 +1,5 @@
 #summary A general synopsis of the architecture and inner workings of Laverna's Brute.
-#labels Phase-Design
+#labels Phase-Design,Deprecated
 
 = Introduction =
 
