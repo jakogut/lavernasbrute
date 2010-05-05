@@ -55,18 +55,18 @@ Laverna's Brute is, quite simply, a tool. The purpose of this tool is to break o
 
 = Milestone Release Plan =
 
-* Version 1.0 *Released*
+Version 1.0 *Released*
     Cracker is stable, and is capable of attacking some form of hash. Shows at least     
     moderate amount of usefulness.
 
-* Version 2.0
+Version 2.0
     Cracker has been adapted to attack hashes using a graphical processing unit (GPU)
 
-* Version 3.0
+Version 3.0
     Some form of networking support has been implemented, and clients can communicate and 
     coordinate a distributed attack over a local area network.
 
-* Version 4.0
+Version 4.0
     Unplanned.    
 
 = Release Labels: =
