@@ -3,7 +3,7 @@
 
 = Debian GNU/Linux 6.0 Squeeze (Virtualized) =
 
-== Development Build r334 ==
+== Development Build r327 ==
 * Hardware
     Intel Core 2 Duo 6420 @ 2.13 GHz
     512 MB DDR2 667
