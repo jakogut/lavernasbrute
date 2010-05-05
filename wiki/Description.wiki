@@ -48,7 +48,7 @@ Laverna's Brute is, quite simply, a tool. The purpose of this tool is to break o
         *  OpenCL processing path *Not started*
         *  Networked load distribution/coordination *Not started*
 
-    * Persistent runs (Saving/loading of progress in a run)
+    * Persistent runs (Saving/loading of progress in a run) *Not started*
         Attacks running on a single local machine should catch the interrupt, and save 
         their progress to a database before exiting. This will allow for automatic  
         resuming when the same hash is attacked later.
