@@ -1,0 +1,16 @@
+#labels Featured
+# Performance achievements for certain Laverna's Brute builds.
+
+= Debian GNU/Linux 6.0 Squeeze (Virtualized) =
+
+== Development Build r334 ==
+* Hardware
+    Intel Core 2 Duo 6420 @ 2.13 GHz
+    512 MB DDR2 667
+
+* Build flags
+    -Wall -O3 -march=x86-64
+
+* Performance
+    Two threads, single hash, SSE enabled
+        28 M keys/s
