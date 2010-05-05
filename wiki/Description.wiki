@@ -3,7 +3,7 @@
 
 = Introduction =
 
- Laverna's Brute is a free and open source platform for attacking or reversing cryptographic algorithms, ciphers, and hashes. The main goal of the project is to provide the fastest, easiest, cheapest, and most extensible and flexible tool for this job. The final and most important milestone for the Laverna project is to create a distributed cracking network powered by its users. 
+Laverna's Brute is a free and open source platform for attacking or reversing cryptographic algorithms, ciphers, and hashes. The main goal of the project is to provide the fastest, easiest, cheapest, and most extensible and flexible tool for this job. The final and most important milestone for the Laverna project is to create a distributed cracking network powered by its users. 
 
 Essentially, each user will provide a hash, or list of hashes, that they want cracked. In order to receive the reversed hashes, they will need to donate processing time to the project, during which they will help crack hashes submitted by other users. Due to the highly parallel nature of attacking hashes, adding target hashes to the queue affects the network's performance very little. The processing time requirement ensures that each client is donating many times more to the network than they take.
 
