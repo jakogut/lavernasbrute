@@ -41,6 +41,8 @@ public:
 	{
 		prepare_key_ntlm_mmx(input);
 
+		initialize_words_mmx();
+
 		md4_crypt_mmx();
 
 		convert_to_int128_mmx(output);
@@ -176,7 +178,6 @@ protected:
 	// The 'md' suffix stands for "multiple data"
 	unsigned int md4_buffer_md[16][2];
 
-	// Three sets, two states per set, four pieces of data per state.
 	unsigned int wd_md[4][2];
 
 };
