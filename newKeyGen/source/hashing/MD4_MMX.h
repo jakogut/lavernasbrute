@@ -4,13 +4,13 @@
 ////* --- THIS DOES NOT WORK YET --- *////
 //////////////////////////////////////////
 
-#include <mmintrin.h>
+#include <xmmintrin.h>
 
 #include "MD4.h"
 #include "KeyGenerator.h"
 
-#define ROTL_mmx(num, places) (_m_por(_m_pslld(num, _mm_set1_pi32(places)), _m_psrld(num, _mm_set1_pi32(32 - places))))
-
+#define ROTL_mmx(num, places) (_m_por(_m_pslld(num, _m_from_int(places)), _m_psrld(num, _m_from_int(32 - places))))
+ 
 #define round1_mmx(wd_index, a, b, c, ntb_index, rotation) \
 	wd[wd_index] = _m_paddd(wd[wd_index], _m_paddd(_m_por(_m_pand(wd[a], wd[b]), _m_pandn(wd[a], wd[c])), md4_buffer[ntb_index])), \
 	wd[wd_index] = ROTL_mmx(wd[wd_index], rotation)
@@ -29,19 +29,17 @@ public:
 
 	MD4_MMX()
 	{
-		SQRT_2 = _mm_set1_pi32(0x5a827999);
-		SQRT_3 = _mm_set1_pi32(0x6ed9eba1);
+		SQRT_2 = _m_from_int(0x5a827999);
+		SQRT_3 = _m_from_int(0x6ed9eba1);
 	}
 
 	~MD4_MMX()
 	{
 	}
 
-	void getMultipleWeakNTLMHashes(std::string* input, int64_pair* output)
+	void getWeakHashes_NTLM(std::string* input, int64_pair* output)
 	{
 		prepare_key_ntlm_mmx(input);
-
-		initialize_words_mmx();
 
 		md4_crypt_mmx();
 
@@ -57,11 +55,12 @@ protected:
 		for(int i = 0; i < 2; i++)
 			length[i] = (unsigned int)input[i].length();
 
-		int j=0;
-		memset(md4_buffer_md,0,16*8);
+		memset(md4_buffer_md,0,16*4*2);
 
 		for(int i = 0; i < 2; i++)
 		{
+			int j=0;
+
 			//The length of input need to be <= 27
 			for(;j<length[i]/2;j++)	
 				md4_buffer_md[j][i] = input[i][2*j] | (input[i][2*j+1]<<16);
@@ -75,24 +74,20 @@ protected:
 			md4_buffer_md[14][i] = length[i] << 4;
 		}
 
-		for(int i = 0; i < 16; i++)
-			for(int j = 0; j < 2; j++)
-				md4_buffer[i].m64_u32[j] = md4_buffer_md[i][j];
+		memcpy(md4_buffer, md4_buffer_md, 16*4*2);
 	}
 
 	inline void initialize_words_mmx()
 	{
-		for(int i = 0; i < 4; i++)
-		{
-			wd[i] = _mm_set1_pi32(0x67452301);
-			wd[i] = _mm_set1_pi32(0xefcdab89);
-			wd[i] = _mm_set1_pi32(0x98badcfe);
-			wd[i] = _mm_set1_pi32(0x10325476);
-		}
+		wd[0] = _m_from_int(0x67452301);
+		wd[1] = _m_from_int(0xefcdab89);
+		wd[2] = _m_from_int(0x98badcfe);
+		wd[3] = _m_from_int(0x10325476);
+
 	}
 
 	inline void md4_crypt_mmx()
-	{	 
+	{
 		// Round 1 // ---
 
 		round1_mmx(0, 1, 2, 3, 0, 3);
@@ -159,9 +154,7 @@ protected:
 		round3_mmx(2, 1, 0, 3, 7, 11);
 		round3_mmx(1, 0, 3, 2, 15, 15);
 
-		for(int i = 0; i < 4; i++)
-			for(int j = 0; j < 2; j++)
-				wd_md[i][j] = wd[i].m64_u32[j];
+		memcpy(wd_md, wd, 4*4*2);
 
 		_m_empty();
 	}
