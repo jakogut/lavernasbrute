@@ -87,7 +87,7 @@ void SSEPath::searchKeyspace()
 	}
 }
 
-int SSEPath::getThreadID()
+unsigned int SSEPath::getThreadID()
 {
 	return id;
 }

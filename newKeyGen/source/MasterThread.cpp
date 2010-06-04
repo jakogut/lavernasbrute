@@ -44,7 +44,7 @@ void masterThread::operator()()
 
 			std::cout.flush();
 
-			std::cout << "\rAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+			std::cout << "\rAverage speed: " << ((iterations / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
 			   << "\tHashes Remaining: " << remainingTargets;
 
 			std::cout.flush();
@@ -140,10 +140,10 @@ void masterThread::increaseIterations(unsigned int input)
 	iterations += input;
 }
 
-void masterThread::initCharset(unsigned int len, int min, int max, 
+void masterThread::initCharset(int min, int max, 
 							   int charsec0, int charsec1, int charsec2, int charsec3)
 {
-	charset.init(len, min, max, charsec0, charsec1, charsec2, charsec3);
+	charset.init(min, max, charsec0, charsec1, charsec2, charsec3);
 }
 
 characterSet* masterThread::getCharset()
