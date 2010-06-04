@@ -16,7 +16,7 @@ public:
 	void operator()();
 	void searchKeyspace();
 
-	int getThreadID();
+	unsigned int getThreadID();
 
 	unsigned long long getKeyspaceEnd();
 	unsigned long long getKeyspaceBegin();

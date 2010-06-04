@@ -82,7 +82,7 @@ void CPUPath::searchKeyspace()
 	}
 }
 
-int CPUPath::getThreadID()
+unsigned int CPUPath::getThreadID()
 {
 	return id;
 }
