@@ -163,6 +163,8 @@ int main(int argc, char** argv)
 		{
 			std::string hashType = toLower(value);
 
+			// This should be replaced with a function table sometime down the road.
+			// Maybe after we add MD5 support. It's a low priority right now.
 			if(hashType == "ntlm" || hashType == "md4")
 				processingPath::setHashType(hashType);
 			else
@@ -200,21 +202,21 @@ int main(int argc, char** argv)
 			charsetSpecified = true;
 
 			if(value == "loweralpha")				// a-z
-				masterThread::initCharset(26, 'a', 'z', 0, 0, 0, 0);
+				masterThread::initCharset('a', 'z', 0, 0, 0, 0);
 			else if(value == "upperalpha")			// A-Z
-				masterThread::initCharset(26, 'A', 'Z', 0, 0, 0, 0);
+				masterThread::initCharset('A', 'Z', 0, 0, 0, 0);
 			else if(value == "mixalpha")			// a-z, A-Z
-				masterThread::initCharset(52, 'A', 'z', 'Z'+1, 'a', 0, 0);
+				masterThread::initCharset('A', 'z', 'Z'+1, 'a', 0, 0);
 			else if(value == "numeric")				// 0-9
-				masterThread::initCharset(10, '0', '9', 0, 0, 0, 0);
+				masterThread::initCharset('0', '9', 0, 0, 0, 0);
 			else if(value == "loweralpha-numeric")	// a-z, 0-9
-				masterThread::initCharset(36, '0', 'z', '9'+1, 'a', 0, 0);
+				masterThread::initCharset('0', 'z', '9'+1, 'a', 0, 0);
 			else if(value == "upperalpha-numeric")	// A-Z, 0-9
-				masterThread::initCharset(36, '0', 'Z', '9'+1, 'A', 0, 0);
+				masterThread::initCharset('0', 'Z', '9'+1, 'A', 0, 0);
 			else if(value == "mixalpha-numeric")	// A-Z, a-z, 0-9
-				masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
+				masterThread::initCharset('0', 'z', '9'+1, 'A', 'Z'+1, 'a');
 			else									// All ascii symbols and characters
-				masterThread::initCharset(95, ' ', '~', 0, 0, 0, 0);
+				masterThread::initCharset(' ', '~', 0, 0, 0, 0);
 		}
 
 		// Set the maximum size of the keyspace in characters. The number of permutations is pow(charsetLength, maxChars).
@@ -247,7 +249,7 @@ int main(int argc, char** argv)
 	}
 
 	if(!charsetSpecified)
-		masterThread::initCharset(62, '0', 'z', '9'+1, 'A', 'Z'+1, 'a');
+		masterThread::initCharset('0', 'z', '9'+1, 'A', 'Z'+1, 'a');
 
 	// Set the total number of worker threads in use for this run
 	masterThread::setNumWorkers(CPUThreads);

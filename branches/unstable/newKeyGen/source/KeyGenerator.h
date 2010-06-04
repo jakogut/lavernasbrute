@@ -7,7 +7,6 @@
 #include <cstring>
 #include <limits.h>
 
-#include "Pow.h"
 #include "CharacterSet.h"
 
 class keyGenerator
@@ -23,12 +22,11 @@ protected:
 public:
 
 	keyGenerator(unsigned long long location, characterSet* charset)
-			: location(location), charset(charset)
+		: location(location), charset(charset)
 	{
 		for(int i = 0; i < 16; i++)
 			key[i] = 0;
 
-		charsetStr = charset->getCharsetStr();
 		integerToKey();
 	}
 
@@ -93,7 +91,7 @@ public:
 
 		if(!num)
 		{
-			key[0] = charsetStr[0];
+			key[0] = charset->str[0];
 		}
 		else
 		{
@@ -105,15 +103,32 @@ public:
 				unsigned int remainder = num % charset->length;
 				num /= charset->length;
 
-				key[strlen(key)] = charsetStr[remainder];
+				key[strlen(key)] = charset->str[remainder];
 			}
 		}
 	}
 
+	unsigned long long keyToInteger(char* input)
+	{
+		unsigned long long retval = 0;
+		int numChars = strlen(input);
+
+		for(int i = 0; i < numChars; i++)
+		{
+			unsigned long long temp = 1;
+
+			for(int j = 0; j < i; j++)
+					temp *= charset->length;
+
+			retval += (temp * (charset->str.find(input[i]) + 1));
+		}
+
+		return retval - 1;
+	}
+
 	inline unsigned long long keyToInteger()
 	{
-		// TODO
-		return 0;
+		return keyToInteger(key);
 	}
 
 	inline char* getKey()
@@ -126,7 +141,6 @@ private:
 	unsigned long long location;
 
 	characterSet* charset;
-	std::string charsetStr;
 
 	char key[16];
 

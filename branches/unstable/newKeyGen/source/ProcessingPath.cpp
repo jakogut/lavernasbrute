@@ -68,3 +68,25 @@ void processingPath::setHashType(std::string type)
 {
 	hashType = type;
 }
+
+unsigned long long processingPath::calculateKeyspaceSize(int charsetLength, int keyLength)
+{
+	unsigned long long  temp, retval(1);
+
+	for(int i = 0; i < keyLength; i++)
+	{
+		temp = 1;
+
+		for(int j = 0; j < i; j++)
+			temp *= (unsigned long long)charsetLength;
+
+		retval += temp;
+	}
+
+	return retval;
+}
+
+unsigned long long processingPath::calculateKeyspaceSize()
+{
+	return calculateKeyspaceSize(masterThread::getCharset()->length, maxChars);
+}

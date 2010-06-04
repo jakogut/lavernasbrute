@@ -42,7 +42,7 @@ public:
 	static void incrementIterations();
 	static void increaseIterations(unsigned int input);
 
-	static void initCharset(unsigned int len, int min, int max, 
+	static void initCharset(int min, int max, 
 							int charsec0, int charsec1, int charsec2, int charsec3);
 
 	static characterSet* getCharset();

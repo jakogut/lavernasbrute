@@ -36,7 +36,7 @@ class processingPath
 	virtual void searchKeyspace() = 0;
     
     // Functions necessary for the Director to do its job
-	virtual int getThreadID() = 0;
+	virtual unsigned int getThreadID() = 0;
 
 	virtual unsigned long long getKeyspaceEnd() = 0;
 	virtual unsigned long long getKeyspaceBegin() = 0;
@@ -58,6 +58,9 @@ class processingPath
 
 	// Set the hash type for the run
 	static void setHashType(std::string type);
+
+	static unsigned long long calculateKeyspaceSize(int charsetLength, int keyLength);
+	static unsigned long long calculateKeyspaceSize();
 
 protected:
 
