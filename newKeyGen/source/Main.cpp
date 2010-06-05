@@ -1,15 +1,5 @@
 //Part of Laverna's Brute
 
-/* Enable functions which aid in developing and debugging for Laverna's Brute.
-Comment this out for release builds. */
-//#define DEBUG
-
-/* Include support for SSE. 
-If the processor doesn't support SSE, this can be disabled for compatibility.
-This should not be necessary, as any processor not supporting SSE is not worth much 
-to the Laverna project, in terms of processing power. */
-#define SSE
-
 #include <iostream>
 #include <time.h>
 #include <string>
@@ -28,6 +18,9 @@ to the Laverna project, in terms of processing power. */
 // Processing paths
 #include "CPUPath.h"
 
+// Build and version configuration
+#include "Version.h"
+
 #ifdef SSE
 #include "SSEPath.h"
 #endif
@@ -36,9 +29,9 @@ using namespace std;
 
 void printHelp()
 {
-	cout << "\nLaverna's Brute."
+	cout << "\nLaverna's Brute " << VERSION <<
 	"\nThis program is a brute-force password cracker."
-	"\nCOPYRIGHT 2008, this program is licensed under the GNU GPL V3 "
+	"\nCOPYRIGHT " << COPYRIGHT << ", this program is licensed under the GNU GPL V3 "
 	"\nSee \"http://lavernasbrute.googlecode.com/\" for more details. "
 	"\n\nI am NOT responsible for loss of or damage to personal property as a result of "
 	"\nthe use of this program. Any use of this program is at your own risk.\n"
