@@ -122,7 +122,7 @@ bool isValidHexDigest(const string hash)
 
 int main(int argc, char** argv)
 {
-	bool hashTypeSpecified = true;
+	bool hashTypeSpecified = false;
 	bool targetPresent = false;
 	bool charsetSpecified = false;
 
@@ -159,9 +159,10 @@ int main(int argc, char** argv)
 			// This should be replaced with a function table sometime down the road.
 			// Maybe after we add MD5 support. It's a low priority right now.
 			if(hashType == "ntlm" || hashType == "md4")
+			{
 				processingPath::setHashType(hashType);
-			else
-				hashTypeSpecified = false;
+				hashTypeSpecified = true;
+			}
 		}
 
 		// Add a hash to the target hash map
