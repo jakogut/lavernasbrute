@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
 
-#include "MD4_SSE2.h"
+#include "MD4_SSE.h"
 
 using namespace std;
 
 int main()
 {
-	MD4_SSE2 md4_md;
+	MD4_SSE md4_md;
 	MD4 md4;
 
 	char* test = "testString";
@@ -39,11 +39,11 @@ int main()
 
 	if(passed)
 	{
-	cout << "SSE2 accelerated NTLM algorithm passed the test." << endl;
+	cout << "SSE accelerated NTLM algorithm passed the test." << endl;
 	}
 	else
 	{
-		cout << "SSE2 accelerated NTLM algorithm FAILED the test." << endl;
+		cout << "SSE accelerated NTLM algorithm FAILED the test." << endl;
 
 		for(unsigned int i = 0; i < failedHashes.size(); i++)
 			cout << "\nString " << failedHashes[i] << " was not hashed properly." << endl;
