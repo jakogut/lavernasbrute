@@ -31,11 +31,11 @@ $(DEST)/%.o:
 	$(MKDIR) $(DEST)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c source/$*.cpp -o $@
 	
-tests: MD4_UT NTLM_UT NTLM_SSE2_UT
+tests: MD4_UT NTLM_UT NTLM_SSE_UT
 	@echo -e "\nRunning tests:"
 	@$(DEST)/tests/MD4_UT
 	@$(DEST)/tests/NTLM_UT
-	@$(DEST)/tests/NTLM_SSE2_UT
+	@$(DEST)/tests/NTLM_SSE_UT
 	
 MD4_UT: 
 	$(MKDIR) $(DEST)/tests/
@@ -45,9 +45,9 @@ NTLM_UT:
 	$(MKDIR) $(DEST)/tests/
 	$(CXX) $(CXXFLAGS) $(INCLUDE) source/tests/NTLM_UT.cpp -o $(DEST)/tests/NTLM_UT
 	
-NTLM_SSE2_UT: NTLM_UT
+NTLM_SSE_UT: NTLM_UT
 	$(MKDIR) $(DEST)/tests/
-	$(CXX) $(CXXFLAGS) $(INCLUDE) source/tests/NTLM_SSE2_UT.cpp -o $(DEST)/tests/NTLM_SSE2_UT
+	$(CXX) $(CXXFLAGS) $(INCLUDE) source/tests/NTLM_SSE_UT.cpp -o $(DEST)/tests/NTLM_SSE_UT
 
 clean:
 	$(RM) $(DEST)/lavernasbrute $(DEST)/gmon.out $(OBJECTS)
