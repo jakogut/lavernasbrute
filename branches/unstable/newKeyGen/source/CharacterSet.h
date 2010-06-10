@@ -1,3 +1,5 @@
+// Part of Laverna's Brute
+
 #ifndef CHARACTERSET_H_
 #define CHARACTERSET_H_
 
@@ -7,6 +9,11 @@ struct characterSet
 {
 	characterSet()
 	{
+	}
+
+	characterSet(char min, char max, char charsec0, char charsec1, char charsec2, char charsec3)
+	{
+		init(min, max, charsec0, charsec1, charsec2, charsec3);
 	}
 
 	void init(char min, char max, char charsec0, char charsec1, char charsec2, char charsec3)
@@ -29,7 +36,7 @@ struct characterSet
 		}
 
 		// Set the length of the character set
-		length = str.length();
+		length = (unsigned int)str.length();
 	}
 
 	int minChar, maxChar;
@@ -41,7 +48,7 @@ struct characterSet
 	std::string str;
 
 	// Character set length
-	int length;
+	unsigned int length;
 };
 
 #endif

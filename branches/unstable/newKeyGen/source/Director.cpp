@@ -45,13 +45,7 @@ void Director::updateMasterThread()
 		totalIterations = 0;
 
 		for(int i = 0; i < numWorkers; i++)
-		{
-			/* Sometimes one of the scheduled threads fails to be created and initialized properly.
-			Until the larger issue is fixed, this little check stops the program from segfaulting. */
-
-			if(i <= numWorkers && workerPtrMap[i] != NULL)
 				totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
-		}
 
 		masterThread::setIterations(totalIterations);
 	}
