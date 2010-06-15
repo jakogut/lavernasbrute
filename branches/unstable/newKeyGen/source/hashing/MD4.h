@@ -23,8 +23,6 @@
 #define HH(A, B, C, D, X, SQRT3, ROT) \
 	A += H(B, C, D) + X + SQRT3, A = ROTL(A, ROT)
 
-typedef std::pair<unsigned long long, unsigned long long> int64_pair;
-
 class MD4
 {
 public:
@@ -46,7 +44,7 @@ public:
 	{
 	}
 
-	typedef int64_pair (MD4::*scalarHashPtr)(const char*);
+	typedef char* (MD4::*scalarHashPtr)(const char*);
 
 	// Full MD4
 	inline char* getHash_MD4(const char* input)
@@ -57,12 +55,12 @@ public:
 		initialize_words();
 		md4_crypt();
 		finalize_md4();
-		
+
 		return convert_to_hex();
 	}
 
 	// Weak MD4
-	inline int64_pair getWeakHash_MD4(const char* input)
+	inline char* getWeakHash_MD4(const char* input)
 	{
 		prepare_key_md4(input);
 
@@ -80,13 +78,13 @@ public:
 		initialize_words();
 		md4_crypt();
 		finalize_md4();
-		
+
 		// Convert the result to hexadecimal
 		return convert_to_hex();
 	}
 
 	// Weak NTLM
-	int64_pair getWeakHash_NTLM(const char* input)
+	char* getWeakHash_NTLM(const char* input)
 	{
 		prepare_key_ntlm(input);
 
@@ -97,7 +95,7 @@ public:
 	}
 
 	// Take an MD4 hash as input, and reverse the hex encoding, returning a 128-bit integer
-	inline int64_pair weakenHash(const char* input)
+	inline char* weakenHash(const char* input)
 	{
 		convert_from_hex(input);
 		return convert_to_int128();
@@ -112,10 +110,10 @@ protected:
 
 		// Zero out the message buffer
 		memset(md4_buffer,0,16*4);
-		
-		for(;i<length/4;i++)	
+
+		for(;i<length/4;i++)
 			md4_buffer[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
-	 
+
 		// Pad with one 1 bit, followed by zeros until the message is 64 bits shy of 512 bits in length.
 		switch(length%4)
 		{
@@ -304,12 +302,9 @@ protected:
 	}
 
 	// Convert the four 32-bit words used in the encryption process to a 128-bit integer
-	inline int64_pair convert_to_int128()
+	inline char* convert_to_int128()
 	{
-		retval.first  = ((unsigned long long)wd[0] << 32) | wd[2];
-		retval.second = ((unsigned long long)wd[1] << 32) | wd[3];
-
-		return retval;
+		return (char*)wd;
 	}
 
 	unsigned int wd_init[4];
@@ -318,7 +313,6 @@ private:
 
 	char* itoa16;
 
-	int64_pair retval; // 128-bit integer type used to store a weakened (partial) hash
 	char hex_format[33]; // Char array used to store the resulting hex digest
 
 	unsigned int md4_buffer[16];

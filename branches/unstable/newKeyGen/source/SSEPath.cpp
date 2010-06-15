@@ -35,7 +35,11 @@ void SSEPath::searchKeyspace()
 		targetIterator = targets.begin();
 	}
 
-	for(int i = 0; i < 12; i++) currentKeys[i] = new char[16];
+	for(int i = 0; i < 12; i++)
+	{
+		currentKeys[i] = new char[16];
+		weakHashedKeys[i] = new char[16];
+	}
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
