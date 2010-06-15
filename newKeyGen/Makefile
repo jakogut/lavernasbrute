@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE)
+CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE) # $(DEBUG)
 ARCH = generic
 BITNESS = 32
 DEBUG = -g

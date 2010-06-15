@@ -20,7 +20,15 @@
 
 #include "KeyGenerator.h"
 
-typedef google::dense_hash_map< int64_pair, std::string, boost::hash<int64_pair> > targetMap;
+struct eqstr
+{
+	bool operator()(const char* a, const char* b) const
+	{
+		return (a == b) || (a && b && strcmp(a, b) == 0);
+	}
+};
+
+typedef google::dense_hash_map< const char*, std::string, boost::hash< const char* >, eqstr > targetMap;
 
 class processingPath
 {
@@ -34,8 +42,8 @@ class processingPath
 
 	// The loop used to search the keyspace
 	virtual void searchKeyspace() = 0;
-    
-    // Functions necessary for the Director to do its job
+
+	// Functions necessary for the Director to do its job
 	virtual unsigned int getThreadID() = 0;
 
 	virtual unsigned long long getKeyspaceEnd() = 0;
@@ -49,7 +57,7 @@ class processingPath
 	// The target map MUST be initialized before targets are added
 	static void initializeTargetMap();
 
-    // Processing path options
+	// Processing path options
 	static void pushTarget(std::string& input);
 	static void setMaxChars(int input);
 	static int getMaxChars();
