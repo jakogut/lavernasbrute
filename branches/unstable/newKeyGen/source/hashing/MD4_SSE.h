@@ -58,7 +58,7 @@ public:
 	typedef char* (MD4::*vectorHashPtr)(const char*);
 
 	// Not quite done yet
-	/*void getMultipleWeakMD4Hashes(std::string input[12], std::string output[12])
+	/*void getMultipleWeakMD4Hashes(std::string input[12], int64_pair output[12])
 	{
 		prepare_key_md4_SSE(input);
 
@@ -69,7 +69,7 @@ public:
 		convert_to_int128_SSE(output);
 	}*/
 
-	void getWeakHashes_NTLM(char** input, char** output)
+	void getWeakHashes_NTLM(char** input, int64_pair output[12])
 	{
 		prepare_key_ntlm_SSE(input);
 
@@ -98,9 +98,9 @@ protected:
 			{
 				unsigned int k=0;
 				//The length of input need to be <= 27
-				for(;k<length[i][j]/4;k++)
+				for(;k<length[i][j]/4;k++)	
 					md4_buffer_SSE[k][j] = input[j+4*i][4*k] | (input[j+4*i][4*k+1]<<8) | (input[j+4*i][4*k+2]<<16) | (input[j+4*i][4*k+3]<<24);
-
+			 
 				//padding
 				switch(length[i][j]%4)
 				{
@@ -143,9 +143,9 @@ protected:
 			{
 				unsigned int k = 0;
 				//The length of input need to be <= 27
-				for(;k<length[i][j]/2;k++)
+				for(;k<length[i][j]/2;k++)	
 					md4_buffer_SSE[k][j] = input[j+4*i][2*k] | (input[j+4*i][2*k+1]<<16);
-
+			 
 				//padding
 				if(length[i][j]%2==1)
 					md4_buffer_SSE[k][j] = input[j+4*i][length[i][j]-1] | 0x800000;
@@ -352,17 +352,16 @@ protected:
 				_mm_store_si128((__m128i*)wd_SSE[i][j], wd[i][j]);
 	}
 
-	inline void convert_to_int128_SSE(char** output)
+	inline void convert_to_int128_SSE(int64_pair* output)
 	{
-		unsigned int temp[12][4];
-
 		for(int i = 0; i < 3; i++)
+		{
 			for(int j = 0; j < 4; j++)
-				for(int k = 0; k < 4; k++)
-					temp[j+4*i][k] = wd_SSE[i][k][j];
-
-		for(int i = 0; i < 12; i++)
-			output[i] = (char*)(temp[i]);
+			{
+				output[j+4*i].first  = ((unsigned long long)wd_SSE[i][0][j] << 32) | wd_SSE[i][2][j];
+				output[j+4*i].second = ((unsigned long long)wd_SSE[i][1][j] << 32) | wd_SSE[i][3][j];
+			}
+		}
 	}
 
 	__m128i md4_buffer[3][16];

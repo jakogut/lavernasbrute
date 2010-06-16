@@ -33,7 +33,7 @@ protected:
 	int id;
 
 	char* currentKeys[12];
-	char* weakHashedKeys[12];
+	int64_pair weakHashedKeys[12];
 
 	targetMap::iterator targetIterator;
 

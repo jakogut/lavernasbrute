@@ -13,7 +13,7 @@ std::string processingPath::hashType;
 
 ////////////////////////////////////////////
 
-processingPath::processingPath()
+processingPath::processingPath() 
 {
 	//Make sure the keyspace size is within the supported limits
 	if(maxChars < 1 || maxChars > 10)
@@ -28,8 +28,13 @@ processingPath::~processingPath()
 
 void processingPath::initializeTargetMap()
 {
-	targets.set_empty_key("empty");
-	targets.set_deleted_key("deleted");
+	int64_pair empty, deleted;
+
+	empty.first = 0, empty.second = 0;
+	targets.set_empty_key(empty);
+
+	deleted.first = 1, deleted.second = 1;
+	targets.set_deleted_key(deleted);
 }
 
 void processingPath::pushTarget(std::string& input)
