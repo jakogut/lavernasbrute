@@ -179,41 +179,35 @@ public:
 
 	unsigned int findMessageLength()
 	{
-		unsigned int retval = 0;
+		unsigned int padByte;
 
-		for(int i = 0; i < 32; i++)
-		{
-			if((message.uint16[i] & 0x800000) == 0x800000 || message.uint16[i] == 0x80)
-				retval = i + 1;
-		}
+		for(padByte = 0; padByte < 64; padByte += 2)
+			if((unsigned int)message.str[padByte] == 0x80)
+				break;
 
-		return retval;
+		return (padByte - 2) + 1;
 	}
 
-	void incrementMessage()
+	inline void incrementMessage()
 	{
 		register size_t messageLength = findMessageLength();
 
-		// Remove padding
-		if(messageLength % 2 == 1)
-			message.uint32[messageLength / 2 - 1] ^= 0x800000;
-		else if(message.uint32[messageLength / 2 - 1] == 0x80)
-			message.uint32[messageLength / 2 - 1] = 0;
-
-		// Wide character pointer, used as an iterator
-		wchar_t* place = (wchar_t*)message.uint16;
-
-		for(; *place != 0; place++)
+		unsigned int i;
+		for(i = 0; i < 64; i += 2)
 		{
-			if(*place == (wchar_t)charset->maxChar)
+			if(message.str[i] == charset->maxChar)
 			{
 				// Overflow, reset char at place
-				*place = (wchar_t)charset->minChar;
+				message.str[i] = charset->minChar;
 
-				if(!*(place+1))
+				if(message.str[i + 2] == 0x80)
 				{
 					// Carry, no space, insert char
-					*(place+1) = (wchar_t)charset->minChar;
+					message.str[i + 2] = charset->minChar;
+
+					// Move the padding byte forward
+					message.str[i + 4] = 0x80;
+
 					++messageLength;
 
 					break;
@@ -226,23 +220,17 @@ public:
 			else
 			{
 				// Space available, increment char at place
-				if(*place == (wchar_t)charset->charSecEnd[0]) *place = (wchar_t)charset->charSecBegin[0];
-				else if(*place == (wchar_t)charset->charSecEnd[1]) *place = (wchar_t)charset->charSecBegin[1];
+				if(message.str[i] == charset->charSecEnd[0]) message.str[i] = charset->charSecBegin[0];
+				else if(message.str[i] == charset->charSecEnd[1]) message.str[i] = charset->charSecBegin[1];
 
-				(*place)++;
+				message.str[i]++;
 
 				break;
 			}
 		}
 
-		// Padding
-		/*if(messageLength % 2 == 1)
-			message.uint16[(messageLength / 2) - 1] |= 0x800000;
-		else 
-			message.uint16[(messageLength / 2) - 1] = 0x80;*/
-
-		// Append the length to the message
-		message.uint32[14] = (unsigned int)messageLength << 4;
+		// Append the length
+		message.uint32[14] = messageLength << 4;
 	}
 
 	unsigned int* operator++()
@@ -310,7 +298,7 @@ protected:
 	union
 	{
 		unsigned int uint32[16];
-		unsigned short uint16[32];
+		unsigned char str[64];
 	} message;
 
 	// The key is the text string that becomes the message.
