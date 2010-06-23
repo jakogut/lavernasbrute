@@ -6,9 +6,9 @@ CPUPath::CPUPath(int id)
 : id(id)
 {
 	if(hashType == "ntlm")
-		hashFunc = &MD4::getWeakHash_NTLM;
+		hashFunc = &MD4::getHashContext_NTLM;
 	else if(hashType == "md4")
-		hashFunc = &MD4::getWeakHash_MD4;;
+		hashFunc = &MD4::getHashContext_MD4;;
 }
 
 CPUPath::~CPUPath()

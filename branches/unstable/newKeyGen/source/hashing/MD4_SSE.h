@@ -58,7 +58,7 @@ public:
 	typedef char* (MD4::*vectorHashPtr)(const char*);
 
 	// Not quite done yet
-	/*void getMultipleWeakMD4Hashes(std::string input[12], int64_pair output[12])
+	/*void getMultipleWeakMD4Hashes(std::string input[12], hashContext_MD4 output[12])
 	{
 		prepare_key_md4_SSE(input);
 
@@ -69,7 +69,7 @@ public:
 		convert_to_int128_SSE(output);
 	}*/
 
-	void getWeakHashes_NTLM(char** input, int64_pair output[12])
+	void getWeakHashes_NTLM(char** input, hashContext_MD4 output[12])
 	{
 		prepare_key_ntlm_SSE(input);
 
@@ -352,7 +352,7 @@ protected:
 				_mm_store_si128((__m128i*)wd_SSE[i][j], wd[i][j]);
 	}
 
-	inline void convert_to_int128_SSE(int64_pair* output)
+	inline void convert_to_int128_SSE(hashContext_MD4* output)
 	{
 		for(int i = 0; i < 3; i++)
 		{
