@@ -23,7 +23,7 @@
 #define HH(A, B, C, D, X, SQRT3, ROT) \
 	A += H(B, C, D) + X + SQRT3, A = ROTL(A, ROT)
 
-typedef std::pair<unsigned long long, unsigned long long> int64_pair;
+typedef std::pair<unsigned long long, unsigned long long> hashContext_MD4;
 
 class MD4
 {
@@ -46,66 +46,65 @@ public:
 	{
 	}
 
-	typedef int64_pair (MD4::*scalarHashPtr)(const char*);
+	typedef hashContext_MD4 (MD4::*scalarHashPtr)(const char*);
 
 	// Full MD4
 	inline char* getHash_MD4(const char* input)
 	{
 		// Take an ASCII string, and convert it to an MD4 message
-		prepare_key_md4(input);
+		prepareKey_MD4(input);
 
-		initialize_words();
-		md4_crypt();
-		finalize_md4();
+		initialize();
+		encrypt();
+		finalize();
 		
-		return convert_to_hex();
+		return convertToHex();
 	}
 
-	// Weak MD4
-	inline int64_pair getWeakHash_MD4(const char* input)
+	// Context only MD4
+	inline hashContext_MD4 getHashContext_MD4(const char* input)
 	{
-		prepare_key_md4(input);
+		prepareKey_MD4(input);
 
-		initialize_words();
-		md4_crypt();
+		initialize();
+		encrypt();
 
-		return convert_to_int128();
+		return convertToContext();
 	}
 
 	// Full NTLM
 	inline char* getHash_NTLM(const char* input)
 	{
-		prepare_key_ntlm(input);
+		prepareKey_NTLM(input);
 
-		initialize_words();
-		md4_crypt();
-		finalize_md4();
+		initialize();
+		encrypt();
+		finalize();
 		
-		// Convert the result to hexadecimal
-		return convert_to_hex();
+		return convertToHex();
 	}
 
-	// Weak NTLM
-	int64_pair getWeakHash_NTLM(const char* input)
+	// Context only NTLM
+	inline hashContext_MD4 getHashContext_NTLM(const char* input)
 	{
-		prepare_key_ntlm(input);
+		prepareKey_NTLM(input);
 
-		initialize_words();
-		md4_crypt();
+		initialize();
+		encrypt();
 
-		return convert_to_int128();
+		return convertToContext();
 	}
 
 	// Take an MD4 hash as input, and reverse the hex encoding, returning a 128-bit integer
-	inline int64_pair weakenHash(const char* input)
+	inline hashContext_MD4 hashToContext(const char* input)
 	{
-		convert_from_hex(input);
-		return convert_to_int128();
+		convertFromHex(input);
+		return convertToContext();
 	}
 
 protected:
 
-	inline void prepare_key_md4(const char* input)
+	void prepareKey_MD4(const char* input)
 	{
 		int i=0;
 		int length = (int)strlen(input);
@@ -137,7 +136,7 @@ protected:
 		md4_buffer[14] = length << 3;
 	}
 
-	inline void prepare_key_ntlm(const char* input)
+	void prepareKey_NTLM(const char* input)
 	{
 		int i=0;
 		int length=(int)(strlen(input));
@@ -156,7 +155,7 @@ protected:
 		md4_buffer[14] = length << 4;
 	}
 
-	inline void initialize_words()
+	inline void initialize()
 	{
 		wd[0] = wd_init[0];
 		wd[1] = wd_init[1];
@@ -164,7 +163,7 @@ protected:
 		wd[3] = wd_init[3];
 	}
 
-	inline void md4_crypt()
+	void encrypt()
 	{	 
 		// Round 1 // ---
 
@@ -242,7 +241,7 @@ protected:
 		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[15], SQRT_3, 15);
 	}
 	 
-	inline void finalize_md4()
+	inline void finalize()
 	{
 		wd[0] += wd_init[0];
 		wd[1] += wd_init[1];
@@ -250,7 +249,7 @@ protected:
 		wd[3] += wd_init[3];
 	}
 
-	char* convert_to_hex()
+	char* convertToHex()
 	{
 		//Iterate the integer
 		for(int i = 0;i < 4; i++)
@@ -267,34 +266,34 @@ protected:
 			}	
 		}
 		//null terminate the string
-		hex_format[32]=0;
+		hex_format[32] = 0;
 
 		return hex_format;
 	}
 
 	// Convert a hex digest back to four 32-bit words
-	void convert_from_hex(const char* hash)
+	void convertFromHex(const char* hash)
 	{
-		char big_endian_hash[4][9];
+		char bigEndianHash[4][9];
 
 		for(int i = 0; i < 4; i++)
 		{
 			// This needs to be reworked
-			big_endian_hash[i][0] = hash[(i*8)+6];
-			big_endian_hash[i][1] = hash[(i*8)+7];
-			big_endian_hash[i][2] = hash[(i*8)+4];
-			big_endian_hash[i][3] = hash[(i*8)+5];
-			big_endian_hash[i][4] = hash[(i*8)+2];
-			big_endian_hash[i][5] = hash[(i*8)+3];
-			big_endian_hash[i][6] = hash[(i*8)+0];
-			big_endian_hash[i][7] = hash[(i*8)+1];
+			bigEndianHash[i][0] = hash[(i*8)+6];
+			bigEndianHash[i][1] = hash[(i*8)+7];
+			bigEndianHash[i][2] = hash[(i*8)+4];
+			bigEndianHash[i][3] = hash[(i*8)+5];
+			bigEndianHash[i][4] = hash[(i*8)+2];
+			bigEndianHash[i][5] = hash[(i*8)+3];
+			bigEndianHash[i][6] = hash[(i*8)+0];
+			bigEndianHash[i][7] = hash[(i*8)+1];
 
-			big_endian_hash[i][8] = '\0';
+			bigEndianHash[i][8] = '\0';
 		}
 
 		for(int i = 0; i < 4; i++)
 		{
-			wd[i] = strtoul(big_endian_hash[i], 0, 16);
+			wd[i] = strtoul(bigEndianHash[i], 0, 16);
 		}
 
 		wd[0] -= wd_init[0];
@@ -304,7 +303,7 @@ protected:
 	}
 
 	// Convert the four 32-bit words used in the encryption process to a 128-bit integer
-	inline int64_pair convert_to_int128()
+	inline hashContext_MD4 convertToContext()
 	{
 		retval.first  = ((unsigned long long)wd[0] << 32) | wd[2];
 		retval.second = ((unsigned long long)wd[1] << 32) | wd[3];
@@ -318,7 +317,7 @@ private:
 
 	char* itoa16;
 
-	int64_pair retval; // 128-bit integer type used to store a weakened (partial) hash
+	hashContext_MD4 retval; // 128-bit integer type used to store a weakened (partial) hash
 	char hex_format[33]; // Char array used to store the resulting hex digest
 
 	unsigned int md4_buffer[16];

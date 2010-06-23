@@ -20,7 +20,7 @@
 
 #include "KeyGenerator.h"
 
-typedef google::dense_hash_map< int64_pair, std::string, boost::hash<int64_pair> > targetMap;
+typedef google::dense_hash_map< hashContext_MD4, std::string, boost::hash<hashContext_MD4> > targetMap;
 
 class processingPath
 {

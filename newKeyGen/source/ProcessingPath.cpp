@@ -28,7 +28,7 @@ processingPath::~processingPath()
 
 void processingPath::initializeTargetMap()
 {
-	int64_pair empty, deleted;
+	hashContext_MD4 empty, deleted;
 
 	empty.first = 0, empty.second = 0;
 	targets.set_empty_key(empty);
@@ -40,7 +40,7 @@ void processingPath::initializeTargetMap()
 void processingPath::pushTarget(std::string& input)
 {
 	MD4 md4;
-	targets[md4.weakenHash(input.c_str())] = input;
+	targets[md4.hashToContext(input.c_str())] = input;
 }
 
 void processingPath::setMaxChars(int input)
