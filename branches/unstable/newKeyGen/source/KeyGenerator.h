@@ -190,7 +190,7 @@ public:
 
 	inline void incrementMessage()
 	{
-		register size_t messageLength = findMessageLength();
+		unsigned int messageLength = findMessageLength();
 
 		unsigned int i;
 		for(i = 0; i < 64; i += 2)
