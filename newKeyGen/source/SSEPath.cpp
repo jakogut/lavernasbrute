@@ -47,7 +47,7 @@ void SSEPath::searchKeyspace()
 		}
 
 		// Hash the keys
-		md4_SSE.getWeakHashes_NTLM(currentKeys, weakHashedKeys);
+		md4_SSE.getHashContext_NTLM(currentKeys, weakHashedKeys);
 
 		// Check our target hash map for matches
 		for(int i = 0; i < 12; i++)

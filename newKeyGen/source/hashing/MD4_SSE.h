@@ -7,16 +7,16 @@
 #include "KeyGenerator.h"
 
 #define round1_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd[set][wd_index] = _mm_add_epi32(wd[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd[set][a], wd[set][b]), _mm_andnot_si128(wd[set][a], wd[set][c])), md4_buffer[set][ntb_index])), \
-	wd[set][wd_index] = ROTL_SSE(wd[set][wd_index], rotation)
+	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], wd_SSE[set][b]), _mm_andnot_si128(wd_SSE[set][a], wd_SSE[set][c])), message_SSE[set][ntb_index])), \
+	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round2_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd[set][wd_index] = _mm_add_epi32(wd[set][wd_index], _mm_add_epi32(_mm_add_epi32(_mm_or_si128(_mm_and_si128(wd[set][a], _mm_or_si128(wd[set][b], wd[set][c])), _mm_and_si128(wd[set][b], wd[set][c])), md4_buffer[set][ntb_index]), SQRT_2)), \
-	wd[set][wd_index] = ROTL_SSE(wd[set][wd_index], rotation)
+	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], _mm_or_si128(wd_SSE[set][b], wd_SSE[set][c])), _mm_and_si128(wd_SSE[set][b], wd_SSE[set][c])), message_SSE[set][ntb_index]), SQRT_2)), \
+	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round3_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd[set][wd_index] = _mm_add_epi32(_mm_add_epi32(_mm_add_epi32(wd[set][wd_index], _mm_xor_si128(wd[set][a], _mm_xor_si128(wd[set][b], wd[set][c]))), md4_buffer[set][ntb_index]), SQRT_3), \
-	wd[set][wd_index] = ROTL_SSE(wd[set][wd_index], rotation)
+	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), message_SSE[set][ntb_index]), SQRT_3), \
+	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 /* The rounds with "null" in the name omit the adding of the message section, 
 because if the hash is short enough to be computationally feasible to crack, 
@@ -28,16 +28,16 @@ than 14 characters in length, that means we can assume that every element beyond
 for MD4, and 7th for NTLM are zeros.*/
 
 #define round1_null_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd[set][wd_index] = _mm_add_epi32(wd[set][wd_index], _mm_or_si128(_mm_and_si128(wd[set][a], wd[set][b]), _mm_andnot_si128(wd[set][a], wd[set][c]))), \
-	wd[set][wd_index] = ROTL_SSE(wd[set][wd_index], rotation)
+	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_or_si128(_mm_and_si128(wd_SSE[set][a], wd_SSE[set][b]), _mm_andnot_si128(wd_SSE[set][a], wd_SSE[set][c]))), \
+	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round2_null_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd[set][wd_index] = _mm_add_epi32(wd[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd[set][a], _mm_or_si128(wd[set][b], wd[set][c])), _mm_and_si128(wd[set][b], wd[set][c])), SQRT_2)), \
-	wd[set][wd_index] = ROTL_SSE(wd[set][wd_index], rotation)
+	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], _mm_or_si128(wd_SSE[set][b], wd_SSE[set][c])), _mm_and_si128(wd_SSE[set][b], wd_SSE[set][c])), SQRT_2)), \
+	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round3_null_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd[set][wd_index] = _mm_add_epi32(_mm_add_epi32(wd[set][wd_index], _mm_xor_si128(wd[set][a], _mm_xor_si128(wd[set][b], wd[set][c]))), SQRT_3), \
-	wd[set][wd_index] = ROTL_SSE(wd[set][wd_index], rotation)
+	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), SQRT_3), \
+	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define ROTL_SSE(num, places) (_mm_or_si128(_mm_slli_epi32(num, places), _mm_srli_epi32(num, (32 - places))))
 
@@ -58,31 +58,29 @@ public:
 	typedef char* (MD4::*vectorHashPtr)(const char*);
 
 	// Not quite done yet
-	/*void getMultipleWeakMD4Hashes(std::string input[12], hashContext_MD4 output[12])
+	/*void getHashContext_MD4(char** input, hashContext_MD4* output)
 	{
-		prepare_key_md4_SSE(input);
+		prepareKey_MD4_SSE(input);
 
-		initialize_words_SSE();
+		initialize();
+		encrypt();
 
-		md4_crypt_SSE();
-
-		convert_to_int128_SSE(output);
+		convertToContext_SSE(output);
 	}*/
 
-	void getWeakHashes_NTLM(char** input, hashContext_MD4 output[12])
+	void getHashContext_NTLM(char** input, hashContext_MD4* output)
 	{
-		prepare_key_ntlm_SSE(input);
+		prepareKey_NTLM_SSE(input);
 
-		initialize_words_SSE();
+		initialize();
+		encrypt();
 
-		md4_crypt_SSE();
-
-		convert_to_int128_SSE(output);
+		convertToContext_SSE(output);
 	}
 
 protected:
 
-	/*inline void prepare_key_md4_SSE(std::string* input)
+	/*inline void prepareKey_MD4_SSE(char** input)
 	{
 		unsigned int length[3][4];
 
@@ -92,42 +90,42 @@ protected:
 
 		for(int i = 0; i < 3; i++)
 		{
-			memset(md4_buffer_SSE,0,16*4*4);
+			memset(message,0,16*4*4);
 
 			for(int j = 0; j < 4; j++)
 			{
 				unsigned int k=0;
 				//The length of input need to be <= 27
 				for(;k<length[i][j]/4;k++)	
-					md4_buffer_SSE[k][j] = input[j+4*i][4*k] | (input[j+4*i][4*k+1]<<8) | (input[j+4*i][4*k+2]<<16) | (input[j+4*i][4*k+3]<<24);
+					message[k][j] = input[j+4*i][4*k] | (input[j+4*i][4*k+1]<<8) | (input[j+4*i][4*k+2]<<16) | (input[j+4*i][4*k+3]<<24);
 			 
 				//padding
 				switch(length[i][j]%4)
 				{
 				case 0:
-					md4_buffer_SSE[k][j] = 0x80;
+					message[k][j] = 0x80;
 					break;
 				case 1:
-					md4_buffer_SSE[k][j] = input[j+4*i][length[i][j]-1] | 0x8000;
+					message[k][j] = input[j+4*i][length[i][j]-1] | 0x8000;
 					break;
 				case 2:
-					md4_buffer_SSE[k][j] = input[j+4*i][length[i][j]-2] | (input[j+4*i][length[i][j]-1]<<8) | 0x800000;
+					message[k][j] = input[j+4*i][length[i][j]-2] | (input[j+4*i][length[i][j]-1]<<8) | 0x800000;
 					break;
 				case 3:
-					md4_buffer_SSE[k][j] = input[j+4*i][length[i][j]-3] | (input[j+4*i][length[i][j]-2]<<8) | (input[j+4*i][length[i][j]-1]<<16) | 0x80000000;
+					message[k][j] = input[j+4*i][length[i][j]-3] | (input[j+4*i][length[i][j]-2]<<8) | (input[j+4*i][length[i][j]-1]<<16) | 0x80000000;
 					break;
 				}
 
 				//put the length
-				md4_buffer_SSE[14][j] = length[i][j] << 3;
+				message[14][j] = length[i][j] << 3;
 			}
 
 			for(int j = 0; j < 3; j++)
-				md4_buffer[i][j] = _mm_load_si128((__m128i*)md4_buffer_SSE[j]);
+				message_SSE[i][j] = _mm_load_si128((__m128i*)message[j]);
 		}
 	}*/
 
-	inline void prepare_key_ntlm_SSE(char** input)
+	inline void prepareKey_NTLM_SSE(char** input)
 	{
 		unsigned int length[3][4];
 
@@ -137,41 +135,41 @@ protected:
 
 		for(int i = 0; i < 3; i++)
 		{
-			memset(md4_buffer_SSE, 0, 16*4*4);
+			memset(message, 0, 16*4*4);
 
 			for(int j = 0; j < 4; j++)
 			{
 				unsigned int k = 0;
 				//The length of input need to be <= 27
 				for(;k<length[i][j]/2;k++)	
-					md4_buffer_SSE[k][j] = input[j+4*i][2*k] | (input[j+4*i][2*k+1]<<16);
+					message[k][j] = input[j+4*i][2*k] | (input[j+4*i][2*k+1]<<16);
 			 
 				//padding
 				if(length[i][j]%2==1)
-					md4_buffer_SSE[k][j] = input[j+4*i][length[i][j]-1] | 0x800000;
+					message[k][j] = input[j+4*i][length[i][j]-1] | 0x800000;
 				else
-					md4_buffer_SSE[k][j]=0x80;
+					message[k][j]=0x80;
 				//put the length
-				md4_buffer_SSE[14][j] = length[i][j] << 4;
+				message[14][j] = length[i][j] << 4;
 			}
 
 			for(int j = 0; j < 16; j++)
-				md4_buffer[i][j] = _mm_load_si128((__m128i*)md4_buffer_SSE[j]);
+				message_SSE[i][j] = _mm_load_si128((__m128i*)message[j]);
 		}
 	}
 
-	inline void initialize_words_SSE()
+	inline void initialize()
 	{
 		for(int i = 0; i < 3; i++)
 		{
-			wd[i][0] = _mm_set1_epi32(wd_init[0]);
-			wd[i][1] = _mm_set1_epi32(wd_init[1]);
-			wd[i][2] = _mm_set1_epi32(wd_init[2]);
-			wd[i][3] = _mm_set1_epi32(wd_init[3]);
+			wd_SSE[i][0] = _mm_set1_epi32(wd_init[0]);
+			wd_SSE[i][1] = _mm_set1_epi32(wd_init[1]);
+			wd_SSE[i][2] = _mm_set1_epi32(wd_init[2]);
+			wd_SSE[i][3] = _mm_set1_epi32(wd_init[3]);
 		}
 	}
 
-	inline void md4_crypt_SSE()
+	inline void encrypt()
 	{	 
 		// Round 1 // ---
 
@@ -349,29 +347,28 @@ protected:
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
-				_mm_store_si128((__m128i*)wd_SSE[i][j], wd[i][j]);
+				_mm_store_si128((__m128i*)wd[i][j], wd_SSE[i][j]);
 	}
 
-	inline void convert_to_int128_SSE(hashContext_MD4* output)
+	inline void convertToContext_SSE(hashContext_MD4* output)
 	{
 		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 4; j++)
 			{
-				output[j+4*i].first  = ((unsigned long long)wd_SSE[i][0][j] << 32) | wd_SSE[i][2][j];
-				output[j+4*i].second = ((unsigned long long)wd_SSE[i][1][j] << 32) | wd_SSE[i][3][j];
+				output[j+4*i].first  = ((unsigned long long)wd[i][0][j] << 32) | wd[i][2][j];
+				output[j+4*i].second = ((unsigned long long)wd[i][1][j] << 32) | wd[i][3][j];
 			}
 		}
 	}
 
-	__m128i md4_buffer[3][16];
-	__m128i wd[3][4];
+	__m128i message_SSE[3][16];
+	__m128i wd_SSE[3][4];
 
 	__m128i SQRT_2, SQRT_3;
 
-	// The 'md' suffix stands for "multiple data"
-	unsigned int md4_buffer_SSE[16][4];
-	unsigned int wd_SSE[3][4][4];
+	unsigned int message[16][4];
+	unsigned int wd[3][4][4];
 };
 
 #endif

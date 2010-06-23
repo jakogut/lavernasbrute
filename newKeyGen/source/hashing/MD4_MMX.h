@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	void getWeakHashes_NTLM(std::string* input, hashContext_MD4* output)
+	void getHashContext_NTLM(std::string* input, hashContext_MD4* output)
 	{
 		prepare_key_ntlm_mmx(input);
 

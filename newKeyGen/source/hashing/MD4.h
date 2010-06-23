@@ -155,7 +155,7 @@ protected:
 		md4_buffer[14] = length << 4;
 	}
 
-	inline void initialize()
+	inline virtual void initialize()
 	{
 		wd[0] = wd_init[0];
 		wd[1] = wd_init[1];
@@ -163,7 +163,7 @@ protected:
 		wd[3] = wd_init[3];
 	}
 
-	void encrypt()
+	virtual void encrypt()
 	{	 
 		// Round 1 // ---
 
@@ -241,7 +241,7 @@ protected:
 		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[15], SQRT_3, 15);
 	}
 	 
-	inline void finalize()
+	inline virtual void finalize()
 	{
 		wd[0] += wd_init[0];
 		wd[1] += wd_init[1];
