@@ -12,15 +12,15 @@
 #define ROTL_mmx(num, places) (_m_por(_m_pslld(num, _m_from_int(places)), _m_psrld(num, _m_from_int(32 - places))))
  
 #define round1_mmx(wd_index, a, b, c, ntb_index, rotation) \
-	wd[wd_index] = _m_paddd(wd[wd_index], _m_paddd(_m_por(_m_pand(wd[a], wd[b]), _m_pandn(wd[a], wd[c])), md4_buffer[ntb_index])), \
+	wd[wd_index] = _m_paddd(wd[wd_index], _m_paddd(_m_por(_m_pand(wd[a], wd[b]), _m_pandn(wd[a], wd[c])), message[ntb_index])), \
 	wd[wd_index] = ROTL_mmx(wd[wd_index], rotation)
 
 #define round2_mmx(wd_index, a, b, c, ntb_index, rotation) \
-	wd[wd_index] = _m_paddd(wd[wd_index], _m_paddd(_m_paddd(_m_por(_m_pand(wd[a], _m_por(wd[b], wd[c])), _m_pand(wd[b], wd[c])), md4_buffer[ntb_index]), SQRT_2)), \
+	wd[wd_index] = _m_paddd(wd[wd_index], _m_paddd(_m_paddd(_m_por(_m_pand(wd[a], _m_por(wd[b], wd[c])), _m_pand(wd[b], wd[c])), message[ntb_index]), SQRT_2)), \
 	wd[wd_index] = ROTL_mmx(wd[wd_index], rotation)
 
 #define round3_mmx(wd_index, a, b, c, ntb_index, rotation) \
-	wd[wd_index] = _m_paddd(_m_paddd(_m_paddd(wd[wd_index], _m_pxor(wd[a], _m_pxor(wd[b], wd[c]))), md4_buffer[ntb_index]), SQRT_3), \
+	wd[wd_index] = _m_paddd(_m_paddd(_m_paddd(wd[wd_index], _m_pxor(wd[a], _m_pxor(wd[b], wd[c]))), message[ntb_index]), SQRT_3), \
 	wd[wd_index] = ROTL_mmx(wd[wd_index], rotation)
 
 class MD4_MMX
@@ -57,7 +57,7 @@ protected:
 		for(int i = 0; i < 2; i++)
 			length[i] = (unsigned int)input[i].length();
 
-		memset(md4_buffer_md,0,16*4*2);
+		memset(message_MMX,0,16*4*2);
 
 		for(int i = 0; i < 2; i++)
 		{
@@ -65,18 +65,18 @@ protected:
 
 			//The length of input need to be <= 27
 			for(;j<length[i]/2;j++)	
-				md4_buffer_md[j][i] = input[i][2*j] | (input[i][2*j+1]<<16);
+				message_MMX[j][i] = input[i][2*j] | (input[i][2*j+1]<<16);
 		 
 			//padding
 			if(length[i]%2==1)
-				md4_buffer_md[j][i] = input[i][length[i]-1] | 0x800000;
+				message_MMX[j][i] = input[i][length[i]-1] | 0x800000;
 			else
-				md4_buffer_md[j][i]=0x80;
+				message_MMX[j][i]=0x80;
 			//put the length
-			md4_buffer_md[14][i] = length[i] << 4;
+			message_MMX[14][i] = length[i] << 4;
 		}
 
-		memcpy(md4_buffer, md4_buffer_md, 16*4*2);
+		memcpy(message, message_MMX, 16*4*2);
 	}
 
 	inline void initialize_words_mmx()
@@ -156,7 +156,7 @@ protected:
 		round3_mmx(2, 1, 0, 3, 7, 11);
 		round3_mmx(1, 0, 3, 2, 15, 15);
 
-		memcpy(wd_md, wd, 4*4*2);
+		memcpy(wd_MMX, wd, 4*4*2);
 
 		_m_empty();
 	}
@@ -165,19 +165,17 @@ protected:
 	{
 		for(int j = 0; j < 2; j++)
 		{
-			output[j].first  = ((unsigned long long)wd_md[0][j] << 32) | wd_md[2][j];
-			output[j].second = ((unsigned long long)wd_md[1][j] << 32) | wd_md[3][j];
+			output[j].first  = ((unsigned long long)wd_MMX[0][j] << 32) | wd_MMX[2][j];
+			output[j].second = ((unsigned long long)wd_MMX[1][j] << 32) | wd_MMX[3][j];
 		}
 	}
 
-	__m64 md4_buffer[16];
+	__m64 message[16];
 	__m64 wd[4];
 
 	__m64 SQRT_2, SQRT_3;
 
-	// The 'md' suffix stands for "multiple data"
-	unsigned int md4_buffer_md[16][2];
-
-	unsigned int wd_md[4][2];
+	unsigned int message_MMX[16][2];
+	unsigned int wd_MMX[4][2];
 
 };
