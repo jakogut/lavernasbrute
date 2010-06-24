@@ -110,30 +110,30 @@ protected:
 		int length = (int)strlen(input);
 
 		// Zero out the message buffer
-		memset(md4_buffer,0,16*4);
+		memset(message,0,16*4);
 		
 		for(;i<length/4;i++)	
-			md4_buffer[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
+			message[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
 	 
 		// Pad with one 1 bit, followed by zeros until the message is 64 bits shy of 512 bits in length.
 		switch(length%4)
 		{
 		case 0:
-			md4_buffer[i] = 0x80;
+			message[i] = 0x80;
 			break;
 		case 1:
-			md4_buffer[i] = input[length - 1] | 0x8000;
+			message[i] = input[length - 1] | 0x8000;
 			break;
 		case 2:
-			md4_buffer[i] = input[length-2] | (input[length-1]<<8) | 0x800000;
+			message[i] = input[length-2] | (input[length-1]<<8) | 0x800000;
 			break;
 		case 3:
-			md4_buffer[i] = input[length-3] | (input[length-2]<<8) | (input[length-1]<<16) | 0x80000000;
+			message[i] = input[length-3] | (input[length-2]<<8) | (input[length-1]<<16) | 0x80000000;
 			break;
 		}
 
 		// Add the length
-		md4_buffer[14] = length << 3;
+		message[14] = length << 3;
 	}
 
 	void prepareKey_NTLM(const char* input)
@@ -141,18 +141,18 @@ protected:
 		int i=0;
 		int length=(int)(strlen(input));
 
-		memset(md4_buffer,0,16*4);
+		memset(message,0,16*4);
 		
 		for(;i<length/2;i++)	
-			md4_buffer[i] = input[2*i] | (input[2*i+1]<<16);
+			message[i] = input[2*i] | (input[2*i+1]<<16);
 	 
 		// Pad
 		if(length%2==1)
-			md4_buffer[i] = input[length-1] | 0x800000;
+			message[i] = input[length-1] | 0x800000;
 		else
-			md4_buffer[i]=0x80;
+			message[i]=0x80;
 		// Length
-		md4_buffer[14] = length << 4;
+		message[14] = length << 4;
 	}
 
 	inline virtual void initialize()
@@ -167,47 +167,47 @@ protected:
 	{	 
 		// Round 1 // ---
 
-		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[0], 3);
-		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[1], 7);
-		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[2], 11);
-		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[3], 19);
+		FF(wd[0], wd[1], wd[2], wd[3], message[0], 3);
+		FF(wd[3], wd[0], wd[1], wd[2], message[1], 7);
+		FF(wd[2], wd[3], wd[0], wd[1], message[2], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], message[3], 19);
 	 
-		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[4], 3);
-		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[5], 7);
-		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[6], 11);
-		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[7], 19);
+		FF(wd[0], wd[1], wd[2], wd[3], message[4], 3);
+		FF(wd[3], wd[0], wd[1], wd[2], message[5], 7);
+		FF(wd[2], wd[3], wd[0], wd[1], message[6], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], message[7], 19);
 	 
-		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[8],  3);
-		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[9],  7);
-		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[10], 11);
-		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[11], 19);
+		FF(wd[0], wd[1], wd[2], wd[3], message[8],  3);
+		FF(wd[3], wd[0], wd[1], wd[2], message[9],  7);
+		FF(wd[2], wd[3], wd[0], wd[1], message[10], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], message[11], 19);
 	 
-		FF(wd[0], wd[1], wd[2], wd[3], md4_buffer[12], 3);
-		FF(wd[3], wd[0], wd[1], wd[2], md4_buffer[13], 7);
-		FF(wd[2], wd[3], wd[0], wd[1], md4_buffer[14], 11);
-		FF(wd[1], wd[2], wd[3], wd[0], md4_buffer[15], 19);
+		FF(wd[0], wd[1], wd[2], wd[3], message[12], 3);
+		FF(wd[3], wd[0], wd[1], wd[2], message[13], 7);
+		FF(wd[2], wd[3], wd[0], wd[1], message[14], 11);
+		FF(wd[1], wd[2], wd[3], wd[0], message[15], 19);
 
 		// Round 2 // ---
 
-		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[0],  SQRT_2, 3);
-		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[4],  SQRT_2, 5);
-		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[8],  SQRT_2, 9);
-		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[12], SQRT_2, 13);
+		GG(wd[0], wd[1], wd[2], wd[3], message[0],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], message[4],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], message[8],  SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], message[12], SQRT_2, 13);
 	 
-		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[1],  SQRT_2, 3);
-		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[5],  SQRT_2, 5);
-		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[9],  SQRT_2, 9);
-		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[13], SQRT_2, 13);
+		GG(wd[0], wd[1], wd[2], wd[3], message[1],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], message[5],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], message[9],  SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], message[13], SQRT_2, 13);
 	 
-		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[2],  SQRT_2, 3);
-		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[6],  SQRT_2, 5);
-		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[10], SQRT_2, 9);
-		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[14], SQRT_2, 13);
+		GG(wd[0], wd[1], wd[2], wd[3], message[2],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], message[6],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], message[10], SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], message[14], SQRT_2, 13);
 	 
-		GG(wd[0], wd[1], wd[2], wd[3], md4_buffer[3],  SQRT_2, 3);
-		GG(wd[3], wd[0], wd[1], wd[2], md4_buffer[7],  SQRT_2, 5);
-		GG(wd[2], wd[3], wd[0], wd[1], md4_buffer[11], SQRT_2, 9);
-		GG(wd[1], wd[2], wd[3], wd[0], md4_buffer[15], SQRT_2, 13);
+		GG(wd[0], wd[1], wd[2], wd[3], message[3],  SQRT_2, 3);
+		GG(wd[3], wd[0], wd[1], wd[2], message[7],  SQRT_2, 5);
+		GG(wd[2], wd[3], wd[0], wd[1], message[11], SQRT_2, 9);
+		GG(wd[1], wd[2], wd[3], wd[0], message[15], SQRT_2, 13);
 	
 		// Round 3 // ---
 
@@ -220,25 +220,25 @@ protected:
 		element had to have been zero. We can do this until we find an element of the message that
 		_wasn't_ zero, in which case we would have found the end of the message.*/
 
-		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[0],  SQRT_3, 3);
-		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[8],  SQRT_3, 9);
-		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[4],  SQRT_3, 11);
-		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[12], SQRT_3, 15);
+		HH(wd[0], wd[3], wd[2], wd[1], message[0],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], message[8],  SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], message[4],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], message[12], SQRT_3, 15);
 	 
-		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[2],  SQRT_3, 3);
-		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[10], SQRT_3, 9);
-		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[6],  SQRT_3, 11);
-		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[14], SQRT_3, 15);
+		HH(wd[0], wd[3], wd[2], wd[1], message[2],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], message[10], SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], message[6],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], message[14], SQRT_3, 15);
 	 
-		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[1],  SQRT_3, 3);
-		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[9],  SQRT_3, 9);
-		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[5],  SQRT_3, 11);
-		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[13], SQRT_3, 15);
+		HH(wd[0], wd[3], wd[2], wd[1], message[1],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], message[9],  SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], message[5],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], message[13], SQRT_3, 15);
 	 
-		HH(wd[0], wd[3], wd[2], wd[1], md4_buffer[3],  SQRT_3, 3);
-		HH(wd[3], wd[2], wd[1], wd[0], md4_buffer[11], SQRT_3, 9);
-		HH(wd[2], wd[1], wd[0], wd[3], md4_buffer[7],  SQRT_3, 11);
-		HH(wd[1], wd[0], wd[3], wd[2], md4_buffer[15], SQRT_3, 15);
+		HH(wd[0], wd[3], wd[2], wd[1], message[3],  SQRT_3, 3);
+		HH(wd[3], wd[2], wd[1], wd[0], message[11], SQRT_3, 9);
+		HH(wd[2], wd[1], wd[0], wd[3], message[7],  SQRT_3, 11);
+		HH(wd[1], wd[0], wd[3], wd[2], message[15], SQRT_3, 15);
 	}
 	 
 	inline virtual void finalize()
@@ -320,7 +320,7 @@ private:
 	hashContext_MD4 retval; // 128-bit integer type used to store a weakened (partial) hash
 	char hex_format[33]; // Char array used to store the resulting hex digest
 
-	unsigned int md4_buffer[16];
+	unsigned int message[16];
 
 	unsigned int SQRT_2;
 	unsigned int SQRT_3;
