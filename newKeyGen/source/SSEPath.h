@@ -1,5 +1,7 @@
 // Part of Laverna's Brute
 
+#ifdef SSE
+
 #ifndef SSEPath_H_
 #define SSEPath_H_
 
@@ -39,5 +41,7 @@ protected:
 
 	unsigned long long keyspaceBegin, keyspaceEnd, keyLocation;
 };
+
+#endif
 
 #endif

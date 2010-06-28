@@ -1,5 +1,7 @@
 // Part of Laverna's Brute
 
+#ifdef SSE
+
 #include "SSEPath.h"
 
 SSEPath::SSEPath(int id)
@@ -121,3 +123,5 @@ void SSEPath::moveKeylocation(unsigned long long input)
 {
 	keyLocation = input;
 }
+
+#endif
