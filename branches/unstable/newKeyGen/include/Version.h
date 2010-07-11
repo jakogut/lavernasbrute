@@ -1,7 +1,7 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-#define VERSION "Development r351"
+#define VERSION "Development r356"
 // #define VERSION "Release 1.1"
 
 #define COPYRIGHT "2008-2010"

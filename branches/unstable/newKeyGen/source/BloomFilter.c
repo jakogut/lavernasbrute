@@ -1,76 +1,51 @@
 // Part of Laverna's Brute
 
-#include <limits.h>
-#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-#include "BloomFilter.h"
+#include "bloomFilter.h"
+#include "FNV.h"
 
-#define NUM_HASH_FUNCS 2
+#define GETBIT(a, n) (a[n / 8] & (1 << (n % 8)))
+#define SETBIT(a, n) (a[n / 8] = a[n / 8] | 1 << (n % 8))
 
-#define SETBIT(a, n) (a[n/CHAR_BIT] |= (1<<(n%CHAR_BIT)))
-#define GETBIT(a, n) (a[n/CHAR_BIT] & (1<<(n%CHAR_BIT)))
-
-bloomFilter* bloomCreate(size_t size, size_t nFuncs, ...)
+bloomFilter* bloomCreate(size_t filter,  size_t inputs)
 {
-	bloomFilter* bloom;
+	bloomFilter* bFilter;
+	bFilter = (bloomFilter*)malloc(sizeof(bloomFilter));
 
-	va_list list;
-	int i;
+	bFilter->filterSize = filter;
+	bFilter->inputSize = inputs;
+	
+	bFilter->numBuckets = bFilter->filterSize * 8;
 
-	bloom = (bloomFilter*)malloc(sizeof(bloomFilter));
-	bloom->bitArray = (unsigned char*)calloc((size + (CHAR_BIT - 1)) / CHAR_BIT, sizeof(char));
+	bFilter->filter = (char*)malloc(bFilter->filterSize * sizeof(char));
 
-	bloom->hashFunctions = (hashFunc*)malloc(nFuncs * sizeof(hashFunc));
-
-	va_start(list, nFuncs);
-	for(i = 0; i < nFuncs; i++) bloom->hashFunctions[i] = va_arg(list, hashFunc);
-	va_end(list);
-
-	bloom->numHashFunctions = nFuncs;
-	bloom->arraySize = size;
-
-	return bloom;
+	return bFilter;
 }
 
-void bloomDestroy(bloomFilter* bloom)
+void bloomDestroy(bloomFilter* bFilter)
 {
-	free(bloom->bitArray);
-	free(bloom);
+	if(bFilter->filter) free(bFilter->filter);
+	if(bFilter) free(bFilter);
+
+	bFilter->filter = NULL;
+	bFilter = NULL;
 }
 
-void bloomAdd(bloomFilter* bloom, const void* input)
+int bloomAdd(bloomFilter* bFilter, const void* input)
 {
-	const char* cstr = (const char*)input;
-
-	int i = 0;
-	for(; i < bloom->numHashFunctions; i++) 
-		SETBIT(bloom->bitArray, bloom->hashFunctions[i](cstr) % bloom->arraySize);
+	SETBIT(bFilter->filter, hash(input, bFilter->inputSize, bFilter->numBuckets));
 }
 
-int bloomCheck(bloomFilter* bloom, const void* input)
+
+int bloomCheck(bloomFilter* bFilter, const void* input)
 {
-	const char* cstr = (const char*)input;
-
-	int i = 0;
-	for(; i < bloom->numHashFunctions; i++) 
-		if(!GETBIT(bloom->bitArray, bloom->hashFunctions[i](input) % bloom->arraySize)) return 0;
-
-	return 1;
+	if(GETBIT(bFilter->filter, hash(input, bFilter->inputSize, bFilter->numBuckets))) return 1;
+	return 0;
 }
 
-unsigned int sax_hash(const char *key)
+unsigned int hash(const void* input, size_t size, unsigned int max)
 {
-	unsigned int h=0;
-
-	while(*key) h^=(h<<5)+(h>>2)+(unsigned char)*key++;
-
-	return h;
-}
-
-unsigned int sdbm_hash(const char *key)
-{
-	unsigned int h=0;
-	while(*key) h=(unsigned char)*key++ + (h<<6) + (h<<16) - h;
-	return h;
+	return FNV32((const char*)input, size) % max;
 }
