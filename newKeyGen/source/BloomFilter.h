@@ -1,41 +1,36 @@
 // Part of Laverna's Brute
 
-#ifndef BLOOMFILTER_H_
-#define BLOOMFILTER_H_
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Bloom filters are used to verify that a given key is present in a dataset before searching the dataset.
-Laverna's Brute uses this to improve performance by skipping unnecessary searches of the target list 
-when we know that the key is not present. */
-
-typedef unsigned int (*hashFunc)(const char*);
+typedef struct
+{
+	unsigned int wd[4];
+} hashContext;
 
 typedef struct
 {
-	size_t arraySize;
-	unsigned char* bitArray;
-
-	size_t numHashFunctions;
-	hashFunc* hashFunctions;
-
-
+	size_t filterSize;
+	char* filter;
+	
+	unsigned int numBuckets;
+	
+	// We need to know how big the input objects are in bytes
+	size_t inputSize;
+	
 } bloomFilter;
 
-bloomFilter* bloomCreate(size_t size, size_t nFuncs, ...);
-void bloomDestroy(bloomFilter* bloom);
+bloomFilter* bloomCreate(size_t filter, size_t inputs);
+void bloomDestroy(bloomFilter* bFilter);
 
-void bloomAdd(bloomFilter* bloom, const void* input);
-int bloomCheck(bloomFilter* bloom, const void* input);
+int bloomAdd(bloomFilter* bFilter, const void* input);
 
-// Hashing function(s)
-unsigned int sax_hash(const char* key);
-unsigned int sdbm_hash(const char* key);
+// If positive, return one, else return zero.
+int bloomCheck(bloomFilter* bFilter, const void* input);
+
+inline unsigned int hash(const void* input, size_t size, unsigned int max);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif
