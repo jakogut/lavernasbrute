@@ -5,7 +5,7 @@ BITNESS = 32
 DEBUG = -g
 PROFILE = -pg
 
-INCLUDE = -I/usr/include -Iinclude -Isource -Isource/hashing
+INCLUDE = -I/usr/include -Iinclude -Iinclude/hashing -Isource
 LIB = -L/usr/lib -Llib -lboost_date_time-mt -lboost_thread-mt
 DEST = bin/gcc/$(ARCH)
 
