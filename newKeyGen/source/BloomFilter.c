@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "bloomFilter.h"
+#include "BloomFilter.h"
 #include "FNV.h"
 
 #define GETBIT(a, n) (a[n / 8] & (1 << (n % 8)))
