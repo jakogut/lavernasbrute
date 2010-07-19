@@ -16,11 +16,13 @@
 #include <boost/thread/thread.hpp>
 
 #include "MasterThread.h"
+#include "BloomFilter.h"
+#include "KeyGenerator.h"
+#include "BinarySearch.h"
+
 #include "MD4.h"
 
-#include "KeyGenerator.h"
-
-typedef google::dense_hash_map< hashContext_MD4, std::string, boost::hash<hashContext_MD4> > targetMap;
+bool operator<(const hashContext& a, const hashContext& b);
 
 class processingPath
 {
@@ -46,11 +48,10 @@ class processingPath
 	virtual void moveKeyspaceBegin(unsigned long long input) = 0;
 	virtual void moveKeylocation(unsigned long long input) = 0;
 
-	// The target map MUST be initialized before targets are added
-	static void initializeTargetMap();
+	static void initializeBloomFilter();
 
     // Processing path options
-	static void pushTarget(std::string& input);
+	static void addTarget(std::string& input);
 	static void setMaxChars(int input);
 	static int getMaxChars();
 
@@ -66,9 +67,9 @@ protected:
 
 	int remainingTargets;
 
-	static void removeTarget(targetMap::iterator it);
-	static targetMap targets;
-	static boost::mutex targetsMutex;
+	static std::vector<hashContext> targets;
+
+	static bloomFilter* bFilter;
 
 	static int maxChars;
 

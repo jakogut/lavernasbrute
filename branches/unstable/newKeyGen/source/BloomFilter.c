@@ -4,18 +4,16 @@
 #include <stdlib.h>
 
 #include "BloomFilter.h"
-#include "FNV.h"
 
 #define GETBIT(a, n) (a[n / 8] & (1 << (n % 8)))
 #define SETBIT(a, n) (a[n / 8] = a[n / 8] | 1 << (n % 8))
 
-bloomFilter* bloomCreate(size_t filter,  size_t inputs)
+bloomFilter* bloomCreate(size_t filter)
 {
 	bloomFilter* bFilter;
 	bFilter = (bloomFilter*)malloc(sizeof(bloomFilter));
 
 	bFilter->filterSize = filter;
-	bFilter->inputSize = inputs;
 	
 	bFilter->numBuckets = bFilter->filterSize * 8;
 
@@ -33,19 +31,17 @@ void bloomDestroy(bloomFilter* bFilter)
 	bFilter = NULL;
 }
 
-int bloomAdd(bloomFilter* bFilter, const void* input)
+int bloomAdd(bloomFilter* bFilter, unsigned int input)
 {
-	SETBIT(bFilter->filter, hash(input, bFilter->inputSize, bFilter->numBuckets));
+	if(!bFilter) return -1;
+
+	SETBIT(bFilter->filter, ((input > bFilter->numBuckets) ? (input % bFilter->numBuckets) : input));
+	return 1;
 }
 
 
-int bloomCheck(bloomFilter* bFilter, const void* input)
+int bloomCheck(const bloomFilter* bFilter, unsigned int input)
 {
-	if(GETBIT(bFilter->filter, hash(input, bFilter->inputSize, bFilter->numBuckets))) return 1;
+	if(GETBIT(bFilter->filter, ((input > bFilter->numBuckets) ? (input % bFilter->numBuckets) : input))) return 1;
 	return 0;
-}
-
-unsigned int hash(const void* input, size_t size, unsigned int max)
-{
-	return FNV32((const char*)input, size) % max;
 }

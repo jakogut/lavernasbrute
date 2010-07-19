@@ -1,5 +1,7 @@
 // Part of Laverna's Brute
 
+#include "Version.h"
+
 #ifdef SSE
 
 #ifndef SSEPath_H_
@@ -35,9 +37,9 @@ protected:
 	int id;
 
 	char* currentKeys[12];
-	hashContext_MD4 weakHashedKeys[12];
+	hashContext currentContexts[12];
 
-	targetMap::iterator targetIterator;
+	std::vector<hashContext>::iterator targetIterator;
 
 	unsigned long long keyspaceBegin, keyspaceEnd, keyLocation;
 };

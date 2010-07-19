@@ -132,8 +132,7 @@ int main(int argc, char** argv)
 
 	int CPUThreads = 2;
 
-	// Initialize sparsehash
-	processingPath::initializeTargetMap();
+	processingPath::initializeBloomFilter();
 
 	// Parse command-line arguments
 	string flag, value;
@@ -174,7 +173,7 @@ int main(int argc, char** argv)
 			// The length of a proper NTLM hash is always 32 characters
 			if (isValidHexDigest(newHash))
 			{
-				processingPath::pushTarget(newHash);
+				processingPath::addTarget(newHash);
 				targetPresent = true;
 			}
 			else
@@ -303,3 +302,4 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+

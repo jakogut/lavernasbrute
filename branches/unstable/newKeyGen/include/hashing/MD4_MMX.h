@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	void getHashContext_NTLM(std::string* input, hashContext_MD4* output)
+	void getHashContext_NTLM(std::string* input, hashContext* output)
 	{
 		prepare_key_ntlm_mmx(input);
 
@@ -161,7 +161,7 @@ protected:
 		_m_empty();
 	}
 
-	inline void convert_to_int128_mmx(hashContext_MD4* output)
+	inline void convert_to_int128_mmx(hashContext* output)
 	{
 		for(int j = 0; j < 2; j++)
 		{

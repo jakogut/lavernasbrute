@@ -6,10 +6,10 @@
 // Initialize our static variables /////////
 ////////////////////////////////////////////
 
-targetMap processingPath::targets;
-boost::mutex processingPath::targetsMutex;
+std::vector<hashContext> processingPath::targets;
 int processingPath::maxChars = 0;
 std::string processingPath::hashType;
+bloomFilter* processingPath::bFilter;
 
 ////////////////////////////////////////////
 
@@ -20,27 +20,29 @@ processingPath::processingPath()
 	{
 		maxChars = 10;
 	}
+
+	// Sort the target array
+
+	std::sort(targets.begin(), targets.end());
 }
 
 processingPath::~processingPath()
 {
+	//if(bFilter) bloomDestroy(bFilter);
 }
 
-void processingPath::initializeTargetMap()
+void processingPath::initializeBloomFilter()
 {
-	hashContext_MD4 empty, deleted;
-
-	empty.first = 0, empty.second = 0;
-	targets.set_empty_key(empty);
-
-	deleted.first = 1, deleted.second = 1;
-	targets.set_deleted_key(deleted);
+	bFilter = bloomCreate(32768);
 }
 
-void processingPath::pushTarget(std::string& input)
+void processingPath::addTarget(std::string& input)
 {
 	MD4 md4;
-	targets[md4.hashToContext(input.c_str())] = input;
+	hashContext* ctx = md4.hashToContext(input.c_str());
+
+	targets.push_back(*ctx);
+	bloomAdd(bFilter, ctx->uint32[0]);
 }
 
 void processingPath::setMaxChars(int input)
@@ -56,12 +58,6 @@ int processingPath::getMaxChars()
 int processingPath::getNumTargets()
 {
 	return (int)targets.size();
-}
-
-void processingPath::removeTarget(targetMap::iterator it)
-{
-	boost::mutex::scoped_lock lock(targetsMutex);
-	targets.erase(it);
 }
 
 void processingPath::setHashType(std::string type)
@@ -89,4 +85,10 @@ unsigned long long processingPath::calculateKeyspaceSize(int charsetLength, int 
 unsigned long long processingPath::calculateKeyspaceSize()
 {
 	return calculateKeyspaceSize(masterThread::getCharset()->length, maxChars);
+}
+
+bool operator<(const hashContext& a, const hashContext& b)
+{
+	if(memcmp(b.uint32, a.uint32, 4 * sizeof(unsigned)) > 0) return true;
+	else return false;
 }

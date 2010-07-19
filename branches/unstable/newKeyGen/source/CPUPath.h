@@ -32,10 +32,10 @@ protected:
 
 	char* currentKey;
 
+	std::vector<hashContext>::iterator targetIterator;
+
 	MD4 md4;
 	MD4::scalarHashPtr hashFunc;
-
-	targetMap::iterator targetIterator;
 
 	unsigned long long keyspaceEnd, keyspaceBegin, keyLocation;
 };

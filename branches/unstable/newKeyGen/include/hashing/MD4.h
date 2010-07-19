@@ -23,7 +23,11 @@
 #define HH(A, B, C, D, X, SQRT3, ROT) \
 	A += H(B, C, D) + X + SQRT3, A = ROTL(A, ROT)
 
-typedef std::pair<unsigned long long, unsigned long long> hashContext_MD4;
+typedef struct ctx
+{
+		unsigned int uint32[4];
+
+} hashContext;
 
 class MD4
 {
@@ -46,7 +50,7 @@ public:
 	{
 	}
 
-	typedef hashContext_MD4 (MD4::*scalarHashPtr)(const char*);
+	typedef hashContext* (MD4::*scalarHashPtr)(const char*);
 
 	// Full MD4
 	inline char* getHash_MD4(const char* input)
@@ -62,7 +66,7 @@ public:
 	}
 
 	// Context only MD4
-	inline hashContext_MD4 getHashContext_MD4(const char* input)
+	inline hashContext* gethashContext(const char* input)
 	{
 		prepareKey_MD4(input);
 
@@ -85,7 +89,7 @@ public:
 	}
 
 	// Context only NTLM
-	inline hashContext_MD4 getHashContext_NTLM(const char* input)
+	inline hashContext* getHashContext_NTLM(const char* input)
 	{
 		prepareKey_NTLM(input);
 
@@ -96,7 +100,7 @@ public:
 	}
 
 	// Take an MD4 hash as input, and reverse the hex encoding, returning a 128-bit integer
-	inline hashContext_MD4 hashToContext(const char* input)
+	inline hashContext* hashToContext(const char* input)
 	{
 		convertFromHex(input);
 		return convertToContext();
@@ -157,10 +161,7 @@ protected:
 
 	inline virtual void initialize()
 	{
-		wd[0] = wd_init[0];
-		wd[1] = wd_init[1];
-		wd[2] = wd_init[2];
-		wd[3] = wd_init[3];
+		memcpy(wd, wd_init, 4 * sizeof(unsigned));
 	}
 
 	virtual void encrypt()
@@ -303,12 +304,10 @@ protected:
 	}
 
 	// Convert the four 32-bit words used in the encryption process to a 128-bit integer
-	inline hashContext_MD4 convertToContext()
+	inline hashContext* convertToContext()
 	{
-		retval.first  = ((unsigned long long)wd[0] << 32) | wd[2];
-		retval.second = ((unsigned long long)wd[1] << 32) | wd[3];
-
-		return retval;
+		memcpy(retval.uint32, wd, (4 * sizeof(4)));
+		return &retval;
 	}
 
 	unsigned int wd_init[4];
@@ -317,7 +316,7 @@ private:
 
 	char* itoa16;
 
-	hashContext_MD4 retval; // 128-bit integer type used to store a weakened (partial) hash
+	hashContext retval;
 	char hex_format[33]; // Char array used to store the resulting hex digest
 
 	unsigned int message[16];
