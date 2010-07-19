@@ -8,7 +8,7 @@ CPUPath::CPUPath(int id)
 	if(hashType == "ntlm")
 		hashFunc = &MD4::getHashContext_NTLM;
 	else if(hashType == "md4")
-		hashFunc = &MD4::getHashContext_MD4;;
+		hashFunc = &MD4::gethashContext;;
 }
 
 CPUPath::~CPUPath()
@@ -25,47 +25,26 @@ void CPUPath::searchKeyspace()
 	masterThread::setRemainingTargets(getNumTargets());
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
-	bool multiHash;
-
-	if(getNumTargets() > 1)
-	{
-		multiHash = true;
-	}
-	else
-	{
-		multiHash = false;
-		targetIterator = targets.begin();
-	}
+	hashContext* currentContext;
 
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Get the next key
 		currentKey = keygen++;
-
 		keyLocation++;
 
-		// If attacking multiple targets, use the hash map. Otherwise, disable it.
-		if(multiHash)
-		{
-			// Look through the targets for our hash
-			targetIterator = targets.find((md4.*hashFunc)(currentKey));
+		currentContext = (md4.*hashFunc)(currentKey);
 
+		// Check the bloom filter for our hash first
+		if(bloomCheck(bFilter, currentContext->uint32[0]))
+		{
+			// The bloom filter returned positive, look through the target list for our hash
+			targetIterator = binarySearch(targets.begin(), targets.end(), currentContext);
+			
 			if(targetIterator != targets.end()) // Match was found
 			{
-				masterThread::printResult(targetIterator->second, currentKey);
-
-				removeTarget(targetIterator);
-				masterThread::setRemainingTargets(getNumTargets());
-			}
-		}
-		else
-		{
-			if((md4.*hashFunc)(currentKey) == targetIterator->first)
-			{
-				masterThread::printResult(targetIterator->second, currentKey);
-
-				removeTarget(targetIterator);
-				masterThread::setRemainingTargets(getNumTargets());
+				masterThread::printResult("placeholder", currentKey);
+				// Reduce the target number here
 			}
 		}
 	}
@@ -117,3 +96,4 @@ void CPUPath::moveKeylocation(unsigned long long input)
 {
 	keyLocation = input;
 }
+

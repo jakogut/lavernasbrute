@@ -3,33 +3,23 @@
 #ifndef BINARYSEARCH_H_
 #define BINARYSEARCH_H_
 
-// The compare function type used in this binary search is compatible with any algorithm that works with qsort
-typedef int (*compareFunc)(const void*, const void*);
+#include "MD4.h"
 
-template <class T>
-unsigned int binarySearch(T* a, size_t low, size_t high, T target, compareFunc compare)
+template < typename T, typename iterT >
+iterT binarySearch(iterT begin, iterT end, const T* target)
 {
-	while(low <= high)
+	iterT arrayEnd = end;
+
+	while(begin < end)
 	{
-		int mid = ((high - low) / 2) + low;
+		iterT mid = ((end - begin - 1) / 2) + begin;
 
-		int compareResult = compare((const void*)&target, (const void*)&a[mid]);
-		(compareResult > 0) ? compareResult = 1 : ((compareResult < 0) ? compareResult = -1 : compareResult = 0);
-
-		switch(compareResult)
-		{
-		case -1:
-			high = mid - 1;
-			break;
-		case 1:
-			low = mid + 1;
-			break;
-		default:
-			return mid;
-		}
+		if(*target < *mid) end = mid;
+		else if(*mid < *target) begin = mid + 1;
+		else return mid;
 	}
 
-	return -1;
+	return arrayEnd; 
 }
 
 #endif

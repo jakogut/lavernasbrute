@@ -1,13 +1,11 @@
 // Part of Laverna's Brute
 
+#ifndef BLOOMFILTER_H_
+#define BLOOMFILTER_H_
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef struct
-{
-	unsigned int wd[4];
-} hashContext;
 
 typedef struct
 {
@@ -16,21 +14,18 @@ typedef struct
 	
 	unsigned int numBuckets;
 	
-	// We need to know how big the input objects are in bytes
-	size_t inputSize;
-	
 } bloomFilter;
 
-bloomFilter* bloomCreate(size_t filter, size_t inputs);
+bloomFilter* bloomCreate(size_t filter);
 void bloomDestroy(bloomFilter* bFilter);
 
-int bloomAdd(bloomFilter* bFilter, const void* input);
+int bloomAdd(bloomFilter* bFilter, unsigned int input);
 
-// If positive, return one, else return zero.
-int bloomCheck(bloomFilter* bFilter, const void* input);
-
-inline unsigned int hash(const void* input, size_t size, unsigned int max);
+// Checks the bloom filter for potential matches; may return a false positive.
+int bloomCheck(const bloomFilter* bFilter, unsigned int input);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif

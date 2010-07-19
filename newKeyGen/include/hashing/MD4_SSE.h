@@ -58,7 +58,7 @@ public:
 	typedef char* (MD4::*vectorHashPtr)(const char*);
 
 	// Not quite done yet
-	/*void getHashContext_MD4(char** input, hashContext_MD4* output)
+	/*void gethashContext(char** input, hashContext* output)
 	{
 		prepareKey_MD4_SSE(input);
 
@@ -68,7 +68,7 @@ public:
 		convertToContext_SSE(output);
 	}*/
 
-	void getHashContext_NTLM(char** input, hashContext_MD4* output)
+	void getHashContext_NTLM(char** input, hashContext* output)
 	{
 		prepareKey_NTLM_SSE(input);
 
@@ -350,16 +350,12 @@ protected:
 				_mm_store_si128((__m128i*)wd[i][j], wd_SSE[i][j]);
 	}
 
-	inline void convertToContext_SSE(hashContext_MD4* output)
+	inline void convertToContext_SSE(hashContext* output)
 	{
 		for(int i = 0; i < 3; i++)
-		{
 			for(int j = 0; j < 4; j++)
-			{
-				output[j+4*i].first  = ((unsigned long long)wd[i][0][j] << 32) | wd[i][2][j];
-				output[j+4*i].second = ((unsigned long long)wd[i][1][j] << 32) | wd[i][3][j];
-			}
-		}
+				for(int k = 0; k < 4; k++)
+					output[j+4*i].uint32[j] = wd[i][j][k];
 	}
 
 	__m128i message_SSE[3][16];

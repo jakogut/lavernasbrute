@@ -1,8 +1,8 @@
 // Part of Laverna's Brute
 
-#ifdef SSE
-
 #include "SSEPath.h"
+
+#ifdef SSE
 
 SSEPath::SSEPath(int id)
 : id(id)
@@ -21,21 +21,9 @@ void SSEPath::operator()()
 void SSEPath::searchKeyspace()
 {
 	masterThread::setRemainingTargets(getNumTargets());
-	MD4_SSE md4_SSE;
+	MD4_SSE md4;
 
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
-
-	bool multiHash;
-
-	if(getNumTargets() > 1)
-	{
-		multiHash = true;
-	}
-	else
-	{
-		multiHash = false;
-		targetIterator = targets.begin();
-	}
 
 	for(int i = 0; i < 12; i++) currentKeys[i] = new char[16];
 
@@ -49,31 +37,19 @@ void SSEPath::searchKeyspace()
 		}
 
 		// Hash the keys
-		md4_SSE.getHashContext_NTLM(currentKeys, weakHashedKeys);
+		md4.getHashContext_NTLM(currentKeys, currentContexts);
 
 		// Check our target hash map for matches
 		for(int i = 0; i < 12; i++)
 		{
-			if(multiHash)
+			if(bloomCheck(bFilter, currentContexts[i].uint32[0]))
 			{
-				targetIterator = targets.find(weakHashedKeys[i]);
+				targetIterator = binarySearch(targets.begin(), targets.end(), &currentContexts[i]);
 
 				if(targetIterator != targets.end())
 				{
-					masterThread::printResult(targetIterator->second, currentKeys[i]);
-
-					removeTarget(targetIterator);
-					masterThread::setRemainingTargets(getNumTargets());
-				}
-			}
-			else // If there's only a single hash, disable searching the hash map to improve speed.
-			{
-				if(weakHashedKeys[i] == targetIterator->first)
-				{
-					masterThread::printResult(targetIterator->second, currentKeys[i]);
-
-					removeTarget(targetIterator);
-					masterThread::setRemainingTargets(getNumTargets());
+					masterThread::printResult("placeholder", currentKeys[i]);
+					// Reduce the target number here
 				}
 			}
 		}
