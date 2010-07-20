@@ -66,7 +66,7 @@ public:
 	}
 
 	// Context only MD4
-	inline hashContext* gethashContext(const char* input)
+	inline hashContext* getHashContext_MD4(const char* input)
 	{
 		prepareKey_MD4(input);
 

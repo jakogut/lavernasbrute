@@ -5,10 +5,10 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	if(hashType == "ntlm")
+	if(hashType == "NTLM")
 		hashFunc = &MD4::getHashContext_NTLM;
-	else if(hashType == "md4")
-		hashFunc = &MD4::gethashContext;;
+	else if(hashType == "MD4")
+		hashFunc = &MD4::getHashContext_MD4;
 }
 
 CPUPath::~CPUPath()
@@ -31,7 +31,7 @@ void CPUPath::searchKeyspace()
 		char* currentKey = keygen++;
 		keyLocation++;
 
-		hashContext* currentContext = (md4.*hashFunc)(currentKey);
+		hashContext* currentContext = md4.getHashContext_NTLM(currentKey);
 
 		// Check the bloom filter for our hash first
 		if(bloomCheck(bFilter, currentContext->uint32[0]))
