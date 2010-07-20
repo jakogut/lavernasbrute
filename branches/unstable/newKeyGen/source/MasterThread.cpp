@@ -8,7 +8,6 @@
 
 bool masterThread::success = 0;
 bool masterThread::silent = 0;
-int masterThread::numWorkers = 0;
 int masterThread::remainingTargets = 0;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
 boost::mutex masterThread::stdoutMutex;
@@ -105,12 +104,7 @@ void masterThread::setSuccess()
 
 int masterThread::getNumWorkers()
 {
-	return numWorkers;
-}
-
-void masterThread::setNumWorkers(int input)
-{
-	numWorkers = input;
+	return workerPtrMap.size();
 }
 
 void masterThread::setRemainingTargets(int input)
@@ -122,7 +116,7 @@ unsigned long long masterThread::getIterations()
 {
 	unsigned long long totalIterations = 0;
 
-	for(int i = 0; i < numWorkers; i++)
+	for(int i = 0; i < getNumWorkers(); i++)
 			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
 
 	return totalIterations;
@@ -182,7 +176,7 @@ void masterThread::manageWorker(processingPath* worker)
 	// Assign a unique portion of the keyspace to the thread (Based on id)
 	unsigned long long keyspaceSize;
 	pow<unsigned long long>(charset.length, processingPath::getMaxChars(), keyspaceSize);
-	keyspaceSize /= numWorkers;
+	keyspaceSize /= getNumWorkers();
 
 	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
 	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);
@@ -199,7 +193,7 @@ bool masterThread::reassignKeyspace(processingPath* worker)
 	int id = 0;
 
 	// Find the worker with the largest remaining section of the keyspace
-	for(int i = 0; i < numWorkers; i++)
+	for(int i = 0; i < getNumWorkers(); i++)
 		if(getRemainingKeyspace(i) > getRemainingKeyspace(id))
 			id = i;
 
