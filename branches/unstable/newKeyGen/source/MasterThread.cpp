@@ -10,11 +10,10 @@ bool masterThread::success = 0;
 bool masterThread::silent = 0;
 int masterThread::numWorkers = 0;
 int masterThread::remainingTargets = 0;
-unsigned long long masterThread::iterations = 0;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
 boost::mutex masterThread::stdoutMutex;
-boost::mutex masterThread::iterationsMutex;
 characterSet masterThread::charset;
+std::map<int, processingPath*> masterThread::workerPtrMap;
 
 
 ////////////////////////////////////////////
@@ -23,6 +22,8 @@ masterThread::masterThread()
 {
 	// Start the clock
 	startTime = time(NULL);
+
+	processingPath::setCharset(&charset);
 }
 
 masterThread::~masterThread()
@@ -34,6 +35,9 @@ void masterThread::operator()()
 	boost::posix_time::seconds updateInterval(1);
 	std::cout.precision(3);
 
+	while(workerPtrMap.size() != (unsigned int)masterThread::getNumWorkers()) 
+		boost::this_thread::sleep(updateInterval);
+
 	do
 	{
 		boost::this_thread::sleep(updateInterval);
@@ -44,7 +48,7 @@ void masterThread::operator()()
 
 			std::cout.flush();
 
-			std::cout << "\rAverage speed: " << ((iterations / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
+			std::cout << "\rAverage speed: " << ((getIterations() / (time(NULL) - startTime)) / 1000000.0f) << " M keys/s"
 			   << "\tHashes Remaining: " << remainingTargets;
 
 			std::cout.flush();
@@ -109,11 +113,6 @@ void masterThread::setNumWorkers(int input)
 	numWorkers = input;
 }
 
-void masterThread::increaseNumWorkers(int input)
-{
-	numWorkers += input;
-}
-
 void masterThread::setRemainingTargets(int input)
 {
 	remainingTargets = input;
@@ -121,23 +120,12 @@ void masterThread::setRemainingTargets(int input)
 
 unsigned long long masterThread::getIterations()
 {
-	return iterations;
-}
+	unsigned long long totalIterations = 0;
 
-void masterThread::setIterations(unsigned long long input)
-{
-	iterations = input;
-}
+	for(int i = 0; i < numWorkers; i++)
+			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
 
-void masterThread::incrementIterations()
-{
-	iterations++;
-}
-
-void masterThread::increaseIterations(unsigned int input)
-{
-	boost::mutex::scoped_lock lock(iterationsMutex);
-	iterations += input;
+	return totalIterations;
 }
 
 void masterThread::initCharset(int min, int max, 
@@ -180,4 +168,65 @@ bool masterThread::getSilent()
 void masterThread::setSilent(bool input)
 {
 	silent = input;
+}
+
+processingPath* masterThread::getWorkerPtr(int id)
+{
+	return workerPtrMap[id];
+}
+
+void masterThread::manageWorker(processingPath* worker)
+{
+	workerPtrMap[worker->getThreadID()] = worker;
+
+	// Assign a unique portion of the keyspace to the thread (Based on id)
+	unsigned long long keyspaceSize;
+	pow<unsigned long long>(charset.length, processingPath::getMaxChars(), keyspaceSize);
+	keyspaceSize /= numWorkers;
+
+	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());
+	worker->moveKeyspaceEnd(worker->getKeyspaceBegin() + keyspaceSize);
+
+	// Set the key location
+	worker->moveKeylocation(worker->getKeyspaceBegin());
+
+	// Start the search
+	worker->searchKeyspace();
+}
+
+bool masterThread::reassignKeyspace(processingPath* worker)
+{
+	int id = 0;
+
+	// Find the worker with the largest remaining section of the keyspace
+	for(int i = 0; i < numWorkers; i++)
+		if(getRemainingKeyspace(i) > getRemainingKeyspace(id))
+			id = i;
+
+	if(getRemainingKeyspace(id) > 0)
+	{
+		// Split the remaining section of the keyspace, and give it to the idle worker
+		worker->moveKeyspaceEnd(workerPtrMap[id]->getKeyspaceEnd());
+		workerPtrMap[id]->moveKeyspaceEnd((workerPtrMap[id]->getKeyspaceEnd() - workerPtrMap[id]->getKeyLocation()) / 2);
+
+		worker->moveKeyspaceBegin(workerPtrMap[id]->getKeyspaceEnd() + 1);
+		worker->moveKeylocation(worker->getKeyLocation());
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+unsigned long long masterThread::getRemainingKeyspace(int id)
+{
+	processingPath* worker = workerPtrMap[id];
+	return worker->getKeyLocation() - worker->getKeyspaceBegin();
+}
+
+unsigned long long masterThread::getRemainingKeyspace(processingPath* worker)
+{
+	return worker->getKeyLocation() - worker->getKeyspaceBegin();
 }

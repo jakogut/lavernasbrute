@@ -12,7 +12,6 @@
 
 #include <boost/thread/thread.hpp>
 
-#include "MasterThread.h"
 #include "BloomFilter.h"
 #include "KeyGenerator.h"
 #include "BinarySearch.h"
@@ -34,7 +33,7 @@ class processingPath
 	// The loop used to search the keyspace
 	virtual void searchKeyspace() = 0;
     
-    // Functions necessary for the Director to do its job
+    // Functions necessary for the master thread to do its job
 	virtual unsigned int getThreadID() = 0;
 
 	virtual unsigned long long getKeyspaceEnd() = 0;
@@ -59,6 +58,8 @@ class processingPath
 	// Set the hash type for the run
 	static void setHashType(std::string type);
 
+	static void setCharset(characterSet* charset);
+
 	static unsigned long long calculateKeyspaceSize(int charsetLength, int keyLength);
 	static unsigned long long calculateKeyspaceSize();
 
@@ -71,6 +72,7 @@ protected:
 	static bloomFilter* bFilter;
 	static size_t bFilterSize;
 
+	static characterSet* pCharset;
 	static int maxChars;
 
 	static std::string hashType;

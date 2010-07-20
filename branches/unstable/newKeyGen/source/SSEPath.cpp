@@ -15,7 +15,7 @@ SSEPath::~SSEPath()
 
 void SSEPath::operator()()
 {
-	Director::manageWorker(this);
+	masterThread::manageWorker(this);
 }
 
 void SSEPath::searchKeyspace()
@@ -49,7 +49,7 @@ void SSEPath::searchKeyspace()
 				if(targetIterator != targets.end())
 				{
 					masterThread::printResult("placeholder", currentKeys[i]);
-					masterThread::setRemainingTargets(getNumTargets());
+					masterThread::setRemainingTargets(getNumTargets() - 1);
 				}
 			}
 		}
@@ -61,7 +61,7 @@ void SSEPath::searchKeyspace()
 	{
 		masterThread::setSuccess();
 	}
-	else if(Director::reassignKeyspace(this))
+	else if(masterThread::reassignKeyspace(this))
 	{
 		searchKeyspace();
 	}

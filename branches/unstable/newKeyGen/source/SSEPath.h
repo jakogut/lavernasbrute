@@ -7,7 +7,6 @@
 #ifndef SSEPath_H_
 #define SSEPath_H_
 
-#include "Director.h"
 #include "ProcessingPath.h"
 
 #include "MD4_SSE.h"

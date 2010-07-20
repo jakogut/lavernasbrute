@@ -6,9 +6,6 @@
 
 #include <boost/thread/thread.hpp>
 
-// Director class
-#include "Director.h"
-
 //Base class for processing paths
 #include "ProcessingPath.h"
 
@@ -296,9 +293,6 @@ int main(int argc, char** argv)
 	// Create the master thread
 	threadGroup.create_thread(masterThread());
 
-	// Create the director thread
-	threadGroup.create_thread(Director());
-
 	// Create the appropriate number of threads for the CPU path
 	for(int i = 0; i < CPUThreads; i++)
 	{
@@ -316,7 +310,7 @@ int main(int argc, char** argv)
 	threadGroup.join_all();
 
 	// Destroy the bloom filter
-	processingPath::destroyBloomFilter();
+	//processingPath::destroyBloomFilter();
 
 	return 0;
 }
