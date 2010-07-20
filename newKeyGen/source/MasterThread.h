@@ -35,7 +35,6 @@ public:
 	static void setSilent(bool input);
 
 	static int getNumWorkers();
-	static void setNumWorkers(int input);
 
 	static void setRemainingTargets(int input);
 
@@ -68,8 +67,6 @@ protected:
 	static std::map<int, processingPath*> workerPtrMap;
 
 	static bool silent;
-
-	static int numWorkers;
 
 	//When a thread is successful, it sets this value to true, signaling the other threads
 	//That the job is done.

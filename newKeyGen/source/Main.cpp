@@ -256,9 +256,6 @@ int main(int argc, char** argv)
 	if(!charsetSpecified)
 		masterThread::initCharset('0', 'z', '9'+1, 'A', 'Z'+1, 'a');
 
-	// Set the total number of worker threads in use for this run
-	masterThread::setNumWorkers(CPUThreads);
-
 	// Check to see that we have a valid target
 	if(targetPresent && hashTypeSpecified)
 	{
