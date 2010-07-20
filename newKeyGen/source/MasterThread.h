@@ -12,7 +12,6 @@
 #include <iomanip>
 
 #include <boost/thread/thread.hpp>
-#include <boost/date_time.hpp>
 
 #include "CharacterSet.h"
 #include "ProcessingPath.h"
