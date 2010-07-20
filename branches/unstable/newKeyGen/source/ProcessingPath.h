@@ -10,9 +10,6 @@
 #include <sstream>
 #include <string>
 
-#include <google/dense_hash_map>
-
-#include <boost/functional/hash.hpp>
 #include <boost/thread/thread.hpp>
 
 #include "MasterThread.h"
@@ -49,6 +46,7 @@ class processingPath
 	virtual void moveKeylocation(unsigned long long input) = 0;
 
 	static void initializeBloomFilter();
+	static void setBloomFilterSize(size_t size);
 
     // Processing path options
 	static void addTarget(std::string& input);
@@ -70,6 +68,7 @@ protected:
 	static std::vector<hashContext> targets;
 
 	static bloomFilter* bFilter;
+	static size_t bFilterSize;
 
 	static int maxChars;
 

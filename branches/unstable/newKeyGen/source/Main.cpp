@@ -46,6 +46,10 @@ void printHelp()
 	"\n\n--hash-type\tSpecify the hashing algorithm to use."
 	"\n\t\tAvailable options are: NTLM, MD4"
 
+	"\n\n--filter-size\tSet the size of the bloom filter in bytes."
+	"\n\t\tThe more target hashes, the larger the filter should be."
+	"\n\t\tTry a filter size of 0.5*N, where N is the number of hashes."
+
 	"\n\n-t INTEGER\tNumber of CPU worker threads used."
 	"\n\t\tThis should match the core count of your CPU."
 
@@ -84,20 +88,21 @@ int toInt(string input)
 	return result;
 }
 
-// Convert a string to lowercase
-string toLower(const string input)
+/* Convert a string to a different case. 
+ * If strCase is false, the string is converted to lowercase.
+ * If strCase is true, the string is converted to uppercase.
+ */
+string changeCase(string str, bool strCase)
 {
-	string result = input;
-
-	for(unsigned int i = 0; i < result.length(); i++)
+	for(unsigned int i = 0; i < str.length(); i++)
 	{
-		if(result[i] >= 65 && result[i] <= 90)
-		{
-			result[i] += 32;
-		}
+		if(strCase)
+			if(str[i] >= 65 && str[i] <= 90) str[i] += 32;
+		else
+			if(str[i] >= 97 && str[i] <= 122) str[i] -= 32;
 	}
 
-	return result;
+	return str;
 }
 
 // Validates a string input as a lowercase hex digest
@@ -126,13 +131,15 @@ int main(int argc, char** argv)
 	bool targetPresent = false;
 	bool charsetSpecified = false;
 
+	std::string hashType;
+
 	#ifdef SSE
 	bool enableSSE = false;
 	#endif
 
 	int CPUThreads = 2;
 
-	processingPath::initializeBloomFilter();
+	processingPath::createBloomFilter();
 
 	// Parse command-line arguments
 	string flag, value;
@@ -145,29 +152,37 @@ int main(int argc, char** argv)
 			value = argv[i + 1];
 
 		// Print the help page
-		if(toLower(flag) == "-h" || flag == "--help")
+		if(changeCase(flag, 0) == "-h" || flag == "--help")
 		{
 			printHelp();
 			return 0;
 		}
 
-		if(toLower(flag) == "--hash-type")
+		if(changeCase(flag, 0) == "--hash-type")
 		{
-			std::string hashType = toLower(value);
+			hashType = changeCase(value, 1);
 
 			// This should be replaced with a function table sometime down the road.
 			// Maybe after we add MD5 support. It's a low priority right now.
-			if(hashType == "ntlm" || hashType == "md4")
+			if(hashType == "NTLM" || hashType == "MD4")
 			{
 				processingPath::setHashType(hashType);
 				hashTypeSpecified = true;
 			}
 		}
 
-		// Add a hash to the target hash map
-		if(toLower(flag.substr(0, 7)) == "target:")
+		if(changeCase(flag, 0) == "--filter-size")
 		{
-			string newHash = toLower(flag.substr(7));
+			size_t filterSize = toInt(value);
+			processingPath::setBloomFilterSize(filterSize);
+
+			std::cout << "Filter size of " << filterSize << " bytes specified." << endl;
+		}
+
+		// Add a hash to the target hash map
+		if(changeCase(flag.substr(0, 7), 0) == "target:")
+		{
+			string newHash = changeCase(flag.substr(7), 0);
  
 			// Check to see whether the hash has been entered correctly
 			// The length of a proper NTLM hash is always 32 characters
@@ -219,7 +234,7 @@ int main(int argc, char** argv)
 		}		
 
 		// Enable SSE path
-		if(toLower(flag) == "--sse" || toLower(flag) == "--sse2")
+		if(changeCase(flag, 0) == "--sse" || changeCase(flag, 0) == "--sse2")
 		{
 			#ifdef SSE
 			enableSSE = true;
@@ -229,13 +244,13 @@ int main(int argc, char** argv)
 		}
 
 		// Disable iteration logging
-		if(toLower(flag) == "--silent")
+		if(changeCase(flag, 0) == "--silent")
 		{
 			masterThread::setSilent(true);
 		}
 
 		// Disable threading
-		if(toLower(flag) == "--disable-threading")
+		if(changeCase(flag, 0) == "--disable-threading")
 		{
 			CPUThreads = 1;
 		}
@@ -251,7 +266,7 @@ int main(int argc, char** argv)
 	if(targetPresent && hashTypeSpecified)
 	{
 		cout << "\nRunning " << CPUThreads << " cooperative threads," << endl
-			 << "Cracking " << processingPath::getNumTargets()  << " hash(es).";
+			 << "Cracking " << processingPath::getNumTargets()  << " " << hashType << " hash(es).";
 
 		#ifdef SSE
 		if(enableSSE)
@@ -300,6 +315,8 @@ int main(int argc, char** argv)
 	// Wait for the threads to complete their work
 	threadGroup.join_all();
 
+	// Destroy the bloom filter
+	processingPath::destroyBloomFilter();
+
 	return 0;
 }
-

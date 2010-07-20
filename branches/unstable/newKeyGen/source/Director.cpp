@@ -28,27 +28,28 @@ void Director::operator()()
 	// Wait for all workers to be initialized.
 	while(workerPtrMap.size() != (unsigned int)masterThread::getNumWorkers())
 
-	// Start updating the masterThread.
-	updateMasterThread();
+	while(!masterThread::getSuccess())
+	{
+		boost::this_thread::sleep(boost::posix_time::seconds(1));
+
+		updateMasterThread();
+	}
 }
 
 void Director::updateMasterThread()
 {
-	boost::posix_time::seconds updateInterval(1);
-	unsigned long long totalIterations = 0;
+	#ifdef DEBUG
+	assert(workerPtrMap[i]->getThreadID());
+	#endif
 
 	int numWorkers = masterThread::getNumWorkers();
 
-	while(!masterThread::getSuccess())
-	{
-		boost::this_thread::sleep(updateInterval);
-		totalIterations = 0;
+	unsigned long long totalIterations = 0;
 
-		for(int i = 0; i < numWorkers; i++)
-				totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
+	for(int i = 0; i < numWorkers; i++)
+			totalIterations += workerPtrMap[i]->getKeyLocation() - workerPtrMap[i]->getKeyspaceBegin();
 
-		masterThread::setIterations(totalIterations);
-	}
+	masterThread::setIterations(totalIterations);
 }
 
 processingPath* Director::getWorkerPtr(int id)

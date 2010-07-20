@@ -49,7 +49,7 @@ void SSEPath::searchKeyspace()
 				if(targetIterator != targets.end())
 				{
 					masterThread::printResult("placeholder", currentKeys[i]);
-					// Reduce the target number here
+					masterThread::setRemainingTargets(getNumTargets());
 				}
 			}
 		}

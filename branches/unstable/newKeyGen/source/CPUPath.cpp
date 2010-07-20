@@ -44,7 +44,7 @@ void CPUPath::searchKeyspace()
 			if(targetIterator != targets.end()) // Match was found
 			{
 				masterThread::printResult("placeholder", currentKey);
-				// Reduce the target number here
+				masterThread::setRemainingTargets(getNumTargets() - 1);
 			}
 		}
 	}
