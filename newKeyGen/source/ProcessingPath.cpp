@@ -28,10 +28,9 @@ processingPath::processingPath()
 
 processingPath::~processingPath()
 {
-	//if(bFilter) bloomDestroy(bFilter);
 }
 
-void processingPath::initializeBloomFilter()
+void processingPath::createBloomFilter()
 {
 	bFilter = bloomCreate(bFilterSize);
 }
@@ -39,6 +38,11 @@ void processingPath::initializeBloomFilter()
 void processingPath::setBloomFilterSize(size_t size)
 {
 	bFilterSize = size;
+}
+
+void processingPath::destroyBloomFilter()
+{
+	if(bFilter) bloomDestroy(bFilter);
 }
 
 void processingPath::addTarget(std::string& input)

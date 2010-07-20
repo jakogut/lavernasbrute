@@ -45,8 +45,9 @@ class processingPath
 	virtual void moveKeyspaceBegin(unsigned long long input) = 0;
 	virtual void moveKeylocation(unsigned long long input) = 0;
 
-	static void initializeBloomFilter();
+	static void createBloomFilter();
 	static void setBloomFilterSize(size_t size);
+	static void destroyBloomFilter();
 
     // Processing path options
 	static void addTarget(std::string& input);

@@ -55,6 +55,8 @@ void SSEPath::searchKeyspace()
 		}
 	}
 
+	delete [] *currentKeys;
+
 	if(targets.empty())
 	{
 		masterThread::setSuccess();
