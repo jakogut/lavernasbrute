@@ -14,7 +14,10 @@
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>
 
-#include "KeyGenerator.h"
+#include "CharacterSet.h"
+#include "ProcessingPath.h"
+
+#include <Pow.h>
 
 class masterThread
 {
@@ -33,14 +36,10 @@ public:
 
 	static int getNumWorkers();
 	static void setNumWorkers(int input);
-	static void increaseNumWorkers(int input);
 
 	static void setRemainingTargets(int input);
 
 	static unsigned long long getIterations();
-	static void setIterations(unsigned long long input);
-	static void incrementIterations();
-	static void increaseIterations(unsigned int input);
 
 	static void initCharset(int min, int max, 
 							int charsec0, int charsec1, int charsec2, int charsec3);
@@ -51,12 +50,23 @@ public:
 
 	void printStatistics();
 
+	// Thread management
+	static processingPath* getWorkerPtr(int id);
+	static void manageWorker(processingPath* worker);
+
+	// The return value is whether or not the master was able to create new work for the idle thread
+	static bool reassignKeyspace(processingPath* worker);
+
+	static unsigned long long getRemainingKeyspace(int id);
+	static unsigned long long getRemainingKeyspace(processingPath* worker);
+
 protected:
 
 	int id;
 	time_t startTime;
 
-	static unsigned long long iterations;
+	static std::map<int, processingPath*> workerPtrMap;
+
 	static bool silent;
 
 	static int numWorkers;
@@ -72,7 +82,6 @@ protected:
 	static std::vector< std::pair<std::string, std::string> > results;
 
 	static boost::mutex stdoutMutex;
-	static boost::mutex iterationsMutex;
 };
 
 #endif

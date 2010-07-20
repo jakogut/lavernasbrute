@@ -11,6 +11,7 @@ int processingPath::maxChars = 0;
 std::string processingPath::hashType;
 bloomFilter* processingPath::bFilter;
 size_t processingPath::bFilterSize = 32000;
+characterSet* processingPath::pCharset = NULL;
 
 ////////////////////////////////////////////
 
@@ -32,7 +33,7 @@ processingPath::~processingPath()
 
 void processingPath::createBloomFilter()
 {
-	bFilter = bloomCreate(bFilterSize);
+	bFilter = bloomCreate(25000);
 }
 
 void processingPath::setBloomFilterSize(size_t size)
@@ -74,6 +75,11 @@ void processingPath::setHashType(std::string type)
 	hashType = type;
 }
 
+void processingPath::setCharset(characterSet* charset)
+{
+	pCharset = charset;
+}
+
 unsigned long long processingPath::calculateKeyspaceSize(int charsetLength, int keyLength)
 {
 	unsigned long long  temp, retval(1);
@@ -93,7 +99,12 @@ unsigned long long processingPath::calculateKeyspaceSize(int charsetLength, int 
 
 unsigned long long processingPath::calculateKeyspaceSize()
 {
-	return calculateKeyspaceSize(masterThread::getCharset()->length, maxChars);
+
+#ifdef DEBUG
+	assert(pCharset);
+#endif
+
+	return calculateKeyspaceSize(pCharset->length, maxChars);
 }
 
 bool operator<(const hashContext& a, const hashContext& b)

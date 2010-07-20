@@ -4,7 +4,7 @@
 #define CPUPATH_H_
 
 #include "ProcessingPath.h"
-#include "Director.h"
+#include "MasterThread.h"
 
 class CPUPath : protected processingPath
 {
@@ -29,8 +29,6 @@ public:
 protected:
 
 	int id;
-
-	char* currentKey;
 
 	std::vector<hashContext>::iterator targetIterator;
 

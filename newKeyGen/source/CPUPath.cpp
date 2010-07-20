@@ -17,7 +17,7 @@ CPUPath::~CPUPath()
 
 void CPUPath::operator()()
 {
-	Director::manageWorker(this);
+	masterThread::manageWorker(this);
 }
 
 void CPUPath::searchKeyspace()
@@ -25,15 +25,13 @@ void CPUPath::searchKeyspace()
 	masterThread::setRemainingTargets(getNumTargets());
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
-	hashContext* currentContext;
-
 	while((keyLocation < keyspaceEnd) && !targets.empty())
 	{
 		// Get the next key
-		currentKey = keygen++;
+		char* currentKey = keygen++;
 		keyLocation++;
 
-		currentContext = (md4.*hashFunc)(currentKey);
+		hashContext* currentContext = (md4.*hashFunc)(currentKey);
 
 		// Check the bloom filter for our hash first
 		if(bloomCheck(bFilter, currentContext->uint32[0]))
@@ -54,8 +52,8 @@ void CPUPath::searchKeyspace()
 	{
 		masterThread::setSuccess();
 	}
-	// If not, have the Director look for more work. If the director finds work for the thread, we restart the search.
-	else if(Director::reassignKeyspace(this))
+	// If not, have the master thread look for more work. If the master finds work for the thread, we restart the search.
+	else if(masterThread::reassignKeyspace(this))
 	{
 		searchKeyspace();
 	}
