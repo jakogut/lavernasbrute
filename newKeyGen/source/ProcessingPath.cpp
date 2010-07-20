@@ -10,6 +10,7 @@ std::vector<hashContext> processingPath::targets;
 int processingPath::maxChars = 0;
 std::string processingPath::hashType;
 bloomFilter* processingPath::bFilter;
+size_t processingPath::bFilterSize = 32000;
 
 ////////////////////////////////////////////
 
@@ -22,7 +23,6 @@ processingPath::processingPath()
 	}
 
 	// Sort the target array
-
 	std::sort(targets.begin(), targets.end());
 }
 
@@ -33,7 +33,12 @@ processingPath::~processingPath()
 
 void processingPath::initializeBloomFilter()
 {
-	bFilter = bloomCreate(32768);
+	bFilter = bloomCreate(bFilterSize);
+}
+
+void processingPath::setBloomFilterSize(size_t size)
+{
+	bFilterSize = size;
 }
 
 void processingPath::addTarget(std::string& input)
