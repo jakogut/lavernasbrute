@@ -5,8 +5,8 @@
 
 #include "BloomFilter.h"
 
-#define GETBIT(a, n) (a[n / 8] & (1 << (n % 8)))
-#define SETBIT(a, n) (a[n / 8] = a[n / 8] | 1 << (n % 8))
+#define GETBIT(a, n) (a[n >> 3] & (1 << (n & 7)))
+#define SETBIT(a, n) (a[n >> 3] = (a[n >> 3] | 1 << (n & 7)))
 
 bloomFilter* bloomCreate(size_t filter)
 {

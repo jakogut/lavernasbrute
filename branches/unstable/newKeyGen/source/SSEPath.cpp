@@ -50,6 +50,7 @@ void SSEPath::searchKeyspace()
 				{
 					masterThread::printResult("placeholder", currentKeys[i]);
 					masterThread::setRemainingTargets(getNumTargets() - 1);
+					targetsCracked++;
 				}
 			}
 		}
@@ -57,7 +58,7 @@ void SSEPath::searchKeyspace()
 
 	delete [] *currentKeys;
 
-	if(targets.empty())
+	if(targetsCracked == getNumTargets())
 	{
 		masterThread::setSuccess();
 	}

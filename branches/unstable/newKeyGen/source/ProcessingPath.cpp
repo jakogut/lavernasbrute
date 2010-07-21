@@ -12,6 +12,7 @@ std::string processingPath::hashType;
 bloomFilter* processingPath::bFilter;
 size_t processingPath::bFilterSize = 32000;
 characterSet* processingPath::pCharset = NULL;
+unsigned int processingPath::targetsCracked = 0;
 
 ////////////////////////////////////////////
 

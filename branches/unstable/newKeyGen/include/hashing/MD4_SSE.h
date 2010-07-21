@@ -355,7 +355,7 @@ protected:
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
 				for(int k = 0; k < 4; k++)
-					output[j+4*i].uint32[j] = wd[i][j][k];
+					output[j+4*i].uint32[k] = wd[i][k][j];
 	}
 
 	__m128i message_SSE[3][16];

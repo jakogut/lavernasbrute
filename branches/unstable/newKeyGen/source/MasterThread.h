@@ -15,6 +15,7 @@
 
 #include "CharacterSet.h"
 #include "ProcessingPath.h"
+#include "Version.h"
 
 #include <Pow.h>
 

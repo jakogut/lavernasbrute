@@ -129,6 +129,7 @@ int main(int argc, char** argv)
 	bool charsetSpecified = false;
 
 	std::string hashType;
+	size_t filterSize = 0;
 
 	#ifdef SSE
 	bool enableSSE = false;
@@ -170,10 +171,8 @@ int main(int argc, char** argv)
 
 		if(changeCase(flag, 0) == "--filter-size")
 		{
-			size_t filterSize = toInt(value);
+			filterSize = toInt(value);
 			processingPath::setBloomFilterSize(filterSize);
-
-			std::cout << "Filter size of " << filterSize << " bytes specified." << endl;
 		}
 
 		// Add a hash to the target hash map
@@ -236,7 +235,7 @@ int main(int argc, char** argv)
 			#ifdef SSE
 			enableSSE = true;
 			#else
-			cerr << "Warning: SSE not supported in this build." << endl;
+			cerr << "Warning: SSE is not supported in this build." << endl;
 			#endif
 		}
 
@@ -260,12 +259,15 @@ int main(int argc, char** argv)
 	if(targetPresent && hashTypeSpecified)
 	{
 		cout << "\nRunning " << CPUThreads << " cooperative threads," << endl
-			 << "Cracking " << processingPath::getNumTargets()  << " " << hashType << " hash(es).";
+			 << "Cracking " << processingPath::getNumTargets()  << " " << hashType << " hash(es)." << endl << endl;
+
+		if(filterSize)
+			cout << "Filter size of " << filterSize << " bytes specified." << endl << endl;
 
 		#ifdef SSE
 		if(enableSSE)
 		{
-			cout << "\n\nSSE processing path enabled." << endl << endl;
+			cout << "SSE processing path enabled." << endl << endl;
 		}
 		else
 		#endif
@@ -307,7 +309,7 @@ int main(int argc, char** argv)
 	threadGroup.join_all();
 
 	// Destroy the bloom filter
-	//processingPath::destroyBloomFilter();
+	processingPath::destroyBloomFilter();
 
 	return 0;
 }
