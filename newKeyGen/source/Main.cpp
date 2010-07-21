@@ -329,8 +329,5 @@ int main(int argc, char** argv)
 	// Wait for the threads to complete their work
 	threadGroup.join_all();
 
-	// Destroy the bloom filter
-	processingPath::destroyBloomFilter();
-
 	return 0;
 }

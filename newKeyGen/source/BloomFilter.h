@@ -10,7 +10,7 @@ extern "C" {
 typedef struct
 {
 	size_t filterSize;
-	char* filter;
+	unsigned int* filter;
 	
 	unsigned int numBuckets;
 	
@@ -19,10 +19,10 @@ typedef struct
 bloomFilter* bloomCreate(size_t filter);
 void bloomDestroy(bloomFilter* bFilter);
 
-int bloomAdd(bloomFilter* bFilter, unsigned int input);
+void bloomAdd(const bloomFilter* bFilter, const unsigned int* input);
 
 // Checks the bloom filter for potential matches; may return a false positive.
-int bloomCheck(const bloomFilter* bFilter, unsigned int input);
+int bloomCheck(const bloomFilter* bFilter, const unsigned int* input);
 
 #ifdef __cplusplus
 }

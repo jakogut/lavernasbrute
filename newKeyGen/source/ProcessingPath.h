@@ -72,6 +72,8 @@ protected:
 	static unsigned int targetsCracked;
 
 	static bloomFilter* bFilter;
+
+	// The bloom filter size MUST be power of 2
 	static size_t bFilterSize;
 
 	static characterSet* pCharset;

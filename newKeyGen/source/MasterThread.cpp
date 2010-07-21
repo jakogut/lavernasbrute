@@ -23,6 +23,8 @@ masterThread::masterThread()
 	startTime = time(NULL);
 
 	processingPath::setCharset(&charset);
+
+	setRemainingTargets(processingPath::getNumTargets());
 }
 
 masterThread::~masterThread()
@@ -41,6 +43,9 @@ void masterThread::operator()()
 	{
 		boost::this_thread::sleep(updateInterval);
 
+		// If there are no targets left, let the threads know they can stop.
+		if(!remainingTargets) success = true;
+
 		if(!silent)
 		{
 			boost::mutex::scoped_lock lock(stdoutMutex);
@@ -56,6 +61,9 @@ void masterThread::operator()()
 	} while(!success);
 
 	printStatistics();
+
+	// Destroy the bloom filter
+	processingPath::destroyBloomFilter();
 }
 
 void masterThread::printStatistics()
@@ -105,6 +113,11 @@ void masterThread::setSuccess()
 int masterThread::getNumWorkers()
 {
 	return workerPtrMap.size();
+}
+
+unsigned int masterThread::getRemainingTargets()
+{
+	return remainingTargets;
 }
 
 void masterThread::setRemainingTargets(int input)

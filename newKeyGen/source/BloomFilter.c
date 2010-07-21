@@ -5,8 +5,8 @@
 
 #include "BloomFilter.h"
 
-#define GETBIT(a, n) (a[n >> 3] & (1 << (n & 7)))
-#define SETBIT(a, n) (a[n >> 3] = (a[n >> 3] | 1 << (n & 7)))
+#define GETBIT(a, n) (a[n >> 5] & (1 << (n & 31)))
+#define SETBIT(a, n) (a[n >> 5] = (a[n >> 5] | 1 << (n & 31)))
 
 bloomFilter* bloomCreate(size_t filter)
 {
@@ -15,9 +15,9 @@ bloomFilter* bloomCreate(size_t filter)
 
 	bFilter->filterSize = filter;
 	
-	bFilter->numBuckets = bFilter->filterSize * 8;
+	bFilter->numBuckets = (bFilter->filterSize + 3) * 32;
 
-	bFilter->filter = (char*)malloc(bFilter->filterSize * sizeof(char));
+	bFilter->filter = (unsigned*)malloc((bFilter->filterSize + 3) * sizeof(unsigned));
 
 	return bFilter;
 }
@@ -31,17 +31,14 @@ void bloomDestroy(bloomFilter* bFilter)
 	bFilter = NULL;
 }
 
-int bloomAdd(bloomFilter* bFilter, unsigned int input)
+void bloomAdd(const bloomFilter* bFilter, const unsigned int* input)
 {
-	if(!bFilter) return -1;
-
-	SETBIT(bFilter->filter, ((input > bFilter->numBuckets) ? (input % bFilter->numBuckets) : input));
-	return 1;
+	SETBIT(bFilter->filter, *input & (bFilter->numBuckets - 1));
 }
 
 
-int bloomCheck(const bloomFilter* bFilter, unsigned int input)
+int bloomCheck(const bloomFilter* bFilter, const unsigned int* input)
 {
-	if(GETBIT(bFilter->filter, ((input > bFilter->numBuckets) ? (input % bFilter->numBuckets) : input))) return 1;
+	if(GETBIT(bFilter->filter, *input &  (bFilter->numBuckets - 1))) return 1;
 	return 0;
 }
