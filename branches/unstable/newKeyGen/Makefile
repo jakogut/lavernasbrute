@@ -1,6 +1,6 @@
 CXX = g++
 CC = gcc
-CXXFLAGS = -Wall -O3 -march=$(ARCH) $(DEBUG)
+CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(DEBUG)
 CCFLAGS = $(CXXFLAGS)
 ARCH = i686
 BITNESS = 32
@@ -18,7 +18,7 @@ RM = rm -f
 
 ifeq ($(ARCH), x86-64)
 	BITNESS = 64
-	#CXXFLAGS += # -DSSE
+	CXXFLAGS += -DSSE
 endif
 
 ifeq ($(BITNESS), 32)
