@@ -29,13 +29,14 @@ public:
 	void operator()();
 
 	static bool getSuccess();
-	static void setSuccess();
+	static inline void setSuccess();
 
 	static bool getSilent();
 	static void setSilent(bool input);
 
 	static int getNumWorkers();
 
+	static unsigned int getRemainingTargets();
 	static void setRemainingTargets(int input);
 
 	static unsigned long long getIterations();

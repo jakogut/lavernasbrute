@@ -20,14 +20,13 @@ void SSEPath::operator()()
 
 void SSEPath::searchKeyspace()
 {
-	masterThread::setRemainingTargets(getNumTargets());
 	MD4_SSE md4;
 
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
 	for(int i = 0; i < 12; i++) currentKeys[i] = new char[16];
 
-	while((keyLocation < keyspaceEnd) && !targets.empty())
+	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
 	{
 		// Twelve keys are processed per round in this path
 		for(int i = 0; i < 12; i++, keyLocation++)
@@ -42,15 +41,14 @@ void SSEPath::searchKeyspace()
 		// Check our target hash map for matches
 		for(int i = 0; i < 12; i++)
 		{
-			if(bloomCheck(bFilter, currentContexts[i].uint32[0]))
+			if(bloomCheck(bFilter, &currentContexts[i].uint32[0]))
 			{
 				targetIterator = binarySearch(targets.begin(), targets.end(), &currentContexts[i]);
 
 				if(targetIterator != targets.end())
 				{
 					masterThread::printResult("placeholder", currentKeys[i]);
-					masterThread::setRemainingTargets(getNumTargets() - 1);
-					targetsCracked++;
+					masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 				}
 			}
 		}
@@ -58,11 +56,7 @@ void SSEPath::searchKeyspace()
 
 	delete [] *currentKeys;
 
-	if(targetsCracked == getNumTargets())
-	{
-		masterThread::setSuccess();
-	}
-	else if(masterThread::reassignKeyspace(this))
+	if((masterThread::getRemainingTargets() > 0) && masterThread::reassignKeyspace(this))
 	{
 		searchKeyspace();
 	}
