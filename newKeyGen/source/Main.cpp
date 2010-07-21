@@ -149,6 +149,27 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
+
+#ifdef DEBUG
+		// Test X number of hashes
+		if(changeCase(flag, 0) == "--test")
+		{
+			unsigned int numHashes = toInt(value);
+
+			MD4 md4;
+			characterSet charset('a', 'z', 0, 0, 0, 0);
+			keyGenerator keygen(500000, &charset);
+
+			std::string newHash = md4.getHash_NTLM(keygen++);
+
+			for(int i = 0; i < numHashes; i++)
+				processingPath::addTarget(newHash);
+
+			targetPresent = true;
+
+		}
+#endif
+
 		// Print the help page
 		if(changeCase(flag, 0) == "-h" || flag == "--help")
 		{
