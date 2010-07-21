@@ -43,12 +43,13 @@ void CPUPath::searchKeyspace()
 			{
 				masterThread::printResult("placeholder", currentKey);
 				masterThread::setRemainingTargets(getNumTargets() - 1);
+				targetsCracked++;
 			}
 		}
 	}
 
 	// If all targets have been cracked, rejoice and signal the master thread that we're done.
-	if(targets.empty())
+	if(targetsCracked == getNumTargets())
 	{
 		masterThread::setSuccess();
 	}

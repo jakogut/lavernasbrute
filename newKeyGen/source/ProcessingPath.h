@@ -12,6 +12,7 @@
 
 #include <boost/thread/thread.hpp>
 
+#include "Version.h"
 #include "BloomFilter.h"
 #include "KeyGenerator.h"
 #include "BinarySearch.h"
@@ -68,6 +69,7 @@ protected:
 	int remainingTargets;
 
 	static std::vector<hashContext> targets;
+	static unsigned int targetsCracked;
 
 	static bloomFilter* bFilter;
 	static size_t bFilterSize;

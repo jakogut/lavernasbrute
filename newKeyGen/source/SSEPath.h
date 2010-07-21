@@ -1,13 +1,12 @@
 // Part of Laverna's Brute
 
-#include "Version.h"
-
-#ifdef SSE
-
 #ifndef SSEPath_H_
 #define SSEPath_H_
 
 #include "ProcessingPath.h"
+#include "MasterThread.h"
+
+#ifdef SSE
 
 #include "MD4_SSE.h"
 
