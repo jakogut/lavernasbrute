@@ -25,4 +25,6 @@ or manually. (If compiling on Windows, the dependencies will need to be installe
 
 	For example, to build for the 64-bit x86 archtecture, run "make ARCH=x86-64".
 
-	NOTE: your processor must support the SSE2 instruction set to use the SSE2 path.
+NOTE: Your processor must support the SSE/SSE2 instruction set to use the SSE path.
+The SSE path must be explicitly enabled during a build by defining "SSE". This can be
+done in "Version.h". 

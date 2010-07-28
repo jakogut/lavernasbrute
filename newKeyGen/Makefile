@@ -1,6 +1,6 @@
 CXX = g++
 CC = gcc
-CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(DEBUG)
+CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE)
 CCFLAGS = $(CXXFLAGS)
 ARCH = i686
 BITNESS = 32
