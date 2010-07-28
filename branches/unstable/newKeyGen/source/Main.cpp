@@ -89,14 +89,23 @@ int toInt(string input)
  * If strCase is false, the string is converted to lowercase.
  * If strCase is true, the string is converted to uppercase.
  */
+
+/* We use the same function to convert an entire string to upper or lowercase.
+ * The boolean strCase dictates what case the string is converted to.
+ * True == upper
+ * False == lower */
 string changeCase(string str, bool strCase)
 {
 	for(unsigned int i = 0; i < str.length(); i++)
 	{
 		if(strCase)
+		{
 			if(str[i] >= 65 && str[i] <= 90) str[i] += 32;
+		}
 		else
+		{
 			if(str[i] >= 97 && str[i] <= 122) str[i] -= 32;
+		}
 	}
 
 	return str;
@@ -162,7 +171,7 @@ int main(int argc, char** argv)
 
 			std::string newHash = md4.getHash_NTLM(keygen++);
 
-			for(int i = 0; i < numHashes; i++)
+			for(unsigned int i = 0; i < numHashes; i++)
 				processingPath::addTarget(newHash);
 
 			targetPresent = true;
