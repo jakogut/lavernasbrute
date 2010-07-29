@@ -185,7 +185,7 @@ public:
 			if((unsigned int)message.str[padByte] == 0x80)
 				break;
 
-		return (padByte - 2) + 1;
+		return (padByte / 2);
 	}
 
 	inline void incrementMessage()
