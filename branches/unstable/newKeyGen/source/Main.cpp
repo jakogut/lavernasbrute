@@ -98,14 +98,8 @@ string changeCase(string str, bool strCase)
 {
 	for(unsigned int i = 0; i < str.length(); i++)
 	{
-		if(strCase)
-		{
-			if(str[i] >= 65 && str[i] <= 90) str[i] += 32;
-		}
-		else
-		{
-			if(str[i] >= 97 && str[i] <= 122) str[i] -= 32;
-		}
+		if(strCase && (str[i] >= 'a' && str[i] <= 'z')) str[i] -= 32;
+		else if(str[i] >= 'A' && str[i] <= 'Z') str[i] += 32;
 	}
 
 	return str;
