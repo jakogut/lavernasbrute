@@ -22,25 +22,25 @@ void CPUPath::operator()()
 
 void CPUPath::searchKeyspace()
 {
-	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
+	keyGenerator_NTLM keygen(keyspaceBegin, masterThread::getCharset());
 
 	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
 	{
 		// Get the next key
-		char* currentKey = keygen++;
+		unsigned int* currentMessage = keygen++;
 		keyLocation++;
 
-		hashContext* currentContext = md4.getHashContext_NTLM(currentKey);
+		hashContext* currentContext = md4.getHashContext_NTLM(currentMessage);
 
 		// Check the bloom filter for our hash first
 		if(bloomCheck(bFilter, &currentContext->uint32[0]))
 		{
 			// The bloom filter returned positive, look through the target list for our hash
 			targetIterator = binarySearch(targets.begin(), targets.end(), currentContext);
-			
+
 			if(targetIterator != targets.end()) // Match was found
 			{
-				masterThread::printResult("placeholder", currentKey);
+				masterThread::printResult("placeholder plaintext", "placeholder key");
 				masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 			}
 		}

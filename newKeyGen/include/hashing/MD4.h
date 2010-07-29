@@ -50,7 +50,7 @@ public:
 	{
 	}
 
-	typedef hashContext* (MD4::*scalarHashPtr)(const char*);
+	typedef hashContext* (MD4::*scalarHashPtr)(const unsigned int*);
 
 	// Full MD4
 	inline char* getHash_MD4(const char* input)
@@ -61,14 +61,14 @@ public:
 		initialize();
 		encrypt();
 		finalize();
-		
+
 		return convertToHex();
 	}
 
 	// Context only MD4
-	inline hashContext* getHashContext_MD4(const char* input)
+	inline hashContext* getHashContext_MD4(const unsigned int* input)
 	{
-		prepareKey_MD4(input);
+		memcpy(message, input, 16*4);
 
 		initialize();
 		encrypt();
@@ -84,14 +84,14 @@ public:
 		initialize();
 		encrypt();
 		finalize();
-		
+
 		return convertToHex();
 	}
 
 	// Context only NTLM
-	inline hashContext* getHashContext_NTLM(const char* input)
+	inline hashContext* getHashContext_NTLM(const unsigned int* input)
 	{
-		prepareKey_NTLM(input);
+		memcpy(message, input, 16*4);
 
 		initialize();
 		encrypt();
@@ -115,7 +115,7 @@ protected:
 
 		// Zero out the message buffer
 		memset(message,0,16*4);
-		
+
 		for(;i<length/4;i++)	
 			message[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
 	 
