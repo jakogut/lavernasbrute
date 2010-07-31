@@ -188,6 +188,14 @@ public:
 		return (padByte / 2);
 	}
 
+	char* messageToKey()
+	{
+		for(unsigned int i = 0; i < findMessageLength(); i++)
+			key[i] = message.str[i*2];
+
+		return key;
+	}
+
 	inline void incrementMessage()
 	{
 		unsigned int messageLength = findMessageLength();
