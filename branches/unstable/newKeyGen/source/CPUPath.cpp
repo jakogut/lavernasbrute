@@ -27,7 +27,7 @@ void CPUPath::searchKeyspace()
 	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
 	{
 		// Get the next key
-		unsigned int* currentMessage = keygen++;
+		unsigned int* currentMessage = ++keygen;
 		keyLocation++;
 
 		hashContext* currentContext = md4.getHashContext_NTLM(currentMessage);
@@ -40,7 +40,7 @@ void CPUPath::searchKeyspace()
 
 			if(targetIterator != targets.end()) // Match was found
 			{
-				masterThread::printResult("placeholder plaintext", "placeholder key");
+				masterThread::printResult("placeholder plaintext", keygen.messageToKey());
 				masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 			}
 		}
