@@ -251,7 +251,7 @@ int main(int argc, char** argv)
 		if(flag == "-c")
 		{
 			processingPath::setMaxChars(toInt(value));
-		}		
+		}
 
 		// Enable SSE path
 		if(changeCase(flag, 0) == "--sse" || changeCase(flag, 0) == "--sse2")
@@ -331,6 +331,9 @@ int main(int argc, char** argv)
 
 	// Wait for the threads to complete their work
 	threadGroup.join_all();
+
+	// Destroy the bloom filter
+	processingPath::destroyBloomFilter();
 
 	return 0;
 }
