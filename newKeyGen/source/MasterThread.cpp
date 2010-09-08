@@ -62,8 +62,6 @@ void masterThread::operator()()
 
 	printStatistics();
 
-	// Destroy the bloom filter
-	processingPath::destroyBloomFilter();
 }
 
 void masterThread::printStatistics()
