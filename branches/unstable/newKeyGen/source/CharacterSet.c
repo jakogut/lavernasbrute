@@ -5,7 +5,7 @@ characterSet* createCharacterSet(char min, char max, char charsec0, char charsec
 	int i, j, chr;
 
 	characterSet* newCharset = (characterSet*)malloc(sizeof(characterSet));
-	newCharset->str = malloc(sizeof(char) * 256);
+	newCharset->str = (char*)malloc(sizeof(char) * 256);
 
 	// Set the limits of the character set
 	newCharset->minChar = min;
