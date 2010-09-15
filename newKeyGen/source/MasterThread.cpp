@@ -136,12 +136,12 @@ unsigned long long masterThread::getIterations()
 void masterThread::initCharset(int min, int max, 
 							   int charsec0, int charsec1, int charsec2, int charsec3)
 {
-	charset = createCharacterSet(min, max, charsec0, charsec1, charsec2, charsec3);
+	if(!charset) charset = createCharacterSet(min, max, charsec0, charsec1, charsec2, charsec3);
 }
 
 void masterThread::destroyCharset()
 {
-	destroyCharacterSet(charset);
+	if(charset) destroyCharacterSet(charset);
 }
 
 characterSet* masterThread::getCharset()
