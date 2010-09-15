@@ -11,7 +11,7 @@ bool masterThread::silent = 0;
 int masterThread::remainingTargets = 0;
 std::vector< std::pair<std::string, std::string> > masterThread::results;
 boost::mutex masterThread::stdoutMutex;
-characterSet masterThread::charset;
+characterSet* masterThread::charset;
 std::map<int, processingPath*> masterThread::workerPtrMap;
 
 
@@ -22,7 +22,7 @@ masterThread::masterThread()
 	// Start the clock
 	startTime = time(NULL);
 
-	processingPath::setCharset(&charset);
+	processingPath::setCharset(charset);
 
 	setRemainingTargets(processingPath::getNumTargets());
 }
@@ -136,12 +136,17 @@ unsigned long long masterThread::getIterations()
 void masterThread::initCharset(int min, int max, 
 							   int charsec0, int charsec1, int charsec2, int charsec3)
 {
-	charset.init(min, max, charsec0, charsec1, charsec2, charsec3);
+	charset = createCharacterSet(min, max, charsec0, charsec1, charsec2, charsec3);
+}
+
+void masterThread::destroyCharset()
+{
+	destroyCharacterSet(charset);
 }
 
 characterSet* masterThread::getCharset()
 {
-	return &charset;
+	return charset;
 }
 
 void masterThread::printResult(std::string hash, std::string plaintext)
@@ -186,7 +191,7 @@ void masterThread::manageWorker(processingPath* worker)
 
 	// Assign a unique portion of the keyspace to the thread (Based on id)
 	unsigned long long keyspaceSize;
-	pow<unsigned long long>(charset.length, processingPath::getMaxChars(), keyspaceSize);
+	pow<unsigned long long>(charset->length, processingPath::getMaxChars(), keyspaceSize);
 	keyspaceSize /= getNumWorkers();
 
 	worker->moveKeyspaceBegin(keyspaceSize * worker->getThreadID());

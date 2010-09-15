@@ -152,16 +152,22 @@ int main(int argc, char** argv)
 		if((i + 1) < argc)
 			value = argv[i + 1];
 
+		// Print the help page
+		if(changeCase(flag, 0) == "-h" || flag == "--help")
+		{
+			printHelp();
+			return 0;
+		}
 
 #ifdef DEBUG
 		// Test X number of hashes
-		if(changeCase(flag, 0) == "--test")
+		else if(changeCase(flag, 0) == "--test")
 		{
 			unsigned int numHashes = toInt(value);
 
 			MD4 md4;
-			characterSet charset('a', 'z', 0, 0, 0, 0);
-			keyGenerator keygen(500000, &charset);
+			characterSet* charset = createCharacterSet('a', 'z', 0, 0, 0, 0);
+			keyGenerator keygen(500000, charset);
 
 			std::string newHash = md4.getHash_NTLM(keygen++);
 
@@ -170,17 +176,12 @@ int main(int argc, char** argv)
 
 			targetPresent = true;
 
+			destroyCharacterSet(charset);
+
 		}
 #endif
 
-		// Print the help page
-		if(changeCase(flag, 0) == "-h" || flag == "--help")
-		{
-			printHelp();
-			return 0;
-		}
-
-		if(changeCase(flag, 0) == "--hash-type")
+		else if(changeCase(flag, 0) == "--hash-type")
 		{
 			hashType = changeCase(value, 1);
 
@@ -193,14 +194,14 @@ int main(int argc, char** argv)
 			}
 		}
 
-		if(changeCase(flag, 0) == "--filter-size")
+		else if(changeCase(flag, 0) == "--filter-size")
 		{
 			filterSize = toInt(value);
 			processingPath::setBloomFilterSize(filterSize);
 		}
 
 		// Add a hash to the target hash map
-		if(changeCase(flag.substr(0, 7), 0) == "target:")
+		else if(changeCase(flag.substr(0, 7), 0) == "target:")
 		{
 			string newHash = changeCase(flag.substr(7), 0);
  
@@ -219,13 +220,13 @@ int main(int argc, char** argv)
 		}
 
 		// Set the number of threads
-		if(flag == "-t")
+		else if(flag == "-t")
 		{
 			// If the specified number of threads is valid, use it. Otherwise, set it to two.
 			(toInt(value) >= 2) ? CPUThreads = toInt(value) : CPUThreads = 2;
 		}
 
-		if(flag == "--charset")
+		else if(flag == "--charset")
 		{
 			charsetSpecified = true;
 
@@ -248,13 +249,13 @@ int main(int argc, char** argv)
 		}
 
 		// Set the maximum size of the keyspace in characters. The number of permutations is pow(charsetLength, maxChars).
-		if(flag == "-c")
+		else if(flag == "-c")
 		{
 			processingPath::setMaxChars(toInt(value));
 		}
 
 		// Enable SSE path
-		if(changeCase(flag, 0) == "--sse" || changeCase(flag, 0) == "--sse2")
+		else if(changeCase(flag, 0) == "--sse" || changeCase(flag, 0) == "--sse2")
 		{
 			#ifdef SSE
 			enableSSE = true;
@@ -264,13 +265,13 @@ int main(int argc, char** argv)
 		}
 
 		// Disable iteration logging
-		if(changeCase(flag, 0) == "--silent")
+		else if(changeCase(flag, 0) == "--silent")
 		{
 			masterThread::setSilent(true);
 		}
 
 		// Disable threading
-		if(changeCase(flag, 0) == "--disable-threading")
+		else if(changeCase(flag, 0) == "--disable-threading")
 		{
 			CPUThreads = 1;
 		}
@@ -332,7 +333,8 @@ int main(int argc, char** argv)
 	// Wait for the threads to complete their work
 	threadGroup.join_all();
 
-	// Destroy the bloom filter
+	// Clean up
+	masterThread::destroyCharset();
 	processingPath::destroyBloomFilter();
 
 	return 0;

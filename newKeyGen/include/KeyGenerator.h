@@ -114,6 +114,8 @@ public:
 
 	unsigned long long keyToInteger(char* input)
 	{
+		std::string stl_str = charset->str;
+
 		unsigned long long retval = 0;
 		unsigned int numChars = (unsigned int)strlen(input);
 
@@ -124,7 +126,9 @@ public:
 			for(unsigned int j = 0; j < i; j++)
 					temp *= charset->length;
 
-			retval += (temp * (charset->str.find(input[i]) + 1));
+			int index = 0;
+
+			retval += (temp * (stl_str.find(input[i]) + 1));
 		}
 
 		return retval - 1;
