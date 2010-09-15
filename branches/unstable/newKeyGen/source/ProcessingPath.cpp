@@ -32,14 +32,14 @@ processingPath::~processingPath()
 {
 }
 
-void processingPath::createBloomFilter()
-{
-	bFilter = bloomCreate(bFilterSize);
-}
-
 void processingPath::setBloomFilterSize(size_t size)
 {
 	bFilterSize = size;
+}
+
+void processingPath::createBloomFilter()
+{
+	bFilter = bloomCreate(bFilterSize);
 }
 
 void processingPath::destroyBloomFilter()
@@ -50,10 +50,12 @@ void processingPath::destroyBloomFilter()
 void processingPath::addTarget(std::string& input)
 {
 	MD4 md4;
-	hashContext* ctx = md4.hashToContext(input.c_str());
+	hashContext ctx;
+	md4.hashToContext(&ctx, input.c_str());
 
-	targets.push_back(*ctx);
-	bloomAdd(bFilter, &ctx->uint32[0]);
+	targets.push_back(ctx);
+
+	bloomAdd(bFilter, &ctx.wd[0]);
 }
 
 void processingPath::setMaxChars(int input)
@@ -110,6 +112,6 @@ unsigned long long processingPath::calculateKeyspaceSize()
 
 bool operator<(const hashContext& a, const hashContext& b)
 {
-	if(memcmp(b.uint32, a.uint32, 4 * sizeof(unsigned)) > 0) return true;
+	if(memcmp(b.wd, a.wd, 4 * sizeof(unsigned)) > 0) return true;
 	else return false;
 }

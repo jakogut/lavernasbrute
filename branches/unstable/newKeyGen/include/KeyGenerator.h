@@ -8,6 +8,7 @@
 #include <limits.h>
 
 #include "CharacterSet.h"
+#include "MD4.h"
 
 ////////////////////////////////////////////
 // Plaintext key generator /////////////////
@@ -172,7 +173,7 @@ public:
 	keyGenerator_NTLM(unsigned long long location, characterSet* charset)
 		: location(location), charset(charset)
 	{
-		memset(message.uint32, 0, 16*4);
+		memset(ctx.message.uint32, 0, 16*4);
 
 		integerToMessage();
 	}
@@ -186,7 +187,7 @@ public:
 		unsigned int padByte;
 
 		for(padByte = 0; padByte < 64; padByte += 2)
-			if((unsigned int)message.str[padByte] == 0x80)
+			if((unsigned int)ctx.message.uint8[padByte] == 0x80)
 				break;
 
 		return (padByte / 2);
@@ -195,7 +196,7 @@ public:
 	char* messageToKey()
 	{
 		for(unsigned int i = 0; i < findMessageLength(); i++)
-			key[i] = message.str[i*2];
+			key[i] = ctx.message.uint8[i*2];
 
 		return key;
 	}
@@ -207,18 +208,18 @@ public:
 		unsigned int i;
 		for(i = 0; i < 64; i += 2)
 		{
-			if(message.str[i] == charset->maxChar)
+			if(ctx.message.uint8[i] == charset->maxChar)
 			{
 				// Overflow, reset char at place
-				message.str[i] = charset->minChar;
+				ctx.message.uint8[i] = charset->minChar;
 
-				if(message.str[i + 2] == 0x80)
+				if(ctx.message.uint8[i + 2] == 0x80)
 				{
 					// Carry, no space, insert char
-					message.str[i + 2] = charset->minChar;
+					ctx.message.uint8[i + 2] = charset->minChar;
 
 					// Move the padding byte forward
-					message.str[i + 4] = 0x80;
+					ctx.message.uint8[i + 4] = 0x80;
 
 					++messageLength;
 
@@ -232,32 +233,29 @@ public:
 			else
 			{
 				// Space available, increment char at place
-				if(message.str[i] == charset->charSecEnd[0]) message.str[i] = charset->charSecBegin[0];
-				else if(message.str[i] == charset->charSecEnd[1]) message.str[i] = charset->charSecBegin[1];
+				if(ctx.message.uint8[i] == charset->charSecEnd[0]) ctx.message.uint8[i] = charset->charSecBegin[0];
+				else if(ctx.message.uint8[i] == charset->charSecEnd[1]) ctx.message.uint8[i] = charset->charSecBegin[1];
 
-				message.str[i]++;
+				ctx.message.uint8[i]++;
 
 				break;
 			}
 		}
 
 		// Append the length
-		message.uint32[14] = messageLength << 4;
+		ctx.message.uint32[14] = messageLength << 4;
 	}
 
-	unsigned int* operator++()
+	hashContext* operator++()
 	{
 		incrementMessage();
-
-		return message.uint32;
+		return &ctx;
 	}
 
-	unsigned int* operator++(int)
+	hashContext* operator++(int)
 	{
-		memcpy(postIncrementRetval, message.uint32, 16*4);
-		incrementMessage();
-
-		return postIncrementRetval;
+		// Too lazy to reimplement this properly.
+		return ++*this;
 	}
 
 	void integerToMessage()
@@ -287,17 +285,17 @@ public:
 		int i=0;
 		int length=(int)(strlen(key));
 
-		memset(message.uint32,0,16*4);
+		memset(ctx.message.uint32, 0, 16*4);
 		
 		for(;i<length/2;i++)	
-			message.uint32[i] = key[2*i] | (key[2*i+1]<<16);
+			ctx.message.uint32[i] = key[2*i] | (key[2*i+1]<<16);
 	 
 		if(length%2==1)
-			message.uint32[i] = key[length-1] | 0x800000;
+			ctx.message.uint32[i] = key[length-1] | 0x800000;
 		else
-			message.uint32[i]=0x80;
+			ctx.message.uint32[i]=0x80;
 
-		message.uint32[14] = length << 4;
+		ctx.message.uint32[14] = length << 4;
 	}
 
 protected:
@@ -306,17 +304,9 @@ protected:
 
 	characterSet* charset;
 
-	// The message is the input to the hashing function.
-	union
-	{
-		unsigned int uint32[16];
-		unsigned char str[64];
-	} message;
+	hashContext ctx;
 
-	// The key is the text string that becomes the message.
 	char key[16];
-
-	unsigned int postIncrementRetval[16];
 };
 
 #endif

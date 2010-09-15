@@ -11,11 +11,11 @@
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round2_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], _mm_or_si128(wd_SSE[set][b], wd_SSE[set][c])), _mm_and_si128(wd_SSE[set][b], wd_SSE[set][c])), message_SSE[set][ntb_index]), SQRT_2)), \
+	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], _mm_or_si128(wd_SSE[set][b], wd_SSE[set][c])), _mm_and_si128(wd_SSE[set][b], wd_SSE[set][c])), message_SSE[set][ntb_index]), SQRT_2_sse)), \
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round3_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), message_SSE[set][ntb_index]), SQRT_3), \
+	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), message_SSE[set][ntb_index]), SQRT_3_sse), \
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 /* The rounds with "null" in the name omit the adding of the message section, 
@@ -32,11 +32,11 @@ for MD4, and 7th for NTLM are zeros.*/
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round2_null_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], _mm_or_si128(wd_SSE[set][b], wd_SSE[set][c])), _mm_and_si128(wd_SSE[set][b], wd_SSE[set][c])), SQRT_2)), \
+	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], _mm_or_si128(wd_SSE[set][b], wd_SSE[set][c])), _mm_and_si128(wd_SSE[set][b], wd_SSE[set][c])), SQRT_2_sse)), \
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define round3_null_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
-	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), SQRT_3), \
+	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), SQRT_3_sse), \
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
 #define ROTL_SSE(num, places) (_mm_or_si128(_mm_slli_epi32(num, places), _mm_srli_epi32(num, (32 - places))))
@@ -47,8 +47,8 @@ public:
 
 	MD4_SSE()
 	{
-		SQRT_2 = _mm_set1_epi32(0x5a827999);
-		SQRT_3 = _mm_set1_epi32(0x6ed9eba1);
+		SQRT_2_sse = _mm_set1_epi32(0x5a827999);
+		SQRT_3_sse = _mm_set1_epi32(0x6ed9eba1);
 	}
 
 	~MD4_SSE()
@@ -355,13 +355,13 @@ protected:
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 4; j++)
 				for(int k = 0; k < 4; k++)
-					output[j+4*i].uint32[k] = wd[i][k][j];
+					output[j+4*i].wd[k] = wd[i][k][j];
 	}
 
 	__m128i message_SSE[3][16];
 	__m128i wd_SSE[3][4];
 
-	__m128i SQRT_2, SQRT_3;
+	__m128i SQRT_2_sse, SQRT_3_sse;
 
 	unsigned int message[16][4];
 	unsigned int wd[3][4][4];
