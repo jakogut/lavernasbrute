@@ -95,7 +95,7 @@ public:
 	}
 
 	// Context only NTLM
-	inline void  getHashContext_NTLM(hashContext* ctx)
+	inline void getHashContext_NTLM(hashContext* ctx)
 	{
 		initialize(ctx);
 		encrypt(ctx);
@@ -179,7 +179,7 @@ protected:
 		memcpy(ctx->wd, wd_init, 4 * sizeof(unsigned));
 	}
 
-	virtual void encrypt(hashContext* ctx)
+	inline virtual void encrypt(hashContext* ctx)
 	{	 
 		unsigned int* wd = ctx->wd;
 		unsigned int* message = ctx->message.uint32;
@@ -232,15 +232,6 @@ protected:
 	
 		// Round 3 // ---
 
-		/* Since all elements past length/2 for NTLM and length/4 for MD4 are zero, 
-		we can assume that a few of the elements in the message are zero. By taking a hash, and
-		reversing it back to four 32-bit words, we can reverse certain sections of the hashing 
-		process by substituting zero for the message section. Also, we might even be able to get
-		a rough estimate of the length of the string that generated the hash by substituting zero
-		for the message section, reversing, then redoing the line. If the same hash results, that
-		element had to have been zero. We can do this until we find an element of the message that
-		_wasn't_ zero, in which case we would have found the end of the message.*/
-
 		HH(a, d, c, b, message[0],  SQRT_3, 3);
 		HH(d, c, b, a, message[8],  SQRT_3, 9);
 		HH(c, b, a, d, message[4],  SQRT_3, 11);
@@ -261,7 +252,10 @@ protected:
 		HH(c, b, a, d, message[7],  SQRT_3, 11);
 		HH(b, a, d, c, message[15], SQRT_3, 15);
 
-		ctx->wd[0] = a, ctx->wd[1] = b, ctx->wd[2] = c, ctx->wd[3] = d;
+		ctx->wd[0] = a;
+		ctx->wd[1] = b;
+		ctx->wd[2] = c;
+		ctx->wd[3] = d;
 	}
 	 
 	inline virtual void finalize(hashContext* ctx)
