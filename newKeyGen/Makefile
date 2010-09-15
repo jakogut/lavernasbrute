@@ -12,7 +12,7 @@ INCLUDE = -I/usr/include -Iinclude -Iinclude/hashing -Isource
 LIB = -L/usr/lib -Llib -lboost_date_time-mt -lboost_thread-mt
 DEST = bin/gcc/$(ARCH)
 
-OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/SSEPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/BloomFilter.o
+OBJECTS = $(DEST)/Main.o $(DEST)/CPUPath.o $(DEST)/SSEPath.o $(DEST)/MasterThread.o $(DEST)/ProcessingPath.o $(DEST)/BloomFilter.o $(DEST)/CharacterSet.o
 MKDIR = mkdir -p
 RM = rm -f
 
