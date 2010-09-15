@@ -26,7 +26,7 @@ void SSEPath::searchKeyspace()
 
 	for(int i = 0; i < 12; i++) currentKeys[i] = new char[16];
 
-	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
+	while((keyLocation < keyspaceEnd) && (!masterThread::getSuccess()))
 	{
 		// Twelve keys are processed per round in this path
 		for(int i = 0; i < 12; i++, keyLocation++)
@@ -41,7 +41,7 @@ void SSEPath::searchKeyspace()
 		// Check our target hash map for matches
 		for(int i = 0; i < 12; i++)
 		{
-			if(bloomCheck(bFilter, &currentContexts[i].uint32[0]))
+			if(bloomCheck(bFilter, &currentContexts[i].wd[0]))
 			{
 				targetIterator = binarySearch(targets.begin(), targets.end(), &currentContexts[i]);
 

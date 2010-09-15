@@ -7,6 +7,11 @@
 #include <iostream>
 #include <cstdlib>
 
+#define itoa16 "0123456789abcdef"
+
+#define SQRT_2 0x5a827999
+#define SQRT_3 0x6ed9eba1
+
 #define ROTL(NUM, PLACES) ((NUM << PLACES) | (NUM >> (32 - PLACES)))
 #define ROTR(NUM, PLACES) ((NUM >> PLACES) | (NUM << (32 - PLACES)))
 
@@ -25,7 +30,13 @@
 
 typedef struct ctx
 {
-		unsigned int uint32[4];
+		unsigned int wd[4];
+
+		union
+		{
+			unsigned int uint32[16];
+			unsigned char uint8[64];
+		} message;
 
 } hashContext;
 
@@ -35,11 +46,6 @@ public:
 
 	MD4()
 	{
-		itoa16 = (char*)"0123456789abcdef";
-
-		SQRT_2 = 0x5a827999;
-		SQRT_3 = 0x6ed9eba1;
-
 		wd_init[0] = 0x67452301;
 		wd_init[1] = 0xefcdab89;
 		wd_init[2] = 0x98badcfe;
@@ -50,68 +56,75 @@ public:
 	{
 	}
 
-	typedef hashContext* (MD4::*scalarHashPtr)(const unsigned int*);
+	typedef void (MD4::*scalarHashPtr)(hashContext*);
 
 	// Full MD4
 	inline char* getHash_MD4(const char* input)
 	{
+		hashContext ctx;
+
 		// Take an ASCII string, and convert it to an MD4 message
-		prepareKey_MD4(input);
+		prepareKey_MD4(&ctx, input);
 
-		initialize();
-		encrypt();
-		finalize();
+		initialize(&ctx);
+		encrypt(&ctx);
+		finalize(&ctx);
 
-		return convertToHex();
+		return convertToHex(&ctx);
 	}
 
 	// Context only MD4
-	inline hashContext* getHashContext_MD4(const unsigned int* input)
+	inline void getHashContext_MD4(hashContext* ctx)
 	{
-		memcpy(message, input, 16*4);
-
-		initialize();
-		encrypt();
-
-		return convertToContext();
+		initialize(ctx);
+		encrypt(ctx);
 	}
 
 	// Full NTLM
 	inline char* getHash_NTLM(const char* input)
 	{
-		prepareKey_NTLM(input);
+		hashContext ctx;
 
-		initialize();
-		encrypt();
-		finalize();
+		prepareKey_NTLM(&ctx, input);
 
-		return convertToHex();
+		initialize(&ctx);
+		encrypt(&ctx);
+		finalize(&ctx);
+
+		return convertToHex(&ctx);
 	}
 
 	// Context only NTLM
-	inline hashContext* getHashContext_NTLM(const unsigned int* input)
+	inline void  getHashContext_NTLM(hashContext* ctx)
 	{
-		memcpy(message, input, 16*4);
-
-		initialize();
-		encrypt();
-
-		return convertToContext();
+		initialize(ctx);
+		encrypt(ctx);
 	}
 
-	// Take an MD4 hash as input, and reverse the hex encoding, returning a 128-bit integer
-	inline hashContext* hashToContext(const char* input)
+	// Take an MD4 hash as input, and reverse the hex encoding, returning a hashContext
+	inline void hashToContext(hashContext* ctx, const char* input)
 	{
-		convertFromHex(input);
-		return convertToContext();
+		convertFromHex(ctx, input);
+	}
+
+	inline char* contextToHash(hashContext* ctx)
+	{
+		ctx->wd[0] += wd_init[0];
+		ctx->wd[1] += wd_init[1];
+		ctx->wd[2] += wd_init[2];
+		ctx->wd[3] += wd_init[3];
+
+		return convertToHex(ctx);
 	}
 
 protected:
 
-	void prepareKey_MD4(const char* input)
+	void prepareKey_MD4(hashContext* ctx, const char* input)
 	{
 		int i=0;
 		int length = (int)strlen(input);
+
+		unsigned int* message = ctx->message.uint32;
 
 		// Zero out the message buffer
 		memset(message,0,16*4);
@@ -140,10 +153,12 @@ protected:
 		message[14] = length << 3;
 	}
 
-	void prepareKey_NTLM(const char* input)
+	void prepareKey_NTLM(hashContext* ctx, const char* input)
 	{
 		int i=0;
 		int length=(int)(strlen(input));
+
+		unsigned int* message = ctx->message.uint32;
 
 		memset(message,0,16*4);
 		
@@ -159,13 +174,16 @@ protected:
 		message[14] = length << 4;
 	}
 
-	inline virtual void initialize()
+	inline virtual void initialize(hashContext* ctx)
 	{
-		memcpy(wd, wd_init, 4 * sizeof(unsigned));
+		memcpy(ctx->wd, wd_init, 4 * sizeof(unsigned));
 	}
 
-	virtual void encrypt()
+	virtual void encrypt(hashContext* ctx)
 	{	 
+		unsigned int* wd = ctx->wd;
+		unsigned int* message = ctx->message.uint32;
+
 		// Round 1 // ---
 
 		FF(wd[0], wd[1], wd[2], wd[3], message[0], 3);
@@ -242,20 +260,20 @@ protected:
 		HH(wd[1], wd[0], wd[3], wd[2], message[15], SQRT_3, 15);
 	}
 	 
-	inline virtual void finalize()
+	inline virtual void finalize(hashContext* ctx)
 	{
-		wd[0] += wd_init[0];
-		wd[1] += wd_init[1];
-		wd[2] += wd_init[2];
-		wd[3] += wd_init[3];
+		ctx->wd[0] += wd_init[0];
+		ctx->wd[1] += wd_init[1];
+		ctx->wd[2] += wd_init[2];
+		ctx->wd[3] += wd_init[3];
 	}
 
-	char* convertToHex()
+	char* convertToHex(hashContext* ctx)
 	{
 		//Iterate the integer
-		for(int i = 0;i < 4; i++)
+		for(int i = 0; i < 4; i++)
 		{
-			unsigned int n = wd[i];
+			unsigned int n = ctx->wd[i];
 			//iterate the bytes of the integer		
 			for(int j = 0; j < 4; j++)
 			{
@@ -273,7 +291,7 @@ protected:
 	}
 
 	// Convert a hex digest back to four 32-bit words
-	void convertFromHex(const char* hash)
+	void convertFromHex(hashContext* ctx, const char* hash)
 	{
 		char bigEndianHash[4][9];
 
@@ -294,37 +312,21 @@ protected:
 
 		for(int i = 0; i < 4; i++)
 		{
-			wd[i] = strtoul(bigEndianHash[i], 0, 16);
+			ctx->wd[i] = strtoul(bigEndianHash[i], 0, 16);
 		}
 
-		wd[0] -= wd_init[0];
-		wd[1] -= wd_init[1];
-		wd[2] -= wd_init[2];
-		wd[3] -= wd_init[3];
-	}
-
-	// Convert the four 32-bit words used in the encryption process to a 128-bit integer
-	inline hashContext* convertToContext()
-	{
-		memcpy(retval.uint32, wd, (4 * sizeof(4)));
-		return &retval;
+		ctx->wd[0] -= wd_init[0];
+		ctx->wd[1] -= wd_init[1];
+		ctx->wd[2] -= wd_init[2];
+		ctx->wd[3] -= wd_init[3];
 	}
 
 	unsigned int wd_init[4];
 
 private:
 
-	char* itoa16;
-
 	hashContext retval;
 	char hex_format[33]; // Char array used to store the resulting hex digest
-
-	unsigned int message[16];
-
-	unsigned int SQRT_2;
-	unsigned int SQRT_3;
-
-	unsigned int wd[4];
 };
 
 #endif

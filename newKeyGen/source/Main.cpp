@@ -334,8 +334,8 @@ int main(int argc, char** argv)
 	threadGroup.join_all();
 
 	// Clean up
-	masterThread::destroyCharset();
 	processingPath::destroyBloomFilter();
+	//masterThread::destroyCharset();
 
 	return 0;
 }
