@@ -182,7 +182,7 @@ public:
 	{
 	}
 
-	unsigned int findMessageLength()
+	inline unsigned int findMessageLength()
 	{
 		for(register unsigned int padByte = 0; padByte < 32; ++padByte)
 			if(ctx.message.uint8[padByte << 1] == 0x80)
@@ -194,16 +194,21 @@ public:
 	char* messageToKey()
 	{
 		for(unsigned int i = 0; i < findMessageLength(); i++)
-			key[i] = ctx.message.uint8[i * 2];
+			key[i] = ctx.message.uint8[i << 1];
 
 		return key;
 	}
 
 	inline void incrementMessage()
 	{
-		unsigned int messageLength = findMessageLength();
+		register unsigned int messageLength;
 
-		unsigned int i;
+		for(messageLength = 0; messageLength < 32; ++messageLength)
+			if(ctx.message.uint8[messageLength << 1] == 0x80)
+				break;
+
+		register unsigned int i;
+
 		for(i = 0; i < 32; ++i)
 		{
 			if(ctx.message.uint8[i << 1] == charset->maxChar)
