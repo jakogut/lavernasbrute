@@ -184,19 +184,17 @@ public:
 
 	unsigned int findMessageLength()
 	{
-		unsigned int padByte;
+		for(register unsigned int padByte = 0; padByte < 32; ++padByte)
+			if(ctx.message.uint8[padByte << 1] == 0x80)
+				return padByte;
 
-		for(padByte = 0; padByte < 64; padByte += 2)
-			if((unsigned int)ctx.message.uint8[padByte] == 0x80)
-				break;
-
-		return (padByte / 2);
+		return 0;
 	}
 
 	char* messageToKey()
 	{
 		for(unsigned int i = 0; i < findMessageLength(); i++)
-			key[i] = ctx.message.uint8[i*2];
+			key[i] = ctx.message.uint8[i * 2];
 
 		return key;
 	}
@@ -206,20 +204,20 @@ public:
 		unsigned int messageLength = findMessageLength();
 
 		unsigned int i;
-		for(i = 0; i < 64; i += 2)
+		for(i = 0; i < 32; ++i)
 		{
-			if(ctx.message.uint8[i] == charset->maxChar)
+			if(ctx.message.uint8[i << 1] == charset->maxChar)
 			{
 				// Overflow, reset char at place
-				ctx.message.uint8[i] = charset->minChar;
+				ctx.message.uint8[i << 1] = charset->minChar;
 
-				if(ctx.message.uint8[i + 2] == 0x80)
+				if(ctx.message.uint8[(i + 1) << 1] == 0x80)
 				{
 					// Carry, no space, insert char
-					ctx.message.uint8[i + 2] = charset->minChar;
+					ctx.message.uint8[(i + 1) << 1] = charset->minChar;
 
 					// Move the padding byte forward
-					ctx.message.uint8[i + 4] = 0x80;
+					ctx.message.uint8[(i + 2) << 1] = 0x80;
 
 					++messageLength;
 
@@ -233,10 +231,10 @@ public:
 			else
 			{
 				// Space available, increment char at place
-				if(ctx.message.uint8[i] == charset->charSecEnd[0]) ctx.message.uint8[i] = charset->charSecBegin[0];
-				else if(ctx.message.uint8[i] == charset->charSecEnd[1]) ctx.message.uint8[i] = charset->charSecBegin[1];
+				if(ctx.message.uint8[i << 1] == charset->charSecEnd[0]) ctx.message.uint8[i << 1] = charset->charSecBegin[0];
+				else if(ctx.message.uint8[i << 1] == charset->charSecEnd[1]) ctx.message.uint8[i << 1] = charset->charSecBegin[1];
 
-				ctx.message.uint8[i]++;
+				ctx.message.uint8[i << 1]++;
 
 				break;
 			}
@@ -246,13 +244,13 @@ public:
 		ctx.message.uint32[14] = messageLength << 4;
 	}
 
-	hashContext* operator++()
+	inline hashContext* operator++()
 	{
 		incrementMessage();
 		return &ctx;
 	}
 
-	hashContext* operator++(int)
+	inline hashContext* operator++(int)
 	{
 		// Too lazy to reimplement this properly.
 		return ++*this;
