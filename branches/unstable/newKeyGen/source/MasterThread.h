@@ -43,6 +43,7 @@ public:
 
 	static void initCharset(int min, int max, 
 							int charsec0, int charsec1, int charsec2, int charsec3);
+	static void destroyCharset();
 
 	static characterSet* getCharset();
 
@@ -73,7 +74,7 @@ protected:
 	//That the job is done.
 	static bool success;
 
-	static characterSet charset;
+	static characterSet* charset;
 
 	static int remainingTargets;
 
