@@ -1,0 +1,130 @@
+.\"     Title: lavernasbrute
+.\"    Author: [see the "Authors" section]
+.\"      Date: 11/29/2009
+.\"    Manual: Laverna's Brute Manual
+.\"    Source: Laverna's Brute 1.0
+.\"  Language: English
+.\"
+.TH "lavernasbrute" "1" "11/29/2009" "Laverna's Brute 1.0" "Laverna's Brute Manual"
+.nh
+.ad l
+.\" {{{ NAME
+.SH "NAME"
+lavernasbrute - an open-source, brute-force password auditor
+.\" }}}
+.\" {{{ SYNOPSIS
+.SH "SYNOPSIS"
+.sp
+.nf
+\fIlavernasbrute\fR [OPTIONS] [ntlm:HASH [ntlm:HASH [\&.\&.\&.]]]
+.\" }}}
+.\" {{{ DESCRIPTION
+.SH "DESCRIPTION"
+.sp
+Laverna's Brute is a password cracker auditor utilizing a custom high\-speed cracking engine, support for a nearly limitless number of threads, cracking auditing NTLM hashes, (Support for others can be easily added) and future plans for GPGPU acceleration via OpenCL\&. (ATI and Nvidia support)
+.sp
+For users without a supported GPU, a high\-performance CPU\-only processing path is available\&.
+.sp
+Anything that can be offline cracked audited is a potential candidate\&.
+.sp
+For a complete summary, visit http://code\&.google\&.com/p/lavernasbrute/wiki/Description
+.\" }}}
+.\" {{{ OPTIONS
+.SH "OPTIONS"
+.\" {{{ -h
+.PP
+\-h
+.RS 4
+Display a help message\&.
+.RE
+.\" }}}
+.\" {{{ ntlm:<hash>
+.PP
+ntlm:<hash>
+.RS 4
+Push an NTLM hash onto the target list\&. Multiple hashes can be attacked at once\&.
+.RE
+.\" }}}
+.\" {{{ -t <integer>
+.PP
+-t <integer>
+.RS 4
+Number of CPU worker threads used\&. This should match the core count of your CPU\&. Default is 2\&.
+.RE
+.\" }}}
+.\" {{{ -c <integer>
+.PP
+-c <integer>
+.RS 4
+Number of characters to include in the keyspace being searched\&. Max for 32\-bit is 8 chars, max for 64\-bit is 14 chars\&.
+.RE
+.\" }}}
+.\" {{{ -i <integer>
+.PP
+-i <integer>
+.RS 4
+Interval in seconds for interations logged to the console\&. The interval may be raised for a slight performance gain\&.
+.RE
+.\" }}}
+.\" {{{ --silent
+.PP
+--silent
+.RS 4
+Run the program in silent mode\&.
+.RE
+.\" }}}
+.\" {{{ --frequency-charset
+.PP
+--frequency-charset
+.RS 4
+Use a character set sorted by letter frequency\&.
+.RE
+.\" }}}
+.\" {{{ --randomize-charset
+.PP
+--randomize-charset
+.RS 4
+Randomizes the character set in order to prevent prediction of the keyspace search order\&.
+.RE
+.\" }}}
+.\" {{{ --large-lookup
+.PP
+--large-lookup
+.RS 4
+Uses a larget lookup table to improve speed\&. It is recommended that you have at least 1 GB memory in order to use this options\&.
+.RE
+.\" }}}
+.\" {{{ --disable-lookup
+.PP
+--disable-lookup
+.RS 4
+Disable the character lookup table\&. This may improve performance depending on the specifications of your computer\&. This option also drastically decreases the amount of memory needed to run Laverna's Brute. 
+.RE
+.\" }}}
+.\" {{{ --disable-threading
+.PP
+--disable-threading
+.RS 4
+Disables threading \-\- This is not recommended\&.
+.RE
+.\" }}}
+.\" }}}
+.\" {{{ FURTHER DOCUMENTATION
+.SH FURTHER DOCUMENTATION
+.sp
+See http://code.google.com/p/lavernasbrute/w/list
+.\" }}}
+.\" {{{ AUTHORS
+.SH "AUTHORS"
+.RS 4
+.sp
+Joseph Kogut <joseph.kogut@gmail.com>
+.sp
+Justin Workman <justin@xinja.net>
+.RE
+.\" }}}
+.\" {{{ BUGS
+.SH "BUGS"
+.sp
+See http://code.google.com/p/lavernasbrute/issues/list?q=type=Defect
+.\" }}}
