@@ -1,9 +1,0 @@
-// multibackend.br
-
-kernel void foo( out float a<>, float b<> ) {
-    int n;
-    // Do something time consuming
-    a = b;
-    for(n=0; n<50; ++n)
-		a+=b;
-}
