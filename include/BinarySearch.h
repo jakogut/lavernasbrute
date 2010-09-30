@@ -3,8 +3,6 @@
 #ifndef BINARYSEARCH_H_
 #define BINARYSEARCH_H_
 
-#include "MD4.h"
-
 template < typename T, typename iterT >
 iterT binarySearch(iterT begin, iterT end, const T* target)
 {

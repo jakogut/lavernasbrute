@@ -23,11 +23,11 @@ void CPUPath::operator()()
 void CPUPath::searchKeyspace()
 {
 	hashContext* ctx;
-	keyGenerator_NTLM keygen(keyspaceBegin, masterThread::getCharset());
+	messageGenerator_NTLM messgen(keyspaceBegin, masterThread::getCharset());
 
 	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
 	{
-		ctx = keygen++;
+		ctx = messgen++;
 
 		md4.getHashContext_NTLM(ctx);
 		keyLocation++;
@@ -40,7 +40,7 @@ void CPUPath::searchKeyspace()
 
 			if(targetIterator != targets.end()) // Match was found
 			{
-				masterThread::printResult(md4.contextToHash(ctx), keygen.messageToKey());
+				masterThread::printResult(md4.contextToHash(ctx), messgen.messageToKey());
 				masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 			}
 		}

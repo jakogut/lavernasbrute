@@ -6,9 +6,11 @@
 #include "ProcessingPath.h"
 #include "MasterThread.h"
 
+#include "hashing/MD4_SSE.h"
+
 #ifdef SSE
 
-#include "MD4_SSE.h"
+#include "hashing/MD4_SSE.h"
 
 class SSEPath : protected processingPath
 {
