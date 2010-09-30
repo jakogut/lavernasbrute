@@ -8,7 +8,7 @@ DEBUG = -g
 PROFILE = -pg
 
 SRC = source/
-INCLUDE = -I/usr/include -Iinclude -Iinclude/hashing -Isource
+INCLUDE = -I/usr/include -Iinclude -Isource
 LIB = -L/usr/lib -Llib -lboost_date_time-mt -lboost_thread-mt
 DEST = bin/gcc/$(ARCH)
 

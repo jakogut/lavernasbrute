@@ -17,7 +17,7 @@
 #include "KeyGenerator.h"
 #include "BinarySearch.h"
 
-#include "MD4.h"
+#include "hashing/MD4.h"
 
 bool operator<(const hashContext& a, const hashContext& b);
 
