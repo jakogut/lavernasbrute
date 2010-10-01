@@ -2,12 +2,9 @@
 #define MESSAGEGENERATOR_NTLM_H_
 
 #include "KeyGenerator.h"
-#include "hashing/MD4.h"
 
-class messageGenerator_NTLM : protected keyGenerator
-
+class messageGenerator_NTLM
 {
-
 public:
 
 	messageGenerator_NTLM(unsigned long long location, characterSet* charset)
