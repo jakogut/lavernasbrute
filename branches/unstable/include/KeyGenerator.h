@@ -8,7 +8,6 @@
 #include <limits.h>
 
 #include "CharacterSet.h"
-#include "hashing/MD4.h"
 
 ////////////////////////////////////////////
 // Plaintext key generator /////////////////

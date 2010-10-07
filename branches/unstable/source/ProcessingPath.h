@@ -33,8 +33,8 @@ class processingPath
 
 	// The loop used to search the keyspace
 	virtual void searchKeyspace() = 0;
-    
-    // Functions necessary for the master thread to do its job
+
+	// Functions necessary for the master thread to do its job
 	virtual unsigned int getThreadID() = 0;
 
 	virtual unsigned long long getKeyspaceEnd() = 0;
@@ -49,7 +49,7 @@ class processingPath
 	static void setBloomFilterSize(size_t size);
 	static void destroyBloomFilter();
 
-    // Processing path options
+	// Processing path options
 	static void addTarget(std::string& input);
 	static void setMaxChars(int input);
 	static int getMaxChars();

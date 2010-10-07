@@ -17,7 +17,7 @@ iterT binarySearch(iterT begin, iterT end, const T* target)
 		else return mid;
 	}
 
-	return arrayEnd; 
+	return arrayEnd;
 }
 
 #endif

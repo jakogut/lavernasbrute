@@ -3,8 +3,7 @@
 
 #include <emmintrin.h>
 
-#include "MD4.h"
-#include "KeyGenerator.h"
+#include "MD4_common.h"
 
 #define round1_SSE(set, wd_index, a, b, c, ntb_index, rotation) \
 	wd_SSE[set][wd_index] = _mm_add_epi32(wd_SSE[set][wd_index], _mm_add_epi32(_mm_or_si128(_mm_and_si128(wd_SSE[set][a], wd_SSE[set][b]), _mm_andnot_si128(wd_SSE[set][a], wd_SSE[set][c])), message_SSE[set][ntb_index])), \
@@ -18,12 +17,12 @@
 	wd_SSE[set][wd_index] = _mm_add_epi32(_mm_add_epi32(_mm_add_epi32(wd_SSE[set][wd_index], _mm_xor_si128(wd_SSE[set][a], _mm_xor_si128(wd_SSE[set][b], wd_SSE[set][c]))), message_SSE[set][ntb_index]), SQRT_3_sse), \
 	wd_SSE[set][wd_index] = ROTL_SSE(wd_SSE[set][wd_index], rotation)
 
-/* The rounds with "null" in the name omit the adding of the message section, 
-because if the hash is short enough to be computationally feasible to crack, 
+/* The rounds with "null" in the name omit the adding of the message section,
+because if the hash is short enough to be computationally feasible to crack,
 that element of the message will be zero. Since each ascii character is 8 bits,
-and each unicode character is 16 bits, this means that each 32-bit word that composes 
-the message can store either four ascii characters per word, or two unicode characters 
-per word. If it is computationally infeasible to attack the hash to any plaintext more 
+and each unicode character is 16 bits, this means that each 32-bit word that composes
+the message can store either four ascii characters per word, or two unicode characters
+per word. If it is computationally infeasible to attack the hash to any plaintext more
 than 14 characters in length, that means we can assume that every element beyond the 4th
 for MD4, and 7th for NTLM are zeros.*/
 
@@ -41,14 +40,14 @@ for MD4, and 7th for NTLM are zeros.*/
 
 #define ROTL_SSE(num, places) (_mm_or_si128(_mm_slli_epi32(num, places), _mm_srli_epi32(num, (32 - places))))
 
-class MD4_SSE : public MD4
+class MD4_SSE
 {
 public:
 
 	MD4_SSE()
 	{
-		SQRT_2_sse = _mm_set1_epi32(0x5a827999);
-		SQRT_3_sse = _mm_set1_epi32(0x6ed9eba1);
+		SQRT_2_sse = _mm_set1_epi32(SQRT_2);
+		SQRT_3_sse = _mm_set1_epi32(SQRT_3);
 	}
 
 	~MD4_SSE()
@@ -143,7 +142,7 @@ protected:
 				//The length of input need to be <= 27
 				for(;k<length[i][j]/2;k++)	
 					message[k][j] = input[j+4*i][2*k] | (input[j+4*i][2*k+1]<<16);
-			 
+ 
 				//padding
 				if(length[i][j]%2==1)
 					message[k][j] = input[j+4*i][length[i][j]-1] | 0x800000;
@@ -170,7 +169,7 @@ protected:
 	}
 
 	inline void encrypt()
-	{	 
+	{
 		// Round 1 // ---
 
 		round1_SSE(0, 0, 1, 2, 3, 0, 3);
