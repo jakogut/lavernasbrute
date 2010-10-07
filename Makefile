@@ -4,6 +4,7 @@ NVCC = nvcc
 CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE)
 CCFLAGS = $(CXXFLAGS)
 NVCC_FLAGS = $(CXXFLAGS)
+ASMFLAGS = -Wall -O1 -march=$(ARCH)
 
 ARCH = i686
 BITNESS = 32
@@ -49,11 +50,11 @@ $(DEST)/%.o: $(SRC)/%.c
 
 $(SRC_ASM)/%.asm: $(SRC)/%.cpp
 	mkdir -p $(SRC_ASM)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.cpp -o $@
+	$(CXX) $(ASMFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.cpp -o $@
 
 $(SRC_ASM)/%.asm: $(SRC)/%.c
 	mkdir -p $(SRC_ASM)
-	$(CC) $(CCFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.c -o $@
+	$(CC) $(ASMFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.c -o $@
 
 # CUDA build rule
 $(DEST)/%.o : $(SRC)/%.cu
@@ -67,10 +68,7 @@ $(DEST)/%.o : $(SRC)/%.cu
 #	@$(DEST)/tests/NTLM_SSE_UT
 	
 clean:
-	rm -f $(OBJECTS_MAIN) 
-	rm -f $(OBJECTS_TEST) 
-	rm -f $(DEST)/lavernasbrute 
-	rm -f $(DEST)/gmon.out 
 	rm -rf $(DEST)
+	rm -rf $(SRC_ASM)
 
 .PHONY: clean
