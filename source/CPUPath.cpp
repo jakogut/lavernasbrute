@@ -2,6 +2,9 @@
 
 #include "CPUPath.h"
 
+#include "messageGenerators/MessageGenerator_NTLM.h"
+#include "hashing/MD4.h"
+
 CPUPath::CPUPath(int id)
 : id(id)
 {

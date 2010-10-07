@@ -1,8 +1,9 @@
 // Part of Laverna's Brute
 
-#include "SSEPath.h"
-
 #ifdef SSE
+
+#include "SSEPath.h"
+#include "hashing/MD4_SSE.h"
 
 SSEPath::SSEPath(int id)
 : id(id)

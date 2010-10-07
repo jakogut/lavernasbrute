@@ -6,8 +6,6 @@
 #include "ProcessingPath.h"
 #include "MasterThread.h"
 
-#include "messageGenerators/MessageGenerator_NTLM.h"
-
 class CPUPath : protected processingPath
 {
 public:

@@ -2,15 +2,12 @@
 
 #ifndef MD4_H_
 #define MD4_H_
- 
+
 #include <cstring>
 #include <iostream>
 #include <cstdlib>
 
-#define itoa16 "0123456789abcdef"
-
-#define SQRT_2 0x5a827999
-#define SQRT_3 0x6ed9eba1
+#include "MD4_common.h"
 
 #define ROTL(NUM, PLACES) ((NUM << PLACES) | (NUM >> (32 - PLACES)))
 #define ROTR(NUM, PLACES) ((NUM >> PLACES) | (NUM << (32 - PLACES)))
@@ -48,10 +45,6 @@ public:
 
 	MD4()
 	{
-		wd_init[0] = 0x67452301;
-		wd_init[1] = 0xefcdab89;
-		wd_init[2] = 0x98badcfe;
-		wd_init[3] = 0x10325476;
 	}
 
 	~MD4()
@@ -136,9 +129,9 @@ protected:
 		// Zero out the message buffer
 		memset(message,0,16*4);
 
-		for(;i<length/4;i++)	
+		for(;i<length/4;i++)
 			message[i] = input[4*i] | (input[4*i+1]<<8) | (input[4*i+2]<<16) | (input[4*i+3]<<24);
-	 
+
 		// Pad with one 1 bit, followed by zeros until the message is 64 bits shy of 512 bits in length.
 		switch(length%4)
 		{
@@ -199,17 +192,17 @@ protected:
 		LOOP(FF(d, a, b, c, message[1], 7), n);
 		LOOP(FF(c, d, a, b, message[2], 11), n);
 		LOOP(FF(b, c, d, a, message[3], 19), n);
-	 
+
 		LOOP(FF(a, b, c, d, message[4], 3), n);
 		LOOP(FF(d, a, b, c, message[5], 7), n);
 		LOOP(FF(c, d, a, b, message[6], 11), n);
 		LOOP(FF(b, c, d, a, message[7], 19), n);
-	 
+
 		LOOP(FF(a, b, c, d, message[8],  3), n);
 		LOOP(FF(d, a, b, c, message[9],  7), n);
 		LOOP(FF(c, d, a, b, message[10], 11), n);
 		LOOP(FF(b, c, d, a, message[11], 19), n);
-	 
+
 		LOOP(FF(a, b, c, d, message[12], 3), n);
 		LOOP(FF(d, a, b, c, message[13], 7), n);
 		LOOP(FF(c, d, a, b, message[14], 11), n);
@@ -221,39 +214,39 @@ protected:
 		LOOP(GG(d, a, b, c, message[4],  SQRT_2, 5), n);
 		LOOP(GG(c, d, a, b, message[8],  SQRT_2, 9), n);
 		LOOP(GG(b, c, d, a, message[12], SQRT_2, 13), n);
-	 
+
 		LOOP(GG(a, b, c, d, message[1],  SQRT_2, 3), n);
 		LOOP(GG(d, a, b, c, message[5],  SQRT_2, 5), n);
 		LOOP(GG(c, d, a, b, message[9],  SQRT_2, 9), n);
 		LOOP(GG(b, c, d, a, message[13], SQRT_2, 13), n);
-	 
+
 		LOOP(GG(a, b, c, d, message[2],  SQRT_2, 3), n);
 		LOOP(GG(d, a, b, c, message[6],  SQRT_2, 5), n);
 		LOOP(GG(c, d, a, b, message[10], SQRT_2, 9), n);
 		LOOP(GG(b, c, d, a, message[14], SQRT_2, 13), n);
-	 
+
 		LOOP(GG(a, b, c, d, message[3],  SQRT_2, 3), n);
 		LOOP(GG(d, a, b, c, message[7],  SQRT_2, 5), n);
 		LOOP(GG(c, d, a, b, message[11], SQRT_2, 9), n);
 		LOOP(GG(b, c, d, a, message[15], SQRT_2, 13), n);
-	
+
 		// Round 3 // ---
 
 		LOOP(HH(a, d, c, b, message[0],  SQRT_3, 3), n);
 		LOOP(HH(d, c, b, a, message[8],  SQRT_3, 9), n);
 		LOOP(HH(c, b, a, d, message[4],  SQRT_3, 11), n);
 		LOOP(HH(b, a, d, c, message[12], SQRT_3, 15), n);
-	 
+
 		LOOP(HH(a, d, c, b, message[2],  SQRT_3, 3), n);
 		LOOP(HH(d, c, b, a, message[10], SQRT_3, 9), n);
 		LOOP(HH(c, b, a, d, message[6],  SQRT_3, 11), n);
 		LOOP(HH(b, a, d, c, message[14], SQRT_3, 15), n);
-	 
+
 		LOOP(HH(a, d, c, b, message[1],  SQRT_3, 3), n);
 		LOOP(HH(d, c, b, a, message[9],  SQRT_3, 9), n);
 		LOOP(HH(c, b, a, d, message[5],  SQRT_3, 11), n);
 		LOOP(HH(b, a, d, c, message[13], SQRT_3, 15), n);
-	 
+
 		LOOP(HH(a, d, c, b, message[3],  SQRT_3, 3), n);
 		LOOP(HH(d, c, b, a, message[11], SQRT_3, 9), n);
 		LOOP(HH(c, b, a, d, message[7],  SQRT_3, 11), n);
@@ -264,7 +257,7 @@ protected:
 		ctx->wd[2] = c;
 		ctx->wd[3] = d;
 	}
-	 
+
 	inline virtual void finalize(hashContext* ctx)
 	{
 		ctx->wd[0] += wd_init[0];
@@ -279,7 +272,7 @@ protected:
 		for(int i = 0; i < 4; i++)
 		{
 			unsigned int n = ctx->wd[i];
-			//iterate the bytes of the integer		
+			//iterate the bytes of the integer
 			for(int j = 0; j < 4; j++)
 			{
 				unsigned int convert = n % 256;
@@ -287,7 +280,7 @@ protected:
 				convert /= 16;
 				hex_format[i*8+j*2+0]=itoa16[convert%16];
 				n /= 256;
-			}	
+			}
 		}
 		//null terminate the string
 		hex_format[32] = 0;
@@ -325,8 +318,6 @@ protected:
 		ctx->wd[2] -= wd_init[2];
 		ctx->wd[3] -= wd_init[3];
 	}
-
-	unsigned int wd_init[4];
 
 private:
 
