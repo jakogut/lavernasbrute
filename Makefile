@@ -1,15 +1,14 @@
+OPTIMIZATION=-O3
+
 CXX = g++
 CC = gcc
 NVCC = nvcc
-CXXFLAGS = -Wall -O3 -march=$(ARCH) # $(PROFILE)
+CXXFLAGS = $(OPTIMIZATION) -Wall -march=$(ARCH)
 CCFLAGS = $(CXXFLAGS)
 NVCC_FLAGS = $(CXXFLAGS)
-ASMFLAGS = -Wall -O1 -march=$(ARCH)
 
 ARCH = i686
 BITNESS = 32
-DEBUG = -g
-PROFILE = -pg
 
 SRC = source
 SRC_ASM = $(SRC)/asm
@@ -38,8 +37,9 @@ lavernasbrute: $(OBJECTS_MAIN)
 	mkdir -p $(DEST)
 	$(CXX) $(CXXFLAGS) $(LIB) $? -o $(DEST)/$@
 
-lavernasbrute-asm: $(ASM)
+asm: $(ASM)
 
+# Object build rules
 $(DEST)/%.o: $(SRC)/%.cpp
 	mkdir -p $(DEST)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $(SRC)/$*.cpp -o $@
@@ -48,13 +48,14 @@ $(DEST)/%.o: $(SRC)/%.c
 	mkdir -p $(DEST)
 	$(CC) $(CCFLAGS) $(INCLUDE) -c $(SRC)/$*.c -o $@
 
+# Assembly build rules
 $(SRC_ASM)/%.asm: $(SRC)/%.cpp
 	mkdir -p $(SRC_ASM)
-	$(CXX) $(ASMFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.cpp -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.cpp -o $@
 
 $(SRC_ASM)/%.asm: $(SRC)/%.c
 	mkdir -p $(SRC_ASM)
-	$(CC) $(ASMFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.c -o $@
+	$(CC) $(CCFLAGS) $(INCLUDE) -S -masm=intel $(SRC)/$*.c -o $@
 
 # CUDA build rule
 $(DEST)/%.o : $(SRC)/%.cu
