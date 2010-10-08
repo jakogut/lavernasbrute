@@ -25,25 +25,27 @@ void CPUPath::operator()()
 
 void CPUPath::searchKeyspace()
 {
-	hashContext* ctx;
-	messageGenerator_NTLM messgen(keyspaceBegin, masterThread::getCharset());
+	hashContext ctx;
+
+	messageGenerator_NTLM messgen(masterThread::getCharset());
+	messgen.integerToMessage(&ctx, keyLocation);
 
 	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
 	{
-		ctx = messgen++;
+		messgen.incrementMessage(&ctx);
 
-		md4.getHashContext_NTLM(ctx);
+		md4.getHashContext_NTLM(&ctx);
 		keyLocation++;
 
 		// Check the bloom filter for our hash first
-		if(bloomCheck(bFilter, &ctx->wd[0]))
+		if(bloomCheck(bFilter, &ctx.wd[0]))
 		{
 			// The bloom filter returned positive, look through the target list for our hash
-			targetIterator = binarySearch(targets.begin(), targets.end(), ctx);
+			targetIterator = binarySearch(targets.begin(), targets.end(), &ctx);
 
 			if(targetIterator != targets.end()) // Match was found
 			{
-				masterThread::printResult(md4.contextToHash(ctx), messgen.messageToKey());
+				masterThread::printResult(md4.contextToHash(&ctx), messgen.messageToKey(&ctx));
 				masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 			}
 		}
