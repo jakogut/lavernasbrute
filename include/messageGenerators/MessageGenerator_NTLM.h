@@ -16,13 +16,13 @@ public:
 	{
 	}
 
-	inline unsigned int findMessageLength(hashContext* ctx)
+	inline int findMessageLength(hashContext* ctx)
 	{
 		for(register unsigned int padByte = 0; padByte < 32; ++padByte)
 			if(ctx->message.uint8[padByte << 1] == 0x80)
 				return padByte;
 
-		return 0;
+		return -1;
 	}
 
 	char* messageToKey(hashContext* ctx)
@@ -33,20 +33,15 @@ public:
 		return key;
 	}
 
-	inline void incrementMessage(hashContext* ctx)
+	void stepMessage(hashContext* ctx, int addend)
 	{
-		register unsigned int messageLength;
-
-		// Find length of message
-		for(messageLength = 0; messageLength < 32; ++messageLength)
-			if(ctx->message.uint8[messageLength << 1] == 0x80)
-				break;
+		register int messageLength = findMessageLength(ctx);
 
 		register unsigned int i;
 
 		for(i = 0; i < 32; ++i)
 		{
-			if(ctx->message.uint8[i << 1] == charset->maxChar)
+			if(ctx->message.uint8[i << 1] + addend >= charset->maxChar)
 			{
 				// Overflow, reset char at place
 				ctx->message.uint8[i << 1] = charset->minChar;
@@ -84,7 +79,12 @@ public:
 		ctx->message.uint32[14] = messageLength << 4;
 	}
 
-	void integerToMessage(hashContext* ctx, unsigned long long& n)
+	inline void stepMessage(hashContext* ctx)
+	{
+		stepMessage(ctx, 1);
+	}
+
+	void integerToMessage(hashContext* ctx, unsigned long long n)
 	{
 		memset(key, 0, 16);
 
@@ -130,7 +130,6 @@ protected:
 	characterSet* charset;
 
 	char key[16];
-
 };
 
 #endif

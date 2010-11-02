@@ -8,10 +8,6 @@
 CPUPath::CPUPath(int id)
 : id(id)
 {
-	if(hashType == "NTLM")
-		hashFunc = &MD4::getHashContext_NTLM;
-	else if(hashType == "MD4")
-		hashFunc = &MD4::getHashContext_MD4;
 }
 
 CPUPath::~CPUPath()
@@ -25,17 +21,12 @@ void CPUPath::operator()()
 
 void CPUPath::searchKeyspace()
 {
-	hashContext ctx;
-
 	messageGenerator_NTLM messgen(masterThread::getCharset());
 	messgen.integerToMessage(&ctx, keyLocation);
 
 	while((keyLocation < keyspaceEnd) && (masterThread::getSuccess() == false))
 	{
-		messgen.incrementMessage(&ctx);
-
-		md4.getHashContext_NTLM(&ctx);
-		keyLocation++;
+		md4.getHashContext(&ctx);
 
 		// Check the bloom filter for our hash first
 		if(bloomCheck(bFilter, &ctx.wd[0]))
@@ -49,9 +40,12 @@ void CPUPath::searchKeyspace()
 				masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 			}
 		}
+
+		messgen.stepMessage(&ctx);
+		++keyLocation;
 	}
 
-	// If we have more targets, have the master thread look for more work. 
+	// If we have more targets, have the master thread look for more work.
 	// If the master finds work for the thread, we restart the search.
 	if((masterThread::getRemainingTargets() > 0) && masterThread::reassignKeyspace(this))
 	{

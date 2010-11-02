@@ -8,4 +8,16 @@
 
 static unsigned int wd_init[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
 
+typedef struct ctx
+{
+		unsigned int wd[4];
+
+		union
+		{
+			unsigned int uint32[16];
+			unsigned char uint8[64];
+		} message;
+
+} hashContext;
+
 #endif
