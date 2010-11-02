@@ -33,9 +33,10 @@ protected:
 	std::vector<hashContext>::iterator targetIterator;
 
 	MD4 md4;
-	MD4::scalarHashPtr hashFunc;
 
 	unsigned long long keyspaceEnd, keyspaceBegin, keyLocation;
+
+	hashContext ctx;
 };
 
 #endif

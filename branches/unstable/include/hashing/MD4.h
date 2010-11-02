@@ -25,20 +25,6 @@
 #define HH(A, B, C, D, X, SQRT3, ROT) \
 	A += H(B, C, D) + X + SQRT3, A = ROTL(A, ROT)
 
-#define LOOP(CODE, N) for(int i = 0; i < N; i++) CODE
-
-typedef struct ctx
-{
-		unsigned int wd[4];
-
-		union
-		{
-			unsigned int uint32[16];
-			unsigned char uint8[64];
-		} message;
-
-} hashContext;
-
 class MD4
 {
 public:
@@ -61,18 +47,11 @@ public:
 		// Take an ASCII string, and convert it to an MD4 message
 		prepareKey_MD4(&ctx, input);
 
-		initialize(&ctx, 1);
-		encrypt(&ctx, 1);
+		initialize(&ctx);
+		encrypt(&ctx);
 		finalize(&ctx);
 
 		return convertToHex(&ctx);
-	}
-
-	// Context only MD4
-	inline void getHashContext_MD4(hashContext* ctx)
-	{
-		initialize(ctx, 1);
-		encrypt(ctx, 1);
 	}
 
 	// Full NTLM
@@ -82,23 +61,18 @@ public:
 
 		prepareKey_NTLM(&ctx, input);
 
-		initialize(&ctx, 1);
-		encrypt(&ctx, 1);
+		initialize(&ctx);
+		encrypt(&ctx);
 		finalize(&ctx);
 
 		return convertToHex(&ctx);
 	}
 
-	// Context only NTLM
-	inline void getHashContext_NTLM(hashContext* ctx)
+	// Context only
+	inline void getHashContext(hashContext* ctx)
 	{
-		getHashContext_NTLM(ctx, 1);
-	}
-
-	inline void getHashContext_NTLM(hashContext* ctx, unsigned int n)
-	{
-		initialize(ctx, n);
-		encrypt(ctx, n);
+		initialize(ctx);
+		encrypt(ctx);
 	}
 
 	// Take an MD4 hash as input, and reverse the hex encoding, returning a hashContext
@@ -174,12 +148,12 @@ protected:
 		message[14] = length << 4;
 	}
 
-	inline virtual void initialize(hashContext* ctx, int n)
+	inline void initialize(hashContext* ctx)
 	{
-		for(int i = 0; i < n; i++) memcpy(ctx->wd, wd_init, 4 * sizeof(unsigned));
+		memcpy(ctx->wd, wd_init, 4 * sizeof(unsigned));
 	}
 
-	inline virtual void encrypt(hashContext* ctx, int n)
+	inline void encrypt(hashContext* ctx)
 	{
 		unsigned int* wd = ctx->wd;
 		unsigned int* message = ctx->message.uint32;
@@ -188,69 +162,69 @@ protected:
 
 		// Round 1 // ---
 
-		LOOP(FF(a, b, c, d, message[0], 3), n);
-		LOOP(FF(d, a, b, c, message[1], 7), n);
-		LOOP(FF(c, d, a, b, message[2], 11), n);
-		LOOP(FF(b, c, d, a, message[3], 19), n);
+		FF(a, b, c, d, message[0], 3);
+		FF(d, a, b, c, message[1], 7);
+		FF(c, d, a, b, message[2], 11);
+		FF(b, c, d, a, message[3], 19);
 
-		LOOP(FF(a, b, c, d, message[4], 3), n);
-		LOOP(FF(d, a, b, c, message[5], 7), n);
-		LOOP(FF(c, d, a, b, message[6], 11), n);
-		LOOP(FF(b, c, d, a, message[7], 19), n);
+		FF(a, b, c, d, message[4], 3);
+		FF(d, a, b, c, message[5], 7);
+		FF(c, d, a, b, message[6], 11);
+		FF(b, c, d, a, message[7], 19);
 
-		LOOP(FF(a, b, c, d, message[8],  3), n);
-		LOOP(FF(d, a, b, c, message[9],  7), n);
-		LOOP(FF(c, d, a, b, message[10], 11), n);
-		LOOP(FF(b, c, d, a, message[11], 19), n);
+		FF(a, b, c, d, message[8],  3);
+		FF(d, a, b, c, message[9],  7);
+		FF(c, d, a, b, message[10], 11);
+		FF(b, c, d, a, message[11], 19);
 
-		LOOP(FF(a, b, c, d, message[12], 3), n);
-		LOOP(FF(d, a, b, c, message[13], 7), n);
-		LOOP(FF(c, d, a, b, message[14], 11), n);
-		LOOP(FF(b, c, d, a, message[15], 19), n);
+		FF(a, b, c, d, message[12], 3);
+		FF(d, a, b, c, message[13], 7);
+		FF(c, d, a, b, message[14], 11);
+		FF(b, c, d, a, message[15], 19);
 
 		// Round 2 // ---
 
-		LOOP(GG(a, b, c, d, message[0],  SQRT_2, 3), n);
-		LOOP(GG(d, a, b, c, message[4],  SQRT_2, 5), n);
-		LOOP(GG(c, d, a, b, message[8],  SQRT_2, 9), n);
-		LOOP(GG(b, c, d, a, message[12], SQRT_2, 13), n);
+		GG(a, b, c, d, message[0],  SQRT_2, 3);
+		GG(d, a, b, c, message[4],  SQRT_2, 5);
+		GG(c, d, a, b, message[8],  SQRT_2, 9);
+		GG(b, c, d, a, message[12], SQRT_2, 13);
 
-		LOOP(GG(a, b, c, d, message[1],  SQRT_2, 3), n);
-		LOOP(GG(d, a, b, c, message[5],  SQRT_2, 5), n);
-		LOOP(GG(c, d, a, b, message[9],  SQRT_2, 9), n);
-		LOOP(GG(b, c, d, a, message[13], SQRT_2, 13), n);
+		GG(a, b, c, d, message[1],  SQRT_2, 3);
+		GG(d, a, b, c, message[5],  SQRT_2, 5);
+		GG(c, d, a, b, message[9],  SQRT_2, 9);
+		GG(b, c, d, a, message[13], SQRT_2, 13);
 
-		LOOP(GG(a, b, c, d, message[2],  SQRT_2, 3), n);
-		LOOP(GG(d, a, b, c, message[6],  SQRT_2, 5), n);
-		LOOP(GG(c, d, a, b, message[10], SQRT_2, 9), n);
-		LOOP(GG(b, c, d, a, message[14], SQRT_2, 13), n);
+		GG(a, b, c, d, message[2],  SQRT_2, 3);
+		GG(d, a, b, c, message[6],  SQRT_2, 5);
+		GG(c, d, a, b, message[10], SQRT_2, 9);
+		GG(b, c, d, a, message[14], SQRT_2, 13);
 
-		LOOP(GG(a, b, c, d, message[3],  SQRT_2, 3), n);
-		LOOP(GG(d, a, b, c, message[7],  SQRT_2, 5), n);
-		LOOP(GG(c, d, a, b, message[11], SQRT_2, 9), n);
-		LOOP(GG(b, c, d, a, message[15], SQRT_2, 13), n);
+		GG(a, b, c, d, message[3],  SQRT_2, 3);
+		GG(d, a, b, c, message[7],  SQRT_2, 5);
+		GG(c, d, a, b, message[11], SQRT_2, 9);
+		GG(b, c, d, a, message[15], SQRT_2, 13);
 
 		// Round 3 // ---
 
-		LOOP(HH(a, d, c, b, message[0],  SQRT_3, 3), n);
-		LOOP(HH(d, c, b, a, message[8],  SQRT_3, 9), n);
-		LOOP(HH(c, b, a, d, message[4],  SQRT_3, 11), n);
-		LOOP(HH(b, a, d, c, message[12], SQRT_3, 15), n);
+		HH(a, d, c, b, message[0],  SQRT_3, 3);
+		HH(d, c, b, a, message[8],  SQRT_3, 9);
+		HH(c, b, a, d, message[4],  SQRT_3, 11);
+		HH(b, a, d, c, message[12], SQRT_3, 15);
 
-		LOOP(HH(a, d, c, b, message[2],  SQRT_3, 3), n);
-		LOOP(HH(d, c, b, a, message[10], SQRT_3, 9), n);
-		LOOP(HH(c, b, a, d, message[6],  SQRT_3, 11), n);
-		LOOP(HH(b, a, d, c, message[14], SQRT_3, 15), n);
+		HH(a, d, c, b, message[2],  SQRT_3, 3);
+		HH(d, c, b, a, message[10], SQRT_3, 9);
+		HH(c, b, a, d, message[6],  SQRT_3, 11);
+		HH(b, a, d, c, message[14], SQRT_3, 15);
 
-		LOOP(HH(a, d, c, b, message[1],  SQRT_3, 3), n);
-		LOOP(HH(d, c, b, a, message[9],  SQRT_3, 9), n);
-		LOOP(HH(c, b, a, d, message[5],  SQRT_3, 11), n);
-		LOOP(HH(b, a, d, c, message[13], SQRT_3, 15), n);
+		HH(a, d, c, b, message[1],  SQRT_3, 3);
+		HH(d, c, b, a, message[9],  SQRT_3, 9);
+		HH(c, b, a, d, message[5],  SQRT_3, 11);
+		HH(b, a, d, c, message[13], SQRT_3, 15);
 
-		LOOP(HH(a, d, c, b, message[3],  SQRT_3, 3), n);
-		LOOP(HH(d, c, b, a, message[11], SQRT_3, 9), n);
-		LOOP(HH(c, b, a, d, message[7],  SQRT_3, 11), n);
-		LOOP(HH(b, a, d, c, message[15], SQRT_3, 15), n);
+		HH(a, d, c, b, message[3],  SQRT_3, 3);
+		HH(d, c, b, a, message[11], SQRT_3, 9);
+		HH(c, b, a, d, message[7],  SQRT_3, 11);
+		HH(b, a, d, c, message[15], SQRT_3, 15);
 
 		ctx->wd[0] = a;
 		ctx->wd[1] = b;

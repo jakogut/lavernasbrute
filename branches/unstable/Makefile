@@ -69,7 +69,7 @@ $(DEST)/%.o : $(SRC)/%.cu
 #	@$(DEST)/tests/NTLM_SSE_UT
 	
 clean:
-	rm -rf $(DEST)
-	rm -rf $(SRC_ASM)
+	@rm -rf $(DEST)
+	@rm -rf $(SRC_ASM)
 
 .PHONY: clean
