@@ -14,13 +14,14 @@
 
 // Processing paths
 #include "CPUPath.h"
-
-// Build and version configuration
-#include "Version.h"
+#include "CUDAPath.h"
 
 #ifdef SSE
 #include "SSEPath.h"
 #endif
+
+// Build and version configuration
+#include "Version.h"
 
 using namespace std;
 
@@ -64,6 +65,9 @@ void printHelp()
 	"\n\n-c INTEGER\tNumber of characters to include in the keyspace being searched."
 	"\n\t\tMax is 10 chars."
 
+	"\n\n--cuda\t\tUse a CUDA accelerated processing path."
+	"\\n\t\t(Requires an NVIDIA 8000 series GPU or better)"
+
 #ifdef SSE
 	"\n\n--SSE\t\tUse an SSE optimized CPU path."
 #endif
@@ -85,7 +89,7 @@ int toInt(string input)
 	return result;
 }
 
-/* Convert a string to a different case. 
+/* Convert a string to a different case.
  * If strCase is false, the string is converted to lowercase.
  * If strCase is true, the string is converted to uppercase.
  */
@@ -133,6 +137,8 @@ int main(int argc, char** argv)
 
 	std::string hashType;
 	size_t filterSize = 0;
+
+	bool enableCUDA = false;
 
 	#ifdef SSE
 	bool enableSSE = false;
@@ -252,6 +258,12 @@ int main(int argc, char** argv)
 		else if(flag == "-c")
 		{
 			processingPath::setMaxChars(toInt(value));
+		}
+
+		// Enable CUDA path
+		else if(changeCase(flag, 0) == "--cuda")
+		{
+			enableCUDA = true;
 		}
 
 		// Enable SSE path
