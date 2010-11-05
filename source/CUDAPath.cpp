@@ -77,7 +77,7 @@ unsigned long long CUDAPath::getKeyspaceBegin()
 	return keyspaceBegin;
 }
 
-unsigned long long CUDAPath::getKeyspaceLocation()
+unsigned long long CUDAPath::getKeyLocation()
 {
 	return keyLocation;
 }
@@ -92,7 +92,7 @@ void CUDAPath::moveKeyspaceBegin(unsigned long long input)
 	keyspaceBegin = input;
 }
 
-void CUDAPath::moveKeyspaceLocation(unsigned long long input)
+void CUDAPath::moveKeylocation(unsigned long long input)
 {
 	keyLocation = input;
 }

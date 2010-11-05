@@ -23,11 +23,11 @@ public:
 
 	unsigned long long getKeyspaceEnd();
 	unsigned long long getKeyspaceBegin();
-	unsigned long long getKeyspaceLocation();
+	unsigned long long getKeyLocation();
 
 	void moveKeyspaceEnd(unsigned long long input);
 	void moveKeyspaceBegin(unsigned long long input);
-	void moveKeyspaceLocation(unsigned long long input);
+	void moveKeylocation(unsigned long long input);
 
 protected:
 
