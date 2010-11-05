@@ -3,7 +3,8 @@
 #include "MD4_CUDA.cuh"
 #include "MD4_CUDA_kernel.cu"
 
-MD4_CUDA::MD4_CUDA()
+MD4_CUDA::MD4_CUDA(unsigned tpb, unsigned bpg)
+	: threadsPerBlock(tpb), blocksPerGrid(bpg)
 {
 }
 

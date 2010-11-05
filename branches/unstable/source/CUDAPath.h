@@ -7,8 +7,9 @@
 #include "MasterThread.h"
 
 #include "hashing/MD4_CUDA.cuh"
+#include "hashing/MD4.h"
 
-class CUDAPath
+class CUDAPath : protected processingPath
 {
 public:
 
@@ -34,9 +35,13 @@ protected:
 
 	std::vector<hashContext>::iterator targetIterator;
 
-	MD4_CUDA cu_md4;
+	MD4_CUDA* cu_md4;
+	MD4 md4;
 
-	unsigned long long keyspaceEnd, keyspaceBegin, keyspaceLocation;
+	unsigned long long keyspaceEnd, keyspaceBegin, keyLocation;
 
 	hashContext* ctx;
-}
+};
+
+#endif
+

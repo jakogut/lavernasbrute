@@ -10,19 +10,18 @@
 
 #include "MD4_common.h"
 
-#define threadsPerBlock 128
-#define blocksPerGrid 1
-
 class MD4_CUDA
 {
 public:
 
-	MD4_CUDA();
+	MD4_CUDA(unsigned tpb, unsigned bpg);
 	~MD4_CUDA();
 
 	void getHashContext(hashContext* ctx, unsigned int n);
 
 protected:
+
+	unsigned threadsPerBlock, blocksPerGrid;
 
 	unsigned int* wd_h;
 	unsigned int* message_h;
