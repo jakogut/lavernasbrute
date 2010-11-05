@@ -4,7 +4,7 @@
 
 #include "messageGenerators/MessageGenerator_NTLM.h"
 
-#define NUM_HASHES 512
+#define NUM_HASHES 128
 
 using namespace std;
 
@@ -40,10 +40,7 @@ int main()
 		}
 	}
 
-	cout << match << endl;
-
-	if(!match) cout << i << endl;
-	for(int j = 0; j < 4; j++) cout << correct_ctx[i].wd[j] << "\t" << trial_ctx[i].wd[j] << endl;
+	cout << (match ? "PASSED" : "FAILED") << endl;
 
 	destroyCharacterSet(charset);
 }

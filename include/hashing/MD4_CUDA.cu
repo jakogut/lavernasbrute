@@ -19,25 +19,18 @@ void MD4_CUDA::getHashContext(hashContext* ctx, unsigned int n)
 	cudaMalloc(&wd_d, sizeof(unsigned) * 4 * n);
 	cudaMalloc(&message_d, sizeof(unsigned) * 16 * n);
 
-	initialize(ctx, n);
-
-	for(int i = 0; i < n; i++)
-	{
-		for(int j = 0; j < 4; j++)
-			wd_h[i*4+j] = ctx[i].wd[j];
-
+	for(int i = 0; i < threadsPerBlock * blocksPerGrid; i++)
 		for(int j = 0; j < 16; j++)
-			message_h[i*4+j] = ctx[i].message.uint32[j];
-	}
+			message_h[i*16+j] = ctx[i].message.uint32[j];
 
-	cudaMemcpy(wd_d, wd_h, sizeof(unsigned) * 4 * n, cudaMemcpyHostToDevice);
+	cuda_init<<<threadsPerBlock, blocksPerGrid>>>(wd_d);
 	cudaMemcpy(message_d, message_h, sizeof(unsigned) * 16 * n, cudaMemcpyHostToDevice);
 
 	cuda_encrypt<<<threadsPerBlock, blocksPerGrid>>>(wd_d, message_d);
 
 	cudaMemcpy(wd_h, wd_d, sizeof(unsigned) * 4 * n, cudaMemcpyDeviceToHost);
 
-	for(int i = 0; i < n; i++)
+	for(int i = 0; i < threadsPerBlock * blocksPerGrid; i++)
 		for(int j = 0; j < 4; j++)
 			ctx[i].wd[j] = wd_h[i*4+j];
 
@@ -46,9 +39,4 @@ void MD4_CUDA::getHashContext(hashContext* ctx, unsigned int n)
 
 	free(message_h);
 	free(wd_h);
-}
-
-void MD4_CUDA::initialize(hashContext* ctx, int n)
-{
-	for(int i = 0; i < n; i++) memcpy(ctx[i].wd, wd_init, sizeof(unsigned) * 4);
 }
