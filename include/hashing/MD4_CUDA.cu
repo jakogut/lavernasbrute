@@ -14,6 +14,8 @@ MD4_CUDA::~MD4_CUDA()
 
 void MD4_CUDA::getHashContext(hashContext* ctx, unsigned int n)
 {
+	size_t sharedMemSize = (sizeof(unsigned) * 4 * threadsPerBlock) + (sizeof(unsigned) * 16 * threadsPerBlock);
+
 	wd_h = (unsigned*)malloc(sizeof(unsigned) * 4 * n);
 	message_h = (unsigned*)malloc(sizeof(unsigned) * 16 * n);
 
@@ -27,7 +29,7 @@ void MD4_CUDA::getHashContext(hashContext* ctx, unsigned int n)
 	cuda_init<<<threadsPerBlock, blocksPerGrid>>>(wd_d);
 	cudaMemcpy(message_d, message_h, sizeof(unsigned) * 16 * n, cudaMemcpyHostToDevice);
 
-	cuda_encrypt<<<threadsPerBlock, blocksPerGrid>>>(wd_d, message_d);
+	cuda_encrypt<<<threadsPerBlock, blocksPerGrid, sharedMemSize>>>(wd_d, message_d);
 
 	cudaMemcpy(wd_h, wd_d, sizeof(unsigned) * 4 * n, cudaMemcpyDeviceToHost);
 
