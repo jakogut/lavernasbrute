@@ -4,7 +4,7 @@
 
 #include "messageGenerators/MessageGenerator_NTLM.h"
 
-#define NUM_HASHES 128
+#define NUM_HASHES 8192
 
 using namespace std;
 
@@ -23,7 +23,7 @@ int main()
 	}
 
 	MD4 md4;
-	MD4_CUDA md4_cuda;
+	MD4_CUDA md4_cuda(128, NUM_HASHES/128);
 
 	for(int i = 0; i < NUM_HASHES; i++) md4.getHashContext(&correct_ctx[i]);
 

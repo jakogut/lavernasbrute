@@ -51,7 +51,7 @@ void CUDAPath::searchKeyspace()
 				}
 			}
 
-			messgen.stepMessage(&ctx[i]);
+			messgen.stepMessage(&ctx[i], bufferSize);
 			++keyLocation;
 		}
 	}

@@ -12,8 +12,8 @@
 #define ROTL(NUM, PLACES, SIZE) ((NUM << PLACES) | (NUM >> (SIZE - PLACES)))
 #define ROTR(NUM, PLACES, SIZE) ((NUM >> PLACES) | (NUM << (SIZE - PLACES)))
 
-#define wd(N) (wd[idx * 4 + N])
-#define message(N) (message[idx * 16 + N])
+#define wd(N) (s_wd[threadIdx.x * 4 + N])
+#define message(N) (s_message[threadIdx.x * 16 + N])
 
 __global__ void cuda_init(unsigned int* wd)
 {
@@ -28,6 +28,13 @@ __global__ void cuda_init(unsigned int* wd)
 __global__ void cuda_encrypt(unsigned int* wd, unsigned int* message)
 {
 	unsigned int idx = blockIdx.x * blockDim.x + threadIdx.x;
+
+	extern __shared__  unsigned int s_data[];
+	unsigned *s_wd(s_data), *s_message(s_data + blockDim.x * 4 * sizeof(unsigned));
+
+	int i;
+	for(i = 0; i < 4; i++) s_wd[threadIdx.x * 4 + i] = wd[idx * 4 + i];
+	for(i = 0; i < 16; i++) s_message[threadIdx.x * 16 + i] = message[idx * 16 + i];
 
 	wd(0) += F(wd(1), wd(2), wd(3))  +  message(0),  wd(0) = ROTL(wd(0), 3, 32);
 	wd(3) += F(wd(0), wd(1), wd(2))  +  message(1),  wd(3) = ROTL(wd(3), 7, 32);
@@ -92,6 +99,8 @@ __global__ void cuda_encrypt(unsigned int* wd, unsigned int* message)
 	wd(3) += H(wd(2), wd(1), wd(0)) + message(11) +  SQRT_3, wd(3) = ROTL(wd(3), 9, 32);
 	wd(2) += H(wd(1), wd(0), wd(3)) + message(7)  +  SQRT_3, wd(2) = ROTL(wd(2), 11, 32);
 	wd(1) += H(wd(0), wd(3), wd(2)) + message(15) +  SQRT_3, wd(1) = ROTL(wd(1), 15, 32);
+
+	for(int i = 0; i < 4; i++) wd[idx * 4 + i] = s_wd[threadIdx.x * 4 + i];
 }
 
 #endif
