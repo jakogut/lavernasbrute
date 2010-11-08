@@ -2,7 +2,7 @@ OPTIMIZATION=-O3
 
 CXX = g++
 CC = gcc
-NVCC = nvcc
+NVCC = /usr/local/cuda/bin/nvcc
 CXXFLAGS = $(OPTIMIZATION) -Wall -march=$(ARCH)
 CCFLAGS = $(CXXFLAGS)
 NVCC_FLAGS = $(OPTIMIZATION)
