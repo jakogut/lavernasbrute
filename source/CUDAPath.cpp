@@ -27,9 +27,9 @@ void CUDAPath::operator()()
 
 void CUDAPath::searchKeyspace()
 {
-	cu_md4 = new MD4_CUDA(threadsPerBlock, blocksPerGrid);
-
 	messageGenerator_NTLM messgen(masterThread::getCharset());
+
+	cu_md4 = new MD4_CUDA(threadsPerBlock, blocksPerGrid);
 	ctx = new hashContext[bufferSize];
 
 	for(int i = 0; i < bufferSize; i++) messgen.integerToMessage(&ctx[i], keyLocation + i);
@@ -50,12 +50,13 @@ void CUDAPath::searchKeyspace()
 					masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 				}
 			}
-
-			messgen.stepMessage(&ctx[i], bufferSize);
-			++keyLocation;
 		}
+
+		for(int i = 0; i < bufferSize; i++) messgen.stepMessage(&ctx[i], bufferSize);
+		keyLocation += bufferSize;
 	}
 
+	delete [] ctx;
 	delete cu_md4;
 
 	if((masterThread::getRemainingTargets() > 0) && masterThread::reassignKeyspace(this))

@@ -48,9 +48,7 @@ void CPUPath::searchKeyspace()
 	// If we have more targets, have the master thread look for more work.
 	// If the master finds work for the thread, we restart the search.
 	if((masterThread::getRemainingTargets() > 0) && masterThread::reassignKeyspace(this))
-	{
 		searchKeyspace();
-	}
 }
 
 unsigned int CPUPath::getThreadID()

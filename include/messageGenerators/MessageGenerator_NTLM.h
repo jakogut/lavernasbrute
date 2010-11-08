@@ -39,39 +39,42 @@ public:
 
 		register unsigned int i;
 
-		for(i = 0; i < 32; ++i)
+		for(int step = 0; step < addend; step++)
 		{
-			if(ctx->message.uint8[i << 1] + addend >= charset->maxChar)
+			for(i = 0; i < 32; ++i)
 			{
-				// Overflow, reset char at place
-				ctx->message.uint8[i << 1] = charset->minChar;
-
-				if(ctx->message.uint8[(i + 1) << 1] == 0x80)
+				if(ctx->message.uint8[i << 1] >= charset->maxChar)
 				{
-					// Carry, no space, insert char
-					ctx->message.uint8[(i + 1) << 1] = charset->minChar;
+					// Overflow, reset char at place
+					ctx->message.uint8[i << 1] = charset->minChar;
 
-					// Move the padding byte forward
-					ctx->message.uint8[(i + 2) << 1] = 0x80;
+					if(ctx->message.uint8[(i + 1) << 1] == 0x80)
+					{
+						// Carry, no space, insert char
+						ctx->message.uint8[(i + 1) << 1] = charset->minChar;
 
-					++messageLength;
+						// Move the padding byte forward
+						ctx->message.uint8[(i + 2) << 1] = 0x80;
 
-					break;
+						++messageLength;
+
+						break;
+					}
+					else
+					{
+						continue;
+					}
 				}
 				else
 				{
-					continue;
+					// Space available, increment char at place
+					if(ctx->message.uint8[i << 1] == charset->charSecEnd[0]) ctx->message.uint8[i << 1] = charset->charSecBegin[0];
+					else if(ctx->message.uint8[i << 1] == charset->charSecEnd[1]) ctx->message.uint8[i << 1] = charset->charSecBegin[1];
+
+					ctx->message.uint8[i << 1]++;
+
+					break;
 				}
-			}
-			else
-			{
-				// Space available, increment char at place
-				if(ctx->message.uint8[i << 1] == charset->charSecEnd[0]) ctx->message.uint8[i << 1] = charset->charSecBegin[0];
-				else if(ctx->message.uint8[i << 1] == charset->charSecEnd[1]) ctx->message.uint8[i << 1] = charset->charSecBegin[1];
-
-				ctx->message.uint8[i << 1]++;
-
-				break;
 			}
 		}
 
