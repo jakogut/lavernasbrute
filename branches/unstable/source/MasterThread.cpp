@@ -62,6 +62,7 @@ void masterThread::operator()()
 
 	printStatistics();
 
+	destroyCharset();
 }
 
 void masterThread::printStatistics()

@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	inline int findMessageLength(hashContext* ctx)
+	inline unsigned int findMessageLength(hashContext* ctx)
 	{
 		for(register unsigned int padByte = 0; padByte < 32; ++padByte)
 			if(ctx->message.uint8[padByte << 1] == 0x80)
