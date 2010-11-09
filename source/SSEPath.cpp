@@ -21,7 +21,8 @@ void SSEPath::operator()()
 
 void SSEPath::searchKeyspace()
 {
-	MD4_SSE md4;
+	MD4_SSE md4_sse;
+	MD4 md4;
 
 	keyGenerator keygen(keyspaceBegin, masterThread::getCharset());
 
@@ -37,7 +38,7 @@ void SSEPath::searchKeyspace()
 		}
 
 		// Hash the keys
-		md4.getHashContext_NTLM(currentKeys, currentContexts);
+		md4_sse.getHashContext_NTLM(currentKeys, currentContexts);
 
 		// Check our target hash map for matches
 		for(int i = 0; i < 12; i++)
@@ -48,7 +49,7 @@ void SSEPath::searchKeyspace()
 
 				if(targetIterator != targets.end())
 				{
-					masterThread::printResult("placeholder", currentKeys[i]);
+					masterThread::printResult(md4.contextToHash(&currentContexts[i]), currentKeys[i]);
 					masterThread::setRemainingTargets(masterThread::getRemainingTargets() - 1);
 				}
 			}
