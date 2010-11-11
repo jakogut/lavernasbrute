@@ -35,7 +35,7 @@ public:
 
 	void stepMessage(hashContext* ctx, int addend)
 	{
-		register int messageLength = findMessageLength(ctx);
+		if(ctx->messageLength <= 0) ctx->messageLength = findMessageLength(ctx);
 
 		register unsigned int i;
 
@@ -56,7 +56,7 @@ public:
 						// Move the padding byte forward
 						ctx->message.uint8[(i + 2) << 1] = 0x80;
 
-						++messageLength;
+						ctx->messageLength++;
 
 						break;
 					}
@@ -79,7 +79,7 @@ public:
 		}
 
 		// Append the length
-		ctx->message.uint32[14] = messageLength << 4;
+		ctx->message.uint32[14] = ctx->messageLength << 4;
 	}
 
 	inline void stepMessage(hashContext* ctx)
