@@ -66,10 +66,10 @@ void printHelp()
 	"\n\t\tMax is 10 chars."
 
 	"\n\n--cuda\t\tUse a CUDA accelerated processing path."
-	"\\n\t\t(Requires an NVIDIA 8000 series GPU or better)"
+	"\n\t\t(Requires an NVIDIA 8000 series GPU or better)"
 
 #ifdef SSE
-	"\n\n--SSE\t\tUse an SSE optimized CPU path."
+	"\n\n--sse\t\tUse an SSE optimized CPU path."
 #endif
 
 	"\n\n--silent\tRun the program in silent mode."
@@ -339,7 +339,7 @@ int main(int argc, char** argv)
 		}
 		else
 		#endif
-			threadGroup.create_thread(CPUPath(i));
+			threadGroup.create_thread(CUDAPath(i));
 	}
 
 	// Wait for the threads to complete their work
